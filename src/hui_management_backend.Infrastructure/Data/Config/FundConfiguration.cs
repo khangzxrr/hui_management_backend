@@ -9,6 +9,7 @@ public class FundConfiguration : IEntityTypeConfiguration<Fund>
 {
   public void Configure(EntityTypeBuilder<Fund> builder)
   {
-    builder.HasMany(f => f.Members);
+    builder.HasMany(f => f.Members).WithOne().OnDelete(DeleteBehavior.Restrict);
+    builder.HasMany(f => f.Sessions).WithOne().OnDelete(DeleteBehavior.Restrict);
   }
 }

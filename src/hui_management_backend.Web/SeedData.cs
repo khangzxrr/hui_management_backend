@@ -13,15 +13,17 @@ public static class SeedData
 
   public static readonly User FundOwner = new User("khangzxrr@gmail.com", "123123aaa", "võ ngọc khang", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106650", "Con của Chị Nhiễn");
 
-  public static readonly User FundMember = new User("khang1@gmail.com", "123123aaa", "võ ngọc khang", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106650", "Con của Chị Nhiễn");
+  public static readonly User FundMember1 = new User("khang1@gmail.com", "123123aaa", "võ ngọc khang 1", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106651", "Con của Chị Nhiễn 1");
+
+  public static readonly User FundMember2 = new User("khang2@gmail.com", "123123aaa", "võ ngọc khang 2", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106652", "Con của Chị Nhiễn 2");
 
   public static void Initialize(IServiceProvider serviceProvider)
   {
     using (var dbContext = new AppDbContext(
         serviceProvider.GetRequiredService<DbContextOptions<AppDbContext>>(), null))
     {
-      
-      PopulateFundData(dbContext);
+
+      PopulateData(dbContext);
 
     }
   }
@@ -33,16 +35,34 @@ public static class SeedData
 
   public static void PopulateFundData(AppDbContext dbContext)
   {
-    if (dbContext.Funds.Any())
+
+    bool hasAnyFunds = dbContext.Funds.Any();
+    if (hasAnyFunds)
     {
       return;
     }
 
     Fund.SetOwner(FundOwner);
-
     dbContext.Funds.Add(Fund);
 
+
+    FundMember fundMember1 = new FundMember
+    {
+      User = FundMember1
+    };
+
+    FundMember fundMember2 = new FundMember
+    {
+      User = FundMember2
+    };
+
+
+
+    Fund.AddMember(fundMember1);
+    Fund.AddMember(fundMember2);
+
     dbContext.SaveChanges();
+
   }
 
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddOwnerToFund : Migration
+    public partial class Session2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -44,12 +44,12 @@ namespace hui_management_backend.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BankName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BankNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -110,7 +110,6 @@ namespace hui_management_backend.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     FundId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -121,13 +120,44 @@ namespace hui_management_backend.Infrastructure.Migrations
                         name: "FK_FundMember_Funds_FundId",
                         column: x => x.FundId,
                         principalTable: "Funds",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_FundMember_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FundSession",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FundMemberId = table.Column<int>(type: "int", nullable: false),
+                    TakenDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    PredictPrice = table.Column<double>(type: "float", nullable: false),
+                    FundAmount = table.Column<double>(type: "float", nullable: false),
+                    RemainPrice = table.Column<double>(type: "float", nullable: false),
+                    FundId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FundSession", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FundSession_FundMember_FundMemberId",
+                        column: x => x.FundMemberId,
+                        principalTable: "FundMember",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FundSession_Funds_FundId",
+                        column: x => x.FundId,
+                        principalTable: "Funds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -146,9 +176,31 @@ namespace hui_management_backend.Infrastructure.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FundSession_FundId",
+                table: "FundSession",
+                column: "FundId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FundSession_FundMemberId",
+                table: "FundSession",
+                column: "FundMemberId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ToDoItems_ProjectId",
                 table: "ToDoItems",
                 column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_Email",
+                table: "User",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_PhoneNumber",
+                table: "User",
+                column: "PhoneNumber",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -158,16 +210,19 @@ namespace hui_management_backend.Infrastructure.Migrations
                 name: "Contributors");
 
             migrationBuilder.DropTable(
-                name: "FundMember");
+                name: "FundSession");
 
             migrationBuilder.DropTable(
                 name: "ToDoItems");
 
             migrationBuilder.DropTable(
-                name: "Funds");
+                name: "FundMember");
 
             migrationBuilder.DropTable(
                 name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "Funds");
 
             migrationBuilder.DropTable(
                 name: "User");

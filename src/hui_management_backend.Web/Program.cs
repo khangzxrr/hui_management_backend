@@ -5,11 +5,13 @@ using hui_management_backend.Core;
 using hui_management_backend.Infrastructure;
 using hui_management_backend.Infrastructure.Data;
 using hui_management_backend.Web;
-using FastEndpoints;
-using FastEndpoints.Swagger.Swashbuckle;
-using FastEndpoints.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using hui_management_backend.Web.Interfaces;
+using hui_management_backend.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,18 +27,65 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");  //Configuration.GetConnectionString("DefaultConnection");
 
+
 builder.Services.AddDbContext(connectionString!);
 
-builder.Services.AddControllersWithViews().AddNewtonsoftJson();
-builder.Services.AddRazorPages();
-builder.Services.AddFastEndpoints();
-builder.Services.AddFastEndpointsApiExplorer();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
   c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
   c.EnableAnnotations();
-  c.OperationFilter<FastEndpointsOperationFilter>();
+  c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+  {
+    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+    Name = "Authorization",
+    In = ParameterLocation.Header,
+    Type = SecuritySchemeType.ApiKey,
+    Scheme = "Bearer"
+  });
+  c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
 });
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+  options.SaveToken = true;
+
+  string key = builder.Configuration.GetSection("Jwt:Key").Get<String>()!;
+
+  options.TokenValidationParameters = new TokenValidationParameters()
+  {
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidAudience = builder.Configuration["Jwt:Audience"],
+    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+  };
+
+});
+
+
+
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddHttpContextAccessor();
 
 // add list services for diagnostic purposes - see https://github.com/ardalis/AspNetCoreStartupServices
 builder.Services.Configure<ServiceConfig>(config =>
@@ -69,7 +118,11 @@ else
   app.UseHsts();
 }
 app.UseRouting();
-app.UseFastEndpoints();
+app.MapControllers();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -80,9 +133,6 @@ app.UseSwagger();
 
 // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
-
-app.MapDefaultControllerRoute();
-app.MapRazorPages();
 
 // Seed Database
 using (var scope = app.Services.CreateScope())

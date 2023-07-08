@@ -98,6 +98,41 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.ToTable("FundMember");
                 });
 
+            modelBuilder.Entity("hui_management_backend.Core.FundAggregate.FundSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("FundAmount")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("FundId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FundMemberId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PredictPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("RemainPrice")
+                        .HasColumnType("float");
+
+                    b.Property<DateTimeOffset>("TakenDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FundId");
+
+                    b.HasIndex("FundMemberId");
+
+                    b.ToTable("FundSession");
+                });
+
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -217,7 +252,8 @@ namespace hui_management_backend.Infrastructure.Migrations
                 {
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", null)
                         .WithMany("Members")
-                        .HasForeignKey("FundId");
+                        .HasForeignKey("FundId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("hui_management_backend.Core.UserAggregate.User", "User")
                         .WithMany()
@@ -226,6 +262,22 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("hui_management_backend.Core.FundAggregate.FundSession", b =>
+                {
+                    b.HasOne("hui_management_backend.Core.FundAggregate.Fund", null)
+                        .WithMany("Sessions")
+                        .HasForeignKey("FundId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("hui_management_backend.Core.FundAggregate.FundMember", "FundMember")
+                        .WithMany()
+                        .HasForeignKey("FundMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FundMember");
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.ToDoItem", b =>
@@ -238,6 +290,8 @@ namespace hui_management_backend.Infrastructure.Migrations
             modelBuilder.Entity("hui_management_backend.Core.FundAggregate.Fund", b =>
                 {
                     b.Navigation("Members");
+
+                    b.Navigation("Sessions");
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.Project", b =>

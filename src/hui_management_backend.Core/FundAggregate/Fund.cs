@@ -22,6 +22,10 @@ public class Fund : EntityBase, IAggregateRoot
   private readonly List<FundMember> _members = new List<FundMember>();
   public IEnumerable<FundMember> Members => _members.AsReadOnly();
 
+
+  private readonly List<FundSession> _sessions = new List<FundSession>();
+  public IEnumerable<FundSession> Sessions => _sessions.AsReadOnly();
+
   public Fund(string name, string openDateText, DateTimeOffset openDateDuration, double fundPrice, double serviceCost)
   {
     Name = name;
@@ -29,6 +33,13 @@ public class Fund : EntityBase, IAggregateRoot
     OpenDateDuration = openDateDuration;
     FundPrice = fundPrice;
     ServiceCost = serviceCost;
+  }
+
+  public void AddMember(FundMember member)
+  {
+    Guard.Against.Null(member);
+
+    _members.Add(member);
   }
 
   public void SetOwner(User owner)

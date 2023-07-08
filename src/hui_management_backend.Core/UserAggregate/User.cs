@@ -24,7 +24,7 @@ public class User : EntityBase, IAggregateRoot
     BankName = Guard.Against.NullOrEmpty(bankName);
     BankNumber = Guard.Against.NullOrEmpty(bankNumber);
     PhoneNumber = Guard.Against.NullOrEmpty(phoneNumber);
-    AdditionalInfo = Guard.Against.NullOrEmpty(additionalInfo);
+    AdditionalInfo = Guard.Against.Null(additionalInfo);
   }
 
   public void UpdateEmail(string email)
@@ -56,6 +56,10 @@ public class User : EntityBase, IAggregateRoot
     PhoneNumber = Guard.Against.NullOrEmpty(phoneNumber);
   }
 
+  public void UpdateAdditionalInfo(string additionalInfo)
+  {
+    AdditionalInfo = Guard.Against.Null(additionalInfo);
+  }
 
 
 }

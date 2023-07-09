@@ -11,7 +11,7 @@ public class Fund : EntityBase, IAggregateRoot
 
 
   public string OpenDateText { get; private set; }
-  public DateTimeOffset OpenDateDuration { get; private set; }
+  public DateTimeOffset OpenDate { get; private set; }
 
   public double FundPrice { get; private set; }
   public double ServiceCost { get; private set; }
@@ -26,11 +26,11 @@ public class Fund : EntityBase, IAggregateRoot
   private readonly List<FundSession> _sessions = new List<FundSession>();
   public IEnumerable<FundSession> Sessions => _sessions.AsReadOnly();
 
-  public Fund(string name, string openDateText, DateTimeOffset openDateDuration, double fundPrice, double serviceCost)
+  public Fund(string name, string openDateText, DateTimeOffset openDate, double fundPrice, double serviceCost)
   {
     Name = name;
     OpenDateText = openDateText;
-    OpenDateDuration = openDateDuration;
+    OpenDate = openDate;
     FundPrice = fundPrice;
     ServiceCost = serviceCost;
   }

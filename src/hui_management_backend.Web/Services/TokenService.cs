@@ -4,6 +4,7 @@ using System.Text;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Records;
 using hui_management_backend.Web.Interfaces;
+using hui_management_backend.Web.Jwts;
 using Microsoft.IdentityModel.Tokens;
 
 namespace hui_management_backend.Web.Services;
@@ -29,7 +30,8 @@ public class TokenService : ITokenService
 
     var claims = new[]
     {
-      new Claim(ClaimTypes.Email, user.Email)
+      new Claim(ClaimTypes.Email, user.Email),
+      new Claim(AdditionalClaimTypes.UserId, user.Id.ToString())
     };
 
     var token = new JwtSecurityToken(

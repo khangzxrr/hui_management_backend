@@ -46,4 +46,29 @@ public class Fund : EntityBase, IAggregateRoot
   {
     Owner = Guard.Against.Null(owner);
   }
+
+  public void SetName(string name)
+  {
+    Name = Guard.Against.NullOrEmpty(name);
+  }
+
+  public void SetOpenDateText(string openDateText)
+  {
+    OpenDateText = Guard.Against.NullOrEmpty(openDateText);
+  }
+
+  public void SetOpenDate(DateTimeOffset openDate)
+  {
+    OpenDate = Guard.Against.Null(openDate);
+  }
+
+  public void SetFundPrice(double fundPrice)
+  {
+    FundPrice = Guard.Against.NegativeOrZero(fundPrice);
+  }
+
+  public void SetServiceCost(double serviceCost)
+  {
+    ServiceCost = Guard.Against.NegativeOrZero(serviceCost);
+  }
 }

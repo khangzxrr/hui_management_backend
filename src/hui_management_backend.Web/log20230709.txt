@@ -5542,3 +5542,367 @@ WHERE [Id] = @p6;
 2023-07-09 15:44:17.333 +07:00 [INF] Executed action hui_management_backend.Web.Endpoints.FundEndpoints.FundUpdate.HandleAsync (hui_management_backend.Web) in 9.7719ms
 2023-07-09 15:44:17.333 +07:00 [INF] Executed endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundUpdate.HandleAsync (hui_management_backend.Web)'
 2023-07-09 15:44:17.333 +07:00 [INF] Request finished HTTP/1.1 PUT http://localhost:57678/funds application/json 181 - 200 - application/json;+charset=utf-8 10.6628ms
+2023-07-09 15:46:24.739 +07:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2023-07-09 15:46:24.789 +07:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-07-09 15:46:24.904 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Funds] AS [f]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2023-07-09 15:46:24.916 +07:00 [INF] User profile is available. Using 'C:\Users\khang\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-07-09 15:46:24.972 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-07-09 15:46:24.972 +07:00 [INF] Hosting environment: Development
+2023-07-09 15:46:24.972 +07:00 [INF] Content root path: C:\Users\khang\Desktop\Hui_Management\hui_management_backend\src\hui_management_backend.Web
+2023-07-09 15:46:24.982 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/ - -
+2023-07-09 15:46:25.043 +07:00 [WRN] Failed to determine the https port for redirect.
+2023-07-09 15:46:25.067 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/ - - - 404 - - 85.4300ms
+2023-07-09 15:47:07.386 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:57678/funds - -
+2023-07-09 15:47:07.394 +07:00 [INF] CORS policy execution successful.
+2023-07-09 15:47:07.397 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:57678/funds - - - 204 - - 10.3711ms
+2023-07-09 15:47:07.400 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:57678/funds application/json 172
+2023-07-09 15:47:07.495 +07:00 [INF] CORS policy execution successful.
+2023-07-09 15:47:07.497 +07:00 [INF] Executing endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundCreate.HandleAsync (hui_management_backend.Web)'
+2023-07-09 15:47:07.510 +07:00 [INF] Route matched with {action = "Handle", controller = "FundCreate"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[hui_management_backend.Web.Endpoints.FundEndpoints.FundCreateResponse]] HandleAsync(hui_management_backend.Web.Endpoints.FundEndpoints.FundCreateRequest, System.Threading.CancellationToken) on controller hui_management_backend.Web.Endpoints.FundEndpoints.FundCreate (hui_management_backend.Web).
+2023-07-09 15:47:07.723 +07:00 [INF] Executed DbCommand (22ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[AdditionalInfo], [u].[Address], [u].[BankName], [u].[BankNumber], [u].[Email], [u].[Name], [u].[Password], [u].[PhoneNumber]
+FROM [User] AS [u]
+WHERE [u].[Id] = @__p_0
+2023-07-09 15:47:07.852 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[@p0='?' (DbType = Double), @p1='?' (Size = 4000), @p2='?' (DbType = DateTimeOffset), @p3='?' (Size = 4000), @p4='?' (DbType = Int32), @p5='?' (DbType = Double)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [Funds] ([FundPrice], [Name], [OpenDate], [OpenDateText], [OwnerId], [ServiceCost])
+OUTPUT INSERTED.[Id]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2023-07-09 15:47:07.877 +07:00 [INF] Executing OkObjectResult, writing value of type 'hui_management_backend.Web.Endpoints.FundEndpoints.FundCreateResponse'.
+2023-07-09 15:47:07.888 +07:00 [INF] Executed action hui_management_backend.Web.Endpoints.FundEndpoints.FundCreate.HandleAsync (hui_management_backend.Web) in 376.4518ms
+2023-07-09 15:47:07.888 +07:00 [INF] Executed endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundCreate.HandleAsync (hui_management_backend.Web)'
+2023-07-09 15:47:07.892 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:57678/funds application/json 172 - 200 - application/json;+charset=utf-8 491.3028ms
+2023-07-09 15:48:48.751 +07:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2023-07-09 15:48:48.782 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2023-07-09 15:48:48.783 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2023-07-09 15:48:48.784 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2023-07-09 15:48:48.794 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2023-07-09 15:48:48.802 +07:00 [INF] Applying migration '20230709084841_AddArchived'.
+2023-07-09 15:48:48.838 +07:00 [INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE [Funds] ADD [IsArchived] bit NOT NULL DEFAULT CAST(0 AS bit);
+2023-07-09 15:48:48.840 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20230709084841_AddArchived', N'7.0.4');
+2023-07-09 16:03:24.343 +07:00 [INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2023-07-09 16:03:24.388 +07:00 [INF] Executed DbCommand (17ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-07-09 16:03:24.509 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Funds] AS [f]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2023-07-09 16:03:24.523 +07:00 [INF] User profile is available. Using 'C:\Users\khang\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-07-09 16:03:24.587 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-07-09 16:03:24.587 +07:00 [INF] Hosting environment: Development
+2023-07-09 16:03:24.587 +07:00 [INF] Content root path: C:\Users\khang\Desktop\Hui_Management\hui_management_backend\src\hui_management_backend.Web
+2023-07-09 16:03:24.596 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/ - -
+2023-07-09 16:03:24.656 +07:00 [WRN] Failed to determine the https port for redirect.
+2023-07-09 16:03:24.682 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/ - - - 404 - - 86.7885ms
+2023-07-09 16:03:24.708 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/favicon.ico - -
+2023-07-09 16:03:24.722 +07:00 [INF] Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\khang\Desktop\Hui_Management\hui_management_backend\src\hui_management_backend.Web\wwwroot\favicon.ico'
+2023-07-09 16:03:24.723 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/favicon.ico - - - 0 5430 image/x-icon 15.1183ms
+2023-07-09 16:03:43.184 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/swagger/index.html - -
+2023-07-09 16:03:43.304 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/swagger/index.html - - - 200 - text/html;charset=utf-8 120.7429ms
+2023-07-09 16:03:43.324 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/_framework/aspnetcore-browser-refresh.js - -
+2023-07-09 16:03:43.324 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/swagger/swagger-ui.css - -
+2023-07-09 16:03:43.324 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/_vs/browserLink - -
+2023-07-09 16:03:43.328 +07:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2023-07-09 16:03:43.330 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/swagger/swagger-ui.css - - - 0 144929 text/css 4.6998ms
+2023-07-09 16:03:43.333 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/_framework/aspnetcore-browser-refresh.js - - - 200 12022 application/javascript;+charset=utf-8 8.7373ms
+2023-07-09 16:03:43.355 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 31.1828ms
+2023-07-09 16:03:43.373 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/swagger/favicon-32x32.png - -
+2023-07-09 16:03:43.375 +07:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2023-07-09 16:03:43.375 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/swagger/favicon-32x32.png - - - 0 628 image/png 2.2148ms
+2023-07-09 16:03:43.430 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/swagger/v1/swagger.json - -
+2023-07-09 16:03:43.508 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 78.3337ms
+2023-07-09 16:03:55.232 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/funds/2/archive - -
+2023-07-09 16:03:55.238 +07:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2023-07-09 16:03:55.241 +07:00 [INF] AuthenticationScheme: Bearer was challenged.
+2023-07-09 16:03:55.242 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/funds/2/archive - - - 401 - - 9.6142ms
+2023-07-09 16:04:25.115 +07:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2023-07-09 16:04:25.154 +07:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+
+IF EXISTS
+    (SELECT *
+     FROM [sys].[objects] o
+     WHERE [o].[type] = 'U'
+     AND [o].[is_ms_shipped] = 0
+     AND NOT EXISTS (SELECT *
+         FROM [sys].[extended_properties] AS [ep]
+         WHERE [ep].[major_id] = [o].[object_id]
+             AND [ep].[minor_id] = 0
+             AND [ep].[class] = 1
+             AND [ep].[name] = N'microsoft_database_tools_support'
+    )
+)
+SELECT 1 ELSE SELECT 0
+2023-07-09 16:04:25.283 +07:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Funds] AS [f]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2023-07-09 16:04:25.294 +07:00 [INF] User profile is available. Using 'C:\Users\khang\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-07-09 16:04:25.352 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-07-09 16:04:25.352 +07:00 [INF] Hosting environment: Development
+2023-07-09 16:04:25.352 +07:00 [INF] Content root path: C:\Users\khang\Desktop\Hui_Management\hui_management_backend\src\hui_management_backend.Web
+2023-07-09 16:04:25.361 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/ - -
+2023-07-09 16:04:25.421 +07:00 [WRN] Failed to determine the https port for redirect.
+2023-07-09 16:04:25.450 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/ - - - 404 - - 90.2662ms
+2023-07-09 16:04:26.060 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/swagger/index.html - -
+2023-07-09 16:04:26.175 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/swagger/index.html - - - 200 - text/html;charset=utf-8 114.7309ms
+2023-07-09 16:04:26.229 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/_vs/browserLink - -
+2023-07-09 16:04:26.230 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/_framework/aspnetcore-browser-refresh.js - -
+2023-07-09 16:04:26.236 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/_framework/aspnetcore-browser-refresh.js - - - 200 12022 application/javascript;+charset=utf-8 5.3485ms
+2023-07-09 16:04:26.261 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 31.3150ms
+2023-07-09 16:04:26.265 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/swagger/favicon-32x32.png - -
+2023-07-09 16:04:26.273 +07:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2023-07-09 16:04:26.273 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/swagger/favicon-32x32.png - - - 0 628 image/png 7.5842ms
+2023-07-09 16:04:26.321 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/swagger/v1/swagger.json - -
+2023-07-09 16:04:26.395 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 74.4741ms
+2023-07-09 16:04:43.587 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:57678/login application/json 60
+2023-07-09 16:04:43.590 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:04:43.592 +07:00 [INF] Executing endpoint 'hui_management_backend.Web.Endpoints.AuthenticationEndpoints.Login.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:04:43.608 +07:00 [INF] Route matched with {action = "Handle", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[hui_management_backend.Web.Endpoints.AuthenticationEndpoints.LoginResponse]] HandleAsync(hui_management_backend.Web.Endpoints.AuthenticationEndpoints.LoginRequest, System.Threading.CancellationToken) on controller hui_management_backend.Web.Endpoints.AuthenticationEndpoints.Login (hui_management_backend.Web).
+2023-07-09 16:04:43.758 +07:00 [INF] Executed DbCommand (25ms) [Parameters=[@__phonenumber_0='?' (Size = 450), @__password_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[AdditionalInfo], [u].[Address], [u].[BankName], [u].[BankNumber], [u].[Email], [u].[Name], [u].[Password], [u].[PhoneNumber]
+FROM [User] AS [u]
+WHERE [u].[PhoneNumber] = @__phonenumber_0 AND [u].[Password] = @__password_1
+2023-07-09 16:04:43.901 +07:00 [INF] Executing OkObjectResult, writing value of type 'hui_management_backend.Web.Endpoints.AuthenticationEndpoints.LoginResponse'.
+2023-07-09 16:04:43.908 +07:00 [INF] Executed action hui_management_backend.Web.Endpoints.AuthenticationEndpoints.Login.HandleAsync (hui_management_backend.Web) in 297.1739ms
+2023-07-09 16:04:43.908 +07:00 [INF] Executed endpoint 'hui_management_backend.Web.Endpoints.AuthenticationEndpoints.Login.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:04:43.912 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:57678/login application/json 60 - 200 - application/json;+charset=utf-8 324.9551ms
+2023-07-09 16:04:53.958 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/funds/2/archive?isArchived=true - -
+2023-07-09 16:04:53.992 +07:00 [INF] Executing endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:04:53.997 +07:00 [INF] Route matched with {action = "Handle", controller = "FundSetArchive"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] HandleAsync(hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchiveRequest, System.Threading.CancellationToken) on controller hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive (hui_management_backend.Web).
+2023-07-09 16:04:54.087 +07:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2023-07-09 16:04:54.100 +07:00 [INF] Executed DbCommand (6ms) [Parameters=[@__ownerId_0='?' (DbType = Int32), @__id_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[FundPrice], [t].[IsArchived], [t].[Name], [t].[OpenDate], [t].[OpenDateText], [t].[OwnerId], [t].[ServiceCost], [t].[Id0], [t].[AdditionalInfo], [t].[Address], [t].[BankName], [t].[BankNumber], [t].[Email], [t].[Name0], [t].[Password], [t].[PhoneNumber], [f0].[Id], [f0].[FundId], [f0].[UserId], [f1].[Id], [f1].[FundId], [f1].[TakenDate]
+FROM (
+    SELECT TOP(1) [f].[Id], [f].[FundPrice], [f].[IsArchived], [f].[Name], [f].[OpenDate], [f].[OpenDateText], [f].[OwnerId], [f].[ServiceCost], [u].[Id] AS [Id0], [u].[AdditionalInfo], [u].[Address], [u].[BankName], [u].[BankNumber], [u].[Email], [u].[Name] AS [Name0], [u].[Password], [u].[PhoneNumber]
+    FROM [Funds] AS [f]
+    INNER JOIN [User] AS [u] ON [f].[OwnerId] = [u].[Id]
+    WHERE [u].[Id] = @__ownerId_0 AND [f].[Id] = @__id_1
+) AS [t]
+LEFT JOIN [FundMember] AS [f0] ON [t].[Id] = [f0].[FundId]
+LEFT JOIN [FundSession] AS [f1] ON [t].[Id] = [f1].[FundId]
+ORDER BY [t].[Id], [t].[Id0], [f0].[Id]
+2023-07-09 16:04:54.199 +07:00 [INF] Executed DbCommand (6ms) [Parameters=[@p7='?' (DbType = Int32), @p0='?' (DbType = Double), @p1='?' (DbType = Boolean), @p2='?' (Size = 4000), @p3='?' (DbType = DateTimeOffset), @p4='?' (Size = 4000), @p5='?' (DbType = Int32), @p6='?' (DbType = Double)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [Funds] SET [FundPrice] = @p0, [IsArchived] = @p1, [Name] = @p2, [OpenDate] = @p3, [OpenDateText] = @p4, [OwnerId] = @p5, [ServiceCost] = @p6
+OUTPUT 1
+WHERE [Id] = @p7;
+2023-07-09 16:04:54.213 +07:00 [INF] Executing StatusCodeResult, setting HTTP status code 200
+2023-07-09 16:04:54.213 +07:00 [INF] Executed action hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web) in 215.622ms
+2023-07-09 16:04:54.213 +07:00 [INF] Executed endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:04:54.214 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/funds/2/archive?isArchived=true - - - 200 - - 256.3877ms
+2023-07-09 16:11:36.469 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:57678/login - -
+2023-07-09 16:11:36.472 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:11:36.474 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:57678/login - - - 204 - - 4.5600ms
+2023-07-09 16:11:36.474 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:57678/login application/json;+charset=utf-8 51
+2023-07-09 16:11:36.475 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:11:36.475 +07:00 [INF] Executing endpoint 'hui_management_backend.Web.Endpoints.AuthenticationEndpoints.Login.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:11:36.475 +07:00 [INF] Route matched with {action = "Handle", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[hui_management_backend.Web.Endpoints.AuthenticationEndpoints.LoginResponse]] HandleAsync(hui_management_backend.Web.Endpoints.AuthenticationEndpoints.LoginRequest, System.Threading.CancellationToken) on controller hui_management_backend.Web.Endpoints.AuthenticationEndpoints.Login (hui_management_backend.Web).
+2023-07-09 16:11:36.506 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__phonenumber_0='?' (Size = 450), @__password_1='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[AdditionalInfo], [u].[Address], [u].[BankName], [u].[BankNumber], [u].[Email], [u].[Name], [u].[Password], [u].[PhoneNumber]
+FROM [User] AS [u]
+WHERE [u].[PhoneNumber] = @__phonenumber_0 AND [u].[Password] = @__password_1
+2023-07-09 16:11:36.508 +07:00 [INF] Executing OkObjectResult, writing value of type 'hui_management_backend.Web.Endpoints.AuthenticationEndpoints.LoginResponse'.
+2023-07-09 16:11:36.508 +07:00 [INF] Executed action hui_management_backend.Web.Endpoints.AuthenticationEndpoints.Login.HandleAsync (hui_management_backend.Web) in 33.3795ms
+2023-07-09 16:11:36.509 +07:00 [INF] Executed endpoint 'hui_management_backend.Web.Endpoints.AuthenticationEndpoints.Login.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:11:36.509 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:57678/login application/json;+charset=utf-8 51 - 200 - application/json;+charset=utf-8 34.2578ms
+2023-07-09 16:11:37.079 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:57678/funds - -
+2023-07-09 16:11:37.080 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:11:37.080 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:57678/funds - - - 204 - - 0.7380ms
+2023-07-09 16:11:37.081 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/funds application/json -
+2023-07-09 16:11:37.082 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:11:37.083 +07:00 [INF] Executing endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAll.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:11:37.085 +07:00 [INF] Route matched with {action = "Handle", controller = "FundGetAll"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAllResponse]] HandleAsync(System.Threading.CancellationToken) on controller hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAll (hui_management_backend.Web).
+2023-07-09 16:11:37.176 +07:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2023-07-09 16:11:37.188 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__ownerId_0='?' (DbType = Int32), @__isArchived_1='?' (DbType = Boolean)], CommandType='"Text"', CommandTimeout='30']
+SELECT [f].[Id], [f].[FundPrice], [f].[IsArchived], [f].[Name], [f].[OpenDate], [f].[OpenDateText], [f].[OwnerId], [f].[ServiceCost], [u].[Id], [u].[AdditionalInfo], [u].[Address], [u].[BankName], [u].[BankNumber], [u].[Email], [u].[Name], [u].[Password], [u].[PhoneNumber], [f0].[Id], [f0].[FundId], [f0].[UserId], [f1].[Id], [f1].[FundId], [f1].[TakenDate]
+FROM [Funds] AS [f]
+INNER JOIN [User] AS [u] ON [f].[OwnerId] = [u].[Id]
+LEFT JOIN [FundMember] AS [f0] ON [f].[Id] = [f0].[FundId]
+LEFT JOIN [FundSession] AS [f1] ON [f].[Id] = [f1].[FundId]
+WHERE [u].[Id] = @__ownerId_0 AND [f].[IsArchived] = @__isArchived_1
+ORDER BY [f].[Id], [u].[Id], [f0].[Id]
+2023-07-09 16:11:37.201 +07:00 [INF] Executing OkObjectResult, writing value of type 'hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAllResponse'.
+2023-07-09 16:11:37.219 +07:00 [INF] Executed action hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAll.HandleAsync (hui_management_backend.Web) in 134.3577ms
+2023-07-09 16:11:37.219 +07:00 [INF] Executed endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAll.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:11:37.219 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/funds application/json - - 200 - application/json;+charset=utf-8 138.2998ms
+2023-07-09 16:11:39.728 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:57678/funds/3/archive?isArchived=true - -
+2023-07-09 16:11:39.728 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:11:39.729 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:57678/funds/3/archive?isArchived=true - - - 204 - - 0.5714ms
+2023-07-09 16:11:39.730 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/funds/3/archive?isArchived=true application/json -
+2023-07-09 16:11:39.730 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:11:39.731 +07:00 [INF] Executing endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:11:39.731 +07:00 [INF] Route matched with {action = "Handle", controller = "FundSetArchive"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] HandleAsync(hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchiveRequest, System.Threading.CancellationToken) on controller hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive (hui_management_backend.Web).
+2023-07-09 16:11:39.736 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__ownerId_0='?' (DbType = Int32), @__id_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[FundPrice], [t].[IsArchived], [t].[Name], [t].[OpenDate], [t].[OpenDateText], [t].[OwnerId], [t].[ServiceCost], [t].[Id0], [t].[AdditionalInfo], [t].[Address], [t].[BankName], [t].[BankNumber], [t].[Email], [t].[Name0], [t].[Password], [t].[PhoneNumber], [f0].[Id], [f0].[FundId], [f0].[UserId], [f1].[Id], [f1].[FundId], [f1].[TakenDate]
+FROM (
+    SELECT TOP(1) [f].[Id], [f].[FundPrice], [f].[IsArchived], [f].[Name], [f].[OpenDate], [f].[OpenDateText], [f].[OwnerId], [f].[ServiceCost], [u].[Id] AS [Id0], [u].[AdditionalInfo], [u].[Address], [u].[BankName], [u].[BankNumber], [u].[Email], [u].[Name] AS [Name0], [u].[Password], [u].[PhoneNumber]
+    FROM [Funds] AS [f]
+    INNER JOIN [User] AS [u] ON [f].[OwnerId] = [u].[Id]
+    WHERE [u].[Id] = @__ownerId_0 AND [f].[Id] = @__id_1
+) AS [t]
+LEFT JOIN [FundMember] AS [f0] ON [t].[Id] = [f0].[FundId]
+LEFT JOIN [FundSession] AS [f1] ON [t].[Id] = [f1].[FundId]
+ORDER BY [t].[Id], [t].[Id0], [f0].[Id]
+2023-07-09 16:11:39.747 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@p7='?' (DbType = Int32), @p0='?' (DbType = Double), @p1='?' (DbType = Boolean), @p2='?' (Size = 4000), @p3='?' (DbType = DateTimeOffset), @p4='?' (Size = 4000), @p5='?' (DbType = Int32), @p6='?' (DbType = Double)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [Funds] SET [FundPrice] = @p0, [IsArchived] = @p1, [Name] = @p2, [OpenDate] = @p3, [OpenDateText] = @p4, [OwnerId] = @p5, [ServiceCost] = @p6
+OUTPUT 1
+WHERE [Id] = @p7;
+2023-07-09 16:11:39.748 +07:00 [INF] Executing StatusCodeResult, setting HTTP status code 200
+2023-07-09 16:11:39.748 +07:00 [INF] Executed action hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web) in 17.167ms
+2023-07-09 16:11:39.748 +07:00 [INF] Executed endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:11:39.748 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/funds/3/archive?isArchived=true application/json - - 200 - - 18.6718ms
+2023-07-09 16:11:42.071 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:57678/funds/5/archive?isArchived=true - -
+2023-07-09 16:11:42.071 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:11:42.072 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:57678/funds/5/archive?isArchived=true - - - 204 - - 0.8229ms
+2023-07-09 16:11:42.073 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/funds/5/archive?isArchived=true application/json -
+2023-07-09 16:11:42.073 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:11:42.073 +07:00 [INF] Executing endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:11:42.074 +07:00 [INF] Route matched with {action = "Handle", controller = "FundSetArchive"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] HandleAsync(hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchiveRequest, System.Threading.CancellationToken) on controller hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive (hui_management_backend.Web).
+2023-07-09 16:11:42.078 +07:00 [INF] Executed DbCommand (3ms) [Parameters=[@__ownerId_0='?' (DbType = Int32), @__id_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[FundPrice], [t].[IsArchived], [t].[Name], [t].[OpenDate], [t].[OpenDateText], [t].[OwnerId], [t].[ServiceCost], [t].[Id0], [t].[AdditionalInfo], [t].[Address], [t].[BankName], [t].[BankNumber], [t].[Email], [t].[Name0], [t].[Password], [t].[PhoneNumber], [f0].[Id], [f0].[FundId], [f0].[UserId], [f1].[Id], [f1].[FundId], [f1].[TakenDate]
+FROM (
+    SELECT TOP(1) [f].[Id], [f].[FundPrice], [f].[IsArchived], [f].[Name], [f].[OpenDate], [f].[OpenDateText], [f].[OwnerId], [f].[ServiceCost], [u].[Id] AS [Id0], [u].[AdditionalInfo], [u].[Address], [u].[BankName], [u].[BankNumber], [u].[Email], [u].[Name] AS [Name0], [u].[Password], [u].[PhoneNumber]
+    FROM [Funds] AS [f]
+    INNER JOIN [User] AS [u] ON [f].[OwnerId] = [u].[Id]
+    WHERE [u].[Id] = @__ownerId_0 AND [f].[Id] = @__id_1
+) AS [t]
+LEFT JOIN [FundMember] AS [f0] ON [t].[Id] = [f0].[FundId]
+LEFT JOIN [FundSession] AS [f1] ON [t].[Id] = [f1].[FundId]
+ORDER BY [t].[Id], [t].[Id0], [f0].[Id]
+2023-07-09 16:11:42.080 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[@p7='?' (DbType = Int32), @p0='?' (DbType = Double), @p1='?' (DbType = Boolean), @p2='?' (Size = 4000), @p3='?' (DbType = DateTimeOffset), @p4='?' (Size = 4000), @p5='?' (DbType = Int32), @p6='?' (DbType = Double)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [Funds] SET [FundPrice] = @p0, [IsArchived] = @p1, [Name] = @p2, [OpenDate] = @p3, [OpenDateText] = @p4, [OwnerId] = @p5, [ServiceCost] = @p6
+OUTPUT 1
+WHERE [Id] = @p7;
+2023-07-09 16:11:42.080 +07:00 [INF] Executing StatusCodeResult, setting HTTP status code 200
+2023-07-09 16:11:42.080 +07:00 [INF] Executed action hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web) in 6.6342ms
+2023-07-09 16:11:42.080 +07:00 [INF] Executed endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:11:42.081 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/funds/5/archive?isArchived=true application/json - - 200 - - 7.9330ms
+2023-07-09 16:11:46.592 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:57678/funds - -
+2023-07-09 16:11:46.592 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:11:46.593 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:57678/funds - - - 204 - - 1.1325ms
+2023-07-09 16:11:46.594 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/funds application/json -
+2023-07-09 16:11:46.594 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:11:46.595 +07:00 [INF] Executing endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAll.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:11:46.595 +07:00 [INF] Route matched with {action = "Handle", controller = "FundGetAll"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAllResponse]] HandleAsync(System.Threading.CancellationToken) on controller hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAll (hui_management_backend.Web).
+2023-07-09 16:11:46.600 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[@__ownerId_0='?' (DbType = Int32), @__isArchived_1='?' (DbType = Boolean)], CommandType='"Text"', CommandTimeout='30']
+SELECT [f].[Id], [f].[FundPrice], [f].[IsArchived], [f].[Name], [f].[OpenDate], [f].[OpenDateText], [f].[OwnerId], [f].[ServiceCost], [u].[Id], [u].[AdditionalInfo], [u].[Address], [u].[BankName], [u].[BankNumber], [u].[Email], [u].[Name], [u].[Password], [u].[PhoneNumber], [f0].[Id], [f0].[FundId], [f0].[UserId], [f1].[Id], [f1].[FundId], [f1].[TakenDate]
+FROM [Funds] AS [f]
+INNER JOIN [User] AS [u] ON [f].[OwnerId] = [u].[Id]
+LEFT JOIN [FundMember] AS [f0] ON [f].[Id] = [f0].[FundId]
+LEFT JOIN [FundSession] AS [f1] ON [f].[Id] = [f1].[FundId]
+WHERE [u].[Id] = @__ownerId_0 AND [f].[IsArchived] = @__isArchived_1
+ORDER BY [f].[Id], [u].[Id], [f0].[Id]
+2023-07-09 16:11:46.602 +07:00 [INF] Executing OkObjectResult, writing value of type 'hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAllResponse'.
+2023-07-09 16:11:46.602 +07:00 [INF] Executed action hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAll.HandleAsync (hui_management_backend.Web) in 7.4412ms
+2023-07-09 16:11:46.602 +07:00 [INF] Executed endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundGetAll.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:11:46.602 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/funds application/json - - 200 - application/json;+charset=utf-8 8.6138ms
+2023-07-09 16:12:25.335 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:57678/funds - -
+2023-07-09 16:12:25.335 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:12:25.336 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:57678/funds - - - 204 - - 0.7509ms
+2023-07-09 16:12:25.337 +07:00 [INF] Request starting HTTP/1.1 POST http://localhost:57678/funds application/json 153
+2023-07-09 16:12:25.337 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:12:25.337 +07:00 [INF] Executing endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundCreate.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:12:25.340 +07:00 [INF] Route matched with {action = "Handle", controller = "FundCreate"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[hui_management_backend.Web.Endpoints.FundEndpoints.FundCreateResponse]] HandleAsync(hui_management_backend.Web.Endpoints.FundEndpoints.FundCreateRequest, System.Threading.CancellationToken) on controller hui_management_backend.Web.Endpoints.FundEndpoints.FundCreate (hui_management_backend.Web).
+2023-07-09 16:12:25.360 +07:00 [INF] Executed DbCommand (5ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[AdditionalInfo], [u].[Address], [u].[BankName], [u].[BankNumber], [u].[Email], [u].[Name], [u].[Password], [u].[PhoneNumber]
+FROM [User] AS [u]
+WHERE [u].[Id] = @__p_0
+2023-07-09 16:12:25.395 +07:00 [INF] Executed DbCommand (12ms) [Parameters=[@p0='?' (DbType = Double), @p1='?' (DbType = Boolean), @p2='?' (Size = 4000), @p3='?' (DbType = DateTimeOffset), @p4='?' (Size = 4000), @p5='?' (DbType = Int32), @p6='?' (DbType = Double)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [Funds] ([FundPrice], [IsArchived], [Name], [OpenDate], [OpenDateText], [OwnerId], [ServiceCost])
+OUTPUT INSERTED.[Id]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+2023-07-09 16:12:25.405 +07:00 [INF] Executing OkObjectResult, writing value of type 'hui_management_backend.Web.Endpoints.FundEndpoints.FundCreateResponse'.
+2023-07-09 16:12:25.406 +07:00 [INF] Executed action hui_management_backend.Web.Endpoints.FundEndpoints.FundCreate.HandleAsync (hui_management_backend.Web) in 65.3155ms
+2023-07-09 16:12:25.406 +07:00 [INF] Executed endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundCreate.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:12:25.406 +07:00 [INF] Request finished HTTP/1.1 POST http://localhost:57678/funds application/json 153 - 200 - application/json;+charset=utf-8 69.4126ms
+2023-07-09 16:12:28.357 +07:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:57678/funds/6/archive?isArchived=true - -
+2023-07-09 16:12:28.357 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:12:28.357 +07:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:57678/funds/6/archive?isArchived=true - - - 204 - - 0.6987ms
+2023-07-09 16:12:28.362 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/funds/6/archive?isArchived=true application/json -
+2023-07-09 16:12:28.362 +07:00 [INF] CORS policy execution successful.
+2023-07-09 16:12:28.363 +07:00 [INF] Executing endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:12:28.363 +07:00 [INF] Route matched with {action = "Handle", controller = "FundSetArchive"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] HandleAsync(hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchiveRequest, System.Threading.CancellationToken) on controller hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive (hui_management_backend.Web).
+2023-07-09 16:12:28.367 +07:00 [INF] Executed DbCommand (4ms) [Parameters=[@__ownerId_0='?' (DbType = Int32), @__id_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[FundPrice], [t].[IsArchived], [t].[Name], [t].[OpenDate], [t].[OpenDateText], [t].[OwnerId], [t].[ServiceCost], [t].[Id0], [t].[AdditionalInfo], [t].[Address], [t].[BankName], [t].[BankNumber], [t].[Email], [t].[Name0], [t].[Password], [t].[PhoneNumber], [f0].[Id], [f0].[FundId], [f0].[UserId], [f1].[Id], [f1].[FundId], [f1].[TakenDate]
+FROM (
+    SELECT TOP(1) [f].[Id], [f].[FundPrice], [f].[IsArchived], [f].[Name], [f].[OpenDate], [f].[OpenDateText], [f].[OwnerId], [f].[ServiceCost], [u].[Id] AS [Id0], [u].[AdditionalInfo], [u].[Address], [u].[BankName], [u].[BankNumber], [u].[Email], [u].[Name] AS [Name0], [u].[Password], [u].[PhoneNumber]
+    FROM [Funds] AS [f]
+    INNER JOIN [User] AS [u] ON [f].[OwnerId] = [u].[Id]
+    WHERE [u].[Id] = @__ownerId_0 AND [f].[Id] = @__id_1
+) AS [t]
+LEFT JOIN [FundMember] AS [f0] ON [t].[Id] = [f0].[FundId]
+LEFT JOIN [FundSession] AS [f1] ON [t].[Id] = [f1].[FundId]
+ORDER BY [t].[Id], [t].[Id0], [f0].[Id]
+2023-07-09 16:12:28.381 +07:00 [INF] Executed DbCommand (13ms) [Parameters=[@p7='?' (DbType = Int32), @p0='?' (DbType = Double), @p1='?' (DbType = Boolean), @p2='?' (Size = 4000), @p3='?' (DbType = DateTimeOffset), @p4='?' (Size = 4000), @p5='?' (DbType = Int32), @p6='?' (DbType = Double)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [Funds] SET [FundPrice] = @p0, [IsArchived] = @p1, [Name] = @p2, [OpenDate] = @p3, [OpenDateText] = @p4, [OwnerId] = @p5, [ServiceCost] = @p6
+OUTPUT 1
+WHERE [Id] = @p7;
+2023-07-09 16:12:28.382 +07:00 [INF] Executing StatusCodeResult, setting HTTP status code 200
+2023-07-09 16:12:28.382 +07:00 [INF] Executed action hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web) in 19.1771ms
+2023-07-09 16:12:28.382 +07:00 [INF] Executed endpoint 'hui_management_backend.Web.Endpoints.FundEndpoints.FundSetArchive.HandleAsync (hui_management_backend.Web)'
+2023-07-09 16:12:28.383 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/funds/6/archive?isArchived=true application/json - - 200 - - 20.7205ms

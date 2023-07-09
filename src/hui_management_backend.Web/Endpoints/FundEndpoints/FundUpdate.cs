@@ -18,15 +18,13 @@ public class FundUpdate : EndpointBaseAsync
 
   private readonly IRepository<Fund> _fundRepository;
 
-  private readonly IRepository<User> _userRepository;
   private readonly IAuthorizeService _authorizeService;
 
   private readonly IMapper _mapper;
 
-  public FundUpdate(IRepository<Fund> fundRepository, IRepository<User> userRepository, IAuthorizeService authoizeService, IMapper mapper)
+  public FundUpdate(IRepository<Fund> fundRepository, IAuthorizeService authoizeService, IMapper mapper)
   {
     _fundRepository = fundRepository;
-    _userRepository = userRepository;
     _authorizeService = authoizeService;
     _mapper = mapper;
   }

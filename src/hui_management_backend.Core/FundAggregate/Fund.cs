@@ -9,6 +9,7 @@ public class Fund : EntityBase, IAggregateRoot
 {
   public string Name { get; private set; } 
 
+  public bool IsArchived { get; private set; }
 
   public string OpenDateText { get; private set; }
   public DateTimeOffset OpenDate { get; private set; }
@@ -33,6 +34,8 @@ public class Fund : EntityBase, IAggregateRoot
     OpenDate = openDate;
     FundPrice = fundPrice;
     ServiceCost = serviceCost;
+
+    IsArchived = false;
   }
 
   public void AddMember(FundMember member)
@@ -42,6 +45,10 @@ public class Fund : EntityBase, IAggregateRoot
     _members.Add(member);
   }
 
+  public void SetArchived(bool archived)
+  {
+    IsArchived = Guard.Against.Null(archived);
+  }
   public void SetOwner(User owner)
   {
     Owner = Guard.Against.Null(owner);

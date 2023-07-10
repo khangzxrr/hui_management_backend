@@ -17,5 +17,8 @@ public class DefaultCoreModule : Module
     builder.RegisterType<AuthenticationService>()
         .As<IAuthenticationService>().InstancePerLifetimeScope();
 
+
+    builder.RegisterType<AddMemberFundService>()
+        .As<IAddMemberFundService>().InstancePerLifetimeScope();
   }
 }

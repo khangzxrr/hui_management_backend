@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Specifications;
+using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Interfaces;
@@ -15,15 +16,13 @@ public class FundAddMember : EndpointBaseAsync
   .WithActionResult
 {
 
-  private readonly IRepository<Fund> _fundRepository;
+  private readonly IAddMemberFundService _addMemberFundService;
   private readonly IAuthorizeService _authorizeService;
-  private readonly IRepository<User> _userRepository;
-
-  public FundAddMember(IRepository<Fund> fundRepository, IAuthorizeService authorizeService, IRepository<User> userRepository)
+  
+  public FundAddMember(IAddMemberFundService addMemberFundService, IAuthorizeService authorizeService)
   {
-    _fundRepository = fundRepository;
+    _addMemberFundService = addMemberFundService;
     _authorizeService = authorizeService;
-    _userRepository = userRepository;
   }
 
   [Authorize]
@@ -37,32 +36,12 @@ public class FundAddMember : EndpointBaseAsync
   ]
   public override async Task<ActionResult> HandleAsync([FromRoute] FundAddMemberRequest request, CancellationToken cancellationToken = default)
   {
-    var spec = new FundByIdAndOwnerId(request.fundId, _authorizeService.UserId);
+    var result = await _addMemberFundService.AddMember(request.fundId, _authorizeService.UserId, request.memberId);
 
-    var fund = await _fundRepository.FirstOrDefaultAsync(spec);
-
-    if (fund == null)
+    if (!result.IsSuccess)
     {
-      return BadRequest("FUND_NOT_FOUND");
+      return BadRequest(result.Errors);
     }
-
-    var user = await _userRepository.GetByIdAsync(request.memberId);
-
-    if (user == null)
-    {
-      return BadRequest("USER_NOT_FOUND");
-    }
-
-    FundMember fundMember = new FundMember
-    {
-      User = user
-    };
-
-    fund.AddMember(fundMember);
-
-    await _fundRepository.UpdateAsync(fund);
-    await _fundRepository.SaveChangesAsync();
-
 
     return Ok();
   }

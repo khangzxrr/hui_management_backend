@@ -36,7 +36,7 @@ public class FundSetArchive : EndpointBaseAsync
   ]
   public override async Task<ActionResult> HandleAsync([FromQuery] FundSetArchiveRequest request, CancellationToken cancellationToken = default)
   {
-    var spec = new FundByIdAndOwnerId(request.id, _authorizeService.UserId);
+    var spec = new FundByIdAndOwnerIdSpec(request.id, _authorizeService.UserId);
 
     var fund = await _fundRepository.FirstOrDefaultAsync(spec);
 

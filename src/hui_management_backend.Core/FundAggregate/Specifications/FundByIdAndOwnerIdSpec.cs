@@ -2,9 +2,9 @@
 using Ardalis.Specification;
 
 namespace hui_management_backend.Core.FundAggregate.Specifications;
-public class FundByIdAndOwnerId : Specification<Fund>, ISingleResultSpecification
+public class FundByIdAndOwnerIdSpec : Specification<Fund>, ISingleResultSpecification
 {
-  public FundByIdAndOwnerId(int id, int ownerId)
+  public FundByIdAndOwnerIdSpec(int id, int ownerId)
   {
     Query
       .Include(f => f.Owner)

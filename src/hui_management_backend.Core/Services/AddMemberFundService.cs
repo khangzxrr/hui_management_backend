@@ -5,6 +5,7 @@ using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel.Interfaces;
+using hui_management_backend.Web.Constants;
 
 namespace hui_management_backend.Core.Services;
 public class AddMemberFundService : IAddMemberFundService
@@ -19,13 +20,13 @@ public class AddMemberFundService : IAddMemberFundService
     _fundRepository = fundRepository;
   }
 
-  public async Task<Result<bool>> AddMember(int fundId, int ownerId, int memberId)
+  public async Task<Result<bool>> AddMember(int fundId, int ownerId, int userId)
   {
-    var user = await _userRepository.GetByIdAsync(memberId);
+    var user = await _userRepository.GetByIdAsync(userId);
 
     if (user == null)
     {
-      return Result<bool>.NotFound("USER_NOT_FOUND");
+      return Result<bool>.NotFound(ResponseMessageConstants.UserNotFound);
     }
 
     var fundSpec = new FundByIdAndOwnerIdSpec(fundId, ownerId);
@@ -33,11 +34,16 @@ public class AddMemberFundService : IAddMemberFundService
 
     if (fund == null)
     {
-      return Result<bool>.NotFound("FUND_NOT_FOUND");
+      return Result<bool>.NotFound(ResponseMessageConstants.FundNotFound);
     }
+
+    var totalExistFundMember = fund.Members.Where(m => m.User == user).Count();
+
+
 
     var fundMember = new FundMember
     {
+      NickName = $"{user.Name}-{totalExistFundMember + 1}",
       User = user,
     };
 

@@ -12,8 +12,8 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230709065939_FundSessionDetail")]
-    partial class FundSessionDetail
+    [Migration("20230713052242_Cascade")]
+    partial class Cascade
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,11 +54,14 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<double>("FundPrice")
                         .HasColumnType("float");
 
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("OpenDateDuration")
+                    b.Property<DateTimeOffset>("OpenDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("OpenDateText")
@@ -88,6 +91,10 @@ namespace hui_management_backend.Infrastructure.Migrations
 
                     b.Property<int?>("FundId")
                         .HasColumnType("int");
+
+                    b.Property<string>("NickName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -277,12 +284,12 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", null)
                         .WithMany("Members")
                         .HasForeignKey("FundId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("hui_management_backend.Core.UserAggregate.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -293,7 +300,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", null)
                         .WithMany("Sessions")
                         .HasForeignKey("FundId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.FundAggregate.FundSessionDetail", b =>

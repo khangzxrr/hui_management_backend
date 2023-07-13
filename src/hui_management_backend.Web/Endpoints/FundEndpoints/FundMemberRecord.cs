@@ -2,6 +2,6 @@
 
 namespace hui_management_backend.Web.Endpoints.FundEndpoints;
 
-public record FundMemberRecord(int id, UserRecord user)
+public record FundMemberRecord(int id, string nickName, UserRecord user)
 {
 }

@@ -48,12 +48,14 @@ public static class SeedData
 
     FundMember fundMember1 = new FundMember
     {
-      User = FundMember1
+      User = FundMember1,
+      NickName = "võ ngọc khang-1"
     };
 
     FundMember fundMember2 = new FundMember
     {
-      User = FundMember2
+      User = FundMember2,
+      NickName = "võ ngọc khang-2"
     };
 
 

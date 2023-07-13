@@ -41,6 +41,8 @@ public class Delete : EndpointBaseAsync
 
     await _userRepository.DeleteAsync(user);
 
+    await _userRepository.SaveChangesAsync();
+
     return Ok();
   }
 }

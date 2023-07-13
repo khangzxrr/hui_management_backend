@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Session2 : Migration
+    public partial class Cascade : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -87,8 +87,9 @@ namespace hui_management_backend.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
                     OpenDateText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OpenDateDuration = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    OpenDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     FundPrice = table.Column<double>(type: "float", nullable: false),
                     ServiceCost = table.Column<double>(type: "float", nullable: false),
                     OwnerId = table.Column<int>(type: "int", nullable: false)
@@ -110,6 +111,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NickName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     FundId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -121,13 +123,13 @@ namespace hui_management_backend.Infrastructure.Migrations
                         column: x => x.FundId,
                         principalTable: "Funds",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FundMember_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -136,28 +138,47 @@ namespace hui_management_backend.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FundMemberId = table.Column<int>(type: "int", nullable: false),
                     TakenDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    PredictPrice = table.Column<double>(type: "float", nullable: false),
-                    FundAmount = table.Column<double>(type: "float", nullable: false),
-                    RemainPrice = table.Column<double>(type: "float", nullable: false),
                     FundId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FundSession", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FundSession_FundMember_FundMemberId",
-                        column: x => x.FundMemberId,
-                        principalTable: "FundMember",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_FundSession_Funds_FundId",
                         column: x => x.FundId,
                         principalTable: "Funds",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FundSessionDetail",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    fundMemberId = table.Column<int>(type: "int", nullable: false),
+                    predictedPrice = table.Column<double>(type: "float", nullable: false),
+                    fundAmount = table.Column<double>(type: "float", nullable: false),
+                    remainPrice = table.Column<double>(type: "float", nullable: false),
+                    ownerCost = table.Column<double>(type: "float", nullable: false),
+                    FundSessionId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FundSessionDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FundSessionDetail_FundMember_fundMemberId",
+                        column: x => x.fundMemberId,
+                        principalTable: "FundMember",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FundSessionDetail_FundSession_FundSessionId",
+                        column: x => x.FundSessionId,
+                        principalTable: "FundSession",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -181,9 +202,14 @@ namespace hui_management_backend.Infrastructure.Migrations
                 column: "FundId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FundSession_FundMemberId",
-                table: "FundSession",
-                column: "FundMemberId");
+                name: "IX_FundSessionDetail_fundMemberId",
+                table: "FundSessionDetail",
+                column: "fundMemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FundSessionDetail_FundSessionId",
+                table: "FundSessionDetail",
+                column: "FundSessionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ToDoItems_ProjectId",
@@ -210,13 +236,16 @@ namespace hui_management_backend.Infrastructure.Migrations
                 name: "Contributors");
 
             migrationBuilder.DropTable(
-                name: "FundSession");
+                name: "FundSessionDetail");
 
             migrationBuilder.DropTable(
                 name: "ToDoItems");
 
             migrationBuilder.DropTable(
                 name: "FundMember");
+
+            migrationBuilder.DropTable(
+                name: "FundSession");
 
             migrationBuilder.DropTable(
                 name: "Projects");

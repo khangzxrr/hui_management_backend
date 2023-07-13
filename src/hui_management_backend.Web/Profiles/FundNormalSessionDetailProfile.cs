@@ -4,12 +4,12 @@ using hui_management_backend.Web.Endpoints.FundEndpoints;
 
 namespace hui_management_backend.Web.Profiles;
 
-public class FundSessionDetailProfile : Profile
+public class FundNormalSessionDetailProfile : Profile
 {
-  public FundSessionDetailProfile()
+  public FundNormalSessionDetailProfile()
   {
     AllowNullCollections = false;
 
-    CreateMap<FundSessionDetail, FundSessionDetailRecord>();
+    CreateMap<NormalSessionDetail, FundNormalSessionDetailRecord>();
   }
 }

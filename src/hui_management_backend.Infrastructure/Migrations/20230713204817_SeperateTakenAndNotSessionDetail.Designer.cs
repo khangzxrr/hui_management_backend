@@ -12,8 +12,8 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230713095611_addisTaken")]
-    partial class addisTaken
+    [Migration("20230713204817_SeperateTakenAndNotSessionDetail")]
+    partial class SeperateTakenAndNotSessionDetail
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,7 +119,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<int?>("FundId")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("TakenDate")
+                    b.Property<DateTimeOffset>("takenDate")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
@@ -129,7 +129,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.ToTable("FundSession");
                 });
 
-            modelBuilder.Entity("hui_management_backend.Core.FundAggregate.FundSessionDetail", b =>
+            modelBuilder.Entity("hui_management_backend.Core.FundAggregate.NormalSessionDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -140,22 +140,10 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<int?>("FundSessionId")
                         .HasColumnType("int");
 
-                    b.Property<double>("fundAmount")
-                        .HasColumnType("float");
-
                     b.Property<int>("fundMemberId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("isTaken")
-                        .HasColumnType("bit");
-
-                    b.Property<double>("ownerCost")
-                        .HasColumnType("float");
-
-                    b.Property<double>("predictedPrice")
-                        .HasColumnType("float");
-
-                    b.Property<double>("remainPrice")
+                    b.Property<double>("payCost")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
@@ -164,7 +152,43 @@ namespace hui_management_backend.Infrastructure.Migrations
 
                     b.HasIndex("fundMemberId");
 
-                    b.ToTable("FundSessionDetail");
+                    b.ToTable("NormalSessionDetail");
+                });
+
+            modelBuilder.Entity("hui_management_backend.Core.FundAggregate.TakenSessionDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("fundAmount")
+                        .HasColumnType("float");
+
+                    b.Property<int>("fundMemberId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("predictedPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("remainPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("serviceCost")
+                        .HasColumnType("float");
+
+                    b.Property<int>("sessionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("fundMemberId");
+
+                    b.HasIndex("sessionId")
+                        .IsUnique();
+
+                    b.ToTable("TakenSessionDetail");
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.Project", b =>
@@ -306,16 +330,34 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("hui_management_backend.Core.FundAggregate.FundSessionDetail", b =>
+            modelBuilder.Entity("hui_management_backend.Core.FundAggregate.NormalSessionDetail", b =>
                 {
                     b.HasOne("hui_management_backend.Core.FundAggregate.FundSession", null)
-                        .WithMany("FundSessionDetails")
-                        .HasForeignKey("FundSessionId");
+                        .WithMany("normalSessionDetails")
+                        .HasForeignKey("FundSessionId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.FundMember", "fundMember")
                         .WithMany()
                         .HasForeignKey("fundMemberId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("fundMember");
+                });
+
+            modelBuilder.Entity("hui_management_backend.Core.FundAggregate.TakenSessionDetail", b =>
+                {
+                    b.HasOne("hui_management_backend.Core.FundAggregate.FundMember", "fundMember")
+                        .WithMany()
+                        .HasForeignKey("fundMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("hui_management_backend.Core.FundAggregate.FundSession", null)
+                        .WithOne("takenSessionDetail")
+                        .HasForeignKey("hui_management_backend.Core.FundAggregate.TakenSessionDetail", "sessionId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("fundMember");
@@ -337,7 +379,10 @@ namespace hui_management_backend.Infrastructure.Migrations
 
             modelBuilder.Entity("hui_management_backend.Core.FundAggregate.FundSession", b =>
                 {
-                    b.Navigation("FundSessionDetails");
+                    b.Navigation("normalSessionDetails");
+
+                    b.Navigation("takenSessionDetail")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.Project", b =>

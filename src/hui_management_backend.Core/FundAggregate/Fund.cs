@@ -85,4 +85,10 @@ public class Fund : EntityBase, IAggregateRoot
   {
     ServiceCost = Guard.Against.NegativeOrZero(serviceCost);
   }
+
+  public void AddSession(FundSession session)
+  {
+    Guard.Against.Null(session);
+    _sessions.Add(session);
+  }
 }

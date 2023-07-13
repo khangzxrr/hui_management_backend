@@ -11,7 +11,10 @@ public class FundDetailByIdAndOwnerIdSpec : Specification<Fund>, ISingleResultSp
      .Include(f => f.Members)
       .ThenInclude(m => m.User)
      .Include(f => f.Sessions)
-      .ThenInclude(s => s.FundSessionDetails)
+      .ThenInclude(s => s.takenSessionDetail)
+        .ThenInclude(ts => ts.fundMember)
+     .Include(f => f.Sessions)
+      .ThenInclude(s => s.normalSessionDetails)
      .Where(f => f.Owner.Id == ownerId && f.Id == fundId);
   }
 }

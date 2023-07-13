@@ -1,11 +1,33 @@
-﻿using hui_management_backend.SharedKernel;
+﻿using Ardalis.GuardClauses;
+using hui_management_backend.SharedKernel;
 
 namespace hui_management_backend.Core.FundAggregate;
 public class FundSession : EntityBase
 {
-  public DateTimeOffset TakenDate { get; private set; }
-  
-  public readonly List<FundSessionDetail> _fundSessionDetails = new List<FundSessionDetail>();
+  public DateTimeOffset takenDate { get; private set; } 
 
-  public IEnumerable<FundSessionDetail> FundSessionDetails => _fundSessionDetails.AsReadOnly();
+  public TakenSessionDetail takenSessionDetail { get; private set; } = null!;
+
+  private List<NormalSessionDetail> _normalSessionDetails = new List<NormalSessionDetail>();
+
+  public IEnumerable<NormalSessionDetail> normalSessionDetails => _normalSessionDetails.AsReadOnly();
+  
+  public FundSession()
+  {
+    takenDate = DateTimeOffset.Now;
+
+  }
+
+  public void SetTakenSessionDetail(TakenSessionDetail detail)
+  {
+    takenSessionDetail = Guard.Against.Null(detail);
+  }
+
+  public void AddNormalSessionDetail(NormalSessionDetail detail)
+  {
+    Guard.Against.Null(detail);
+
+    _normalSessionDetails.Add(detail);
+  }
+
 }

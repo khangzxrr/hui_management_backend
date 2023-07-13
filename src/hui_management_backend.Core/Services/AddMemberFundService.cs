@@ -44,6 +44,7 @@ public class AddMemberFundService : IAddMemberFundService
     var fundMember = new FundMember
     {
       NickName = $"{user.Name}-{totalExistFundMember + 1}",
+
       User = user,
     };
 

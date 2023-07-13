@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hui_management_backend.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230713095611_addisTaken")]
+    partial class addisTaken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,13 +149,13 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<bool>("isTaken")
                         .HasColumnType("bit");
 
+                    b.Property<double>("ownerCost")
+                        .HasColumnType("float");
+
                     b.Property<double>("predictedPrice")
                         .HasColumnType("float");
 
                     b.Property<double>("remainPrice")
-                        .HasColumnType("float");
-
-                    b.Property<double>("serviceCost")
                         .HasColumnType("float");
 
                     b.HasKey("Id");

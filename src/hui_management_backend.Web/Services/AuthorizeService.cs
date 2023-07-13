@@ -3,12 +3,12 @@ using hui_management_backend.Web.Jwts;
 
 namespace hui_management_backend.Web.Services;
 
-public class AuthoirzeService : IAuthorizeService
+public class AuthorizeService : IAuthorizeService
 {
 
   private readonly IHttpContextAccessor _contextAccessor;
 
-  public AuthoirzeService(IHttpContextAccessor contextAccessor)
+  public AuthorizeService(IHttpContextAccessor contextAccessor)
   {
     _contextAccessor = contextAccessor;
   }

@@ -20,5 +20,8 @@ public class DefaultCoreModule : Module
 
     builder.RegisterType<AddMemberFundService>()
         .As<IAddMemberFundService>().InstancePerLifetimeScope();
+
+    builder.RegisterType<RemoveMemberFundService>()
+        .As<IRemoveMemberFundService>().InstancePerLifetimeScope();
   }
 }

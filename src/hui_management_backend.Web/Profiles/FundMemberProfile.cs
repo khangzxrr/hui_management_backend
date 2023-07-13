@@ -1,20 +1,15 @@
 ﻿using AutoMapper;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Web.Endpoints.FundEndpoints;
+using hui_management_backend.Web.Endpoints.UserEndpoints;
 
 namespace hui_management_backend.Web.Profiles;
 
-public class FundProfile : Profile
+public class FundMemberProfile : Profile
 {
-  public FundProfile()
+  public FundMemberProfile()
   {
-
-    AllowNullCollections = false;
-
-    CreateMap<Fund, FundRecord>();
-
-    CreateMap<Fund, GeneralFundRecord>();
-
-
+    CreateMap<FundMember, FundMemberRecord>();
+      
   }
 }

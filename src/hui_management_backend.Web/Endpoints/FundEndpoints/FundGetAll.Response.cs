@@ -2,9 +2,9 @@
 
 public class FundGetAllResponse
 {
-  public IEnumerable<FundRecord> funds { get; set; }
+  public IEnumerable<GeneralFundRecord> funds { get; set; }
 
-  public FundGetAllResponse(IEnumerable<FundRecord> funds)
+  public FundGetAllResponse(IEnumerable<GeneralFundRecord> funds)
   {
     this.funds = funds;
   }

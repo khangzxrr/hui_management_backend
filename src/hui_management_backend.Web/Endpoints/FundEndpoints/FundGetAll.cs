@@ -41,7 +41,7 @@ public class FundGetAll : EndpointBaseAsync
     var spec = new FundsByOwnerIdSpec(_authorizeService.UserId);
     var funds = await _fundRepository.ListAsync(spec);
 
-    var fundRecords = funds.Select(_mapper.Map<FundRecord>); 
+    var fundRecords = funds.Select(_mapper.Map<GeneralFundRecord>); 
 
     var response = new FundGetAllResponse(fundRecords);
 

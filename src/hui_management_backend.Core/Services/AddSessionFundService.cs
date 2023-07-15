@@ -41,7 +41,9 @@ public class AddSessionFundService : IAddSessionFundService
       return Result<bool>.Error(ResponseMessageConstants.FundMemberAlreadyTakenFund);
     }
 
-    var newSession = new FundSession();
+    var sessionNumber = fund.Sessions.Count() + 1;
+
+    var newSession = new FundSession(sessionNumber);
 
     double normalMemberPayCost = fund.FundPrice - predictedPrice;
 

@@ -5,6 +5,7 @@ namespace hui_management_backend.Core.FundAggregate;
 public class FundSession : EntityBase
 {
   public DateTimeOffset takenDate { get; private set; } 
+  public int sessionNumber { get; private set; }
 
   public TakenSessionDetail takenSessionDetail { get; private set; } = null!;
 
@@ -12,10 +13,10 @@ public class FundSession : EntityBase
 
   public IEnumerable<NormalSessionDetail> normalSessionDetails => _normalSessionDetails.AsReadOnly();
   
-  public FundSession()
+  public FundSession(int sessionNumber)
   {
     takenDate = DateTimeOffset.Now;
-
+    this.sessionNumber = sessionNumber;
   }
 
   public void SetTakenSessionDetail(TakenSessionDetail detail)

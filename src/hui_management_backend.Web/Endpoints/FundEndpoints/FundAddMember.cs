@@ -1,9 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
-using hui_management_backend.Core.FundAggregate;
-using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.Core.Interfaces;
-using hui_management_backend.Core.UserAggregate;
-using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

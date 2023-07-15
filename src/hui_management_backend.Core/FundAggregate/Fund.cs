@@ -91,4 +91,11 @@ public class Fund : EntityBase, IAggregateRoot
     Guard.Against.Null(session);
     _sessions.Add(session);
   }
+
+  public void RemoveSession(FundSession session)
+  {
+    Guard.Against.Null(session);
+
+    _sessions.Remove(session);
+  }
 }

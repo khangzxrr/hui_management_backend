@@ -1,4 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
+using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +20,7 @@ public class GetAll : EndpointBaseAsync
     _userRepository = userRepository;
   }
 
-  [Authorize]
+  [Authorize(Roles = RoleNameConstants.Owner)]
   [HttpGet(GetAllRequest.Route)]
   [SwaggerOperation(
     Summary = "Get all users",

@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
+using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel.Interfaces;
@@ -29,7 +30,7 @@ public class FundCreate : EndpointBaseAsync
     _authoizeService = authorizeService;
   }
 
-  [Authorize]
+  [Authorize(Roles = RoleNameConstants.Owner)]
   [HttpPost(FundCreateRequest.Route)]
   [SwaggerOperation(
     Summary = "Fund create",

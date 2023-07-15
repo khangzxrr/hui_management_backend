@@ -5035,3 +5035,21 @@ OUTPUT INSERTED.[Id], i._Position;
 2023-07-15 22:55:35.334 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/swagger/favicon-16x16.png - - - 0 665 image/png 2.7734ms
 2023-07-15 22:55:35.389 +07:00 [INF] Request starting HTTP/1.1 GET http://localhost:57678/swagger/v1/swagger.json - -
 2023-07-15 22:55:35.474 +07:00 [INF] Request finished HTTP/1.1 GET http://localhost:57678/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 84.8228ms
+2023-07-15 23:53:40.715 +07:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2023-07-15 23:53:40.757 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2023-07-15 23:53:40.758 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2023-07-15 23:53:40.759 +07:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2023-07-15 23:53:40.771 +07:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2023-07-15 23:53:40.779 +07:00 [INF] Applying migration '20230715165332_AddPaymentType'.
+2023-07-15 23:53:40.813 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE [Payment] ADD [Type] int NOT NULL DEFAULT 0;
+2023-07-15 23:53:40.814 +07:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20230715165332_AddPaymentType', N'7.0.4');

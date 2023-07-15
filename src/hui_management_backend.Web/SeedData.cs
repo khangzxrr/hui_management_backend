@@ -11,11 +11,12 @@ public static class SeedData
   
   public static readonly Fund Fund = new Fund("Hụi ngày", "Khui vào mỗi ngày", DateTimeOffset.Now, 1500000.0, 300000.0);
 
-  public static readonly User FundOwner = new User("khangzxrr@gmail.com", "123123aaa", "võ ngọc khang", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106650", "Con của Chị Nhiễn");
+  public static readonly User FundOwner = new User("khangzxrr@gmail.com", "123123aaa", "võ ngọc khang", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106650", "Con của Chị Nhiễn", RoleName.Owner);
 
-  public static readonly User FundMember1 = new User("khang1@gmail.com", "123123aaa", "võ ngọc khang 1", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106651", "Con của Chị Nhiễn 1");
+  public static readonly User FundMember1 = new User("khang1@gmail.com", "123123aaa", "võ ngọc khang 1", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106651", "Con của Chị Nhiễn 1", RoleName.User);
 
-  public static readonly User FundMember2 = new User("khang2@gmail.com", "123123aaa", "võ ngọc khang 2", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106652", "Con của Chị Nhiễn 2");
+  public static readonly User FundMember2 = new User("khang2@gmail.com", "123123aaa", "võ ngọc khang 2", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106652", "Con của Chị Nhiễn 2", RoleName.User);
+
 
   public static void Initialize(IServiceProvider serviceProvider)
   {
@@ -41,6 +42,8 @@ public static class SeedData
     {
       return;
     }
+
+    FundOwner.AddRole(RoleName.Owner);
 
     Fund.SetOwner(FundOwner);
     dbContext.Funds.Add(Fund);

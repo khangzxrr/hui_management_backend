@@ -1,5 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
+using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.Interfaces;
+using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +23,7 @@ public class FundAddMember : EndpointBaseAsync
     _authorizeService = authorizeService;
   }
 
-  [Authorize]
+  [Authorize(Roles = RoleNameConstants.Owner)]
   [HttpGet(FundAddMemberRequest.Route)]
   [SwaggerOperation(
     Summary = "Fund add member",

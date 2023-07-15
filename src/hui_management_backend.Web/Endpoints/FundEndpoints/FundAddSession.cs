@@ -1,4 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
+using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.Interfaces;
 using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Interfaces;
@@ -21,7 +22,7 @@ public class FundAddSession : EndpointBaseAsync
     _addSessionFundService = addSessionFundService;
   }
 
-  [Authorize]
+  [Authorize(Roles = RoleNameConstants.Owner)]
   [HttpPost(FundAddSessionRequest.Route)]
   [SwaggerOperation(
     Summary = "Fund create session",

@@ -15,7 +15,9 @@ public class User : EntityBase, IAggregateRoot
 
   public string Password { get; private set; }
 
-  public User(string email, string password, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo)
+  public RoleName Role { get; private set; }
+
+  public User(string email, string password, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, RoleName role)
   {
     Email = Guard.Against.NullOrEmpty(email);
     Password = Guard.Against.NullOrEmpty(password);
@@ -25,6 +27,13 @@ public class User : EntityBase, IAggregateRoot
     BankNumber = Guard.Against.NullOrEmpty(bankNumber);
     PhoneNumber = Guard.Against.NullOrEmpty(phoneNumber);
     AdditionalInfo = Guard.Against.Null(additionalInfo);
+
+    Role = Guard.Against.Null(role);
+  }
+
+  public void AddRole(RoleName role)
+  {
+    _roles.Add(Guard.Against.Null(role));
   }
 
   public void UpdateEmail(string email)

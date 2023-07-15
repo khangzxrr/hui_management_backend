@@ -17,6 +17,12 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
       .HasConversion(
         p => p.Value,
         v => PaymentStatus.FromValue(v))
-      .HasDefaultValue(PaymentStatus.Processing);
+      .HasDefaultValue(PaymentStatus.Processing)
+      .IsRequired();
+
+    builder.Property(p => p.Type)
+      .HasConversion(pt => pt.Value,v => PaymentType.FromValue(v))
+      .HasDefaultValue(PaymentType.TransferToOwner)
+      .IsRequired();
   }
 }

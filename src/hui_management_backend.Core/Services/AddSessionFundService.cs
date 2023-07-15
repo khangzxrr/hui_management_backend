@@ -1,19 +1,22 @@
 ﻿
 using Ardalis.Result;
 using hui_management_backend.Core.FundAggregate;
+using hui_management_backend.Core.FundAggregate.Events;
 using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.Core.Interfaces;
 using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Constants;
+using MediatR;
 
 namespace hui_management_backend.Core.Services;
 public class AddSessionFundService : IAddSessionFundService
 {
   private readonly IRepository<Fund> _fundRepository;
-
-  public AddSessionFundService(IRepository<Fund> fundRepository)
+  private readonly IMediator _mediator;
+  public AddSessionFundService(IRepository<Fund> fundRepository, IMediator mediator)
   {
     _fundRepository = fundRepository;
+    _mediator = mediator;
   }
 
   public async Task<Result<bool>> AddSession(int fundId, int ownerId, int memberId, double predictedPrice)
@@ -74,6 +77,9 @@ public class AddSessionFundService : IAddSessionFundService
 
     await _fundRepository.UpdateAsync(fund);
     await _fundRepository.SaveChangesAsync();
+
+    var domainEvent = new NewFundSessionAddedEvent(newSession);
+    await _mediator.Publish(domainEvent);
 
     return new Result<bool>(true);
   }

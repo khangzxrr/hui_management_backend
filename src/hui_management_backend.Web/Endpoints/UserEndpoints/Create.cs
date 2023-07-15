@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
+using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +23,7 @@ public class Create : EndpointBaseAsync
     _mapper = mapper;
   }
 
-  [Authorize]
+  [Authorize(Roles = RoleNameConstants.Owner)]
   [HttpPost(CreateRequest.Route)]
   [SwaggerOperation(
     Summary = "Create new user",

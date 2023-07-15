@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
+using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +24,7 @@ public class Update : EndpointBaseAsync
     _mapper = mapper;
   }
 
-  [Authorize]
+  [Authorize(Roles = RoleNameConstants.Owner)]
   [HttpPut(UpdateRequest.Route)]
   [SwaggerOperation(
     Summary = "Update a user",

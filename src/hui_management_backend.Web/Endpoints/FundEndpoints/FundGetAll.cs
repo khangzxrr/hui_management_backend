@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
+using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
@@ -27,7 +28,7 @@ public class FundGetAll : EndpointBaseAsync
     _authorizeService = authorizeService;
   }
 
-  [Authorize]
+  [Authorize(Roles = RoleNameConstants.Owner)]
   [HttpGet(FundGetAllRequest.Route)]
   [SwaggerOperation(
     Summary = "Get all funds of owner",

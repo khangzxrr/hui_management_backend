@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Ardalis.ApiEndpoints;
+﻿using Ardalis.ApiEndpoints;
+using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
@@ -25,7 +25,7 @@ public class FundRemoveSession : EndpointBaseAsync
     _fundRepository = fundRepository;
   }
 
-  [Authorize]
+  [Authorize(Roles = RoleNameConstants.Owner)]
   [HttpDelete(FundRemoveSessionRequest.Route)]
   [SwaggerOperation(
     Summary = "Fund remove session",

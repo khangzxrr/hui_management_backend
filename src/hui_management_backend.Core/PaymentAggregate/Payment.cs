@@ -6,14 +6,15 @@ using hui_management_backend.SharedKernel.Interfaces;
 namespace hui_management_backend.Core.PaymentAggregate;
 public class Payment : EntityBase, IAggregateRoot
 {
-  public User Owner { get; private set;  } = null!;
+  public required User Owner { get; set;  } 
   public int OwnerId { get;  }
-  public DateTimeOffset CreateAt { get; }
+  public required DateTimeOffset CreateAt { get; set; }
 
-  public double Amount { get; }
+  public required double Amount { get; set; }
   public double Remain => _paymentTransactions.Sum(pt => pt.Amount) - Amount;
 
-  public PaymentStatus Status { get; private set; } = null!;
+  public required PaymentType Type { get; set; }
+  public required PaymentStatus Status { get; set; } 
 
   private readonly List<PaymentTransaction> _paymentTransactions = new List<PaymentTransaction>();
   public IEnumerable<PaymentTransaction> PaymentTransactions => _paymentTransactions.AsReadOnly();

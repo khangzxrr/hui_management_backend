@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
+using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.Core.UserAggregate;
@@ -29,7 +30,7 @@ public class FundUpdate : EndpointBaseAsync
     _mapper = mapper;
   }
 
-  [Authorize]
+  [Authorize(Roles = RoleNameConstants.Owner)]
   [HttpPut(FundUpdateRequest.Route)]
   [SwaggerOperation(
     Summary = "Update fund",

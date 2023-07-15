@@ -1,4 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
+using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
@@ -25,7 +26,7 @@ public class FundSetArchive : EndpointBaseAsync
   }
 
 
-  [Authorize]
+  [Authorize(Roles = RoleNameConstants.Owner)]
   [HttpGet(FundSetArchiveRequest.Route)]
   [SwaggerOperation(
     Summary = "set archived",

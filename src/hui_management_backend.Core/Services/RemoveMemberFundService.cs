@@ -30,6 +30,11 @@ public class RemoveMemberFundService : IRemoveMemberFundService
     }
 
 
+    if (fund.Sessions.Any()) {
+      return Result<bool>.Error(ResponseMessageConstants.FundIsStarted);
+    }
+
+
     var fundMember = fund.Members.Where(m => m.Id == memberId).FirstOrDefault();
 
     if (fundMember == null)

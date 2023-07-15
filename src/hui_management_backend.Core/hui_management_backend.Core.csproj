@@ -19,4 +19,8 @@
     <ProjectReference Include="..\hui_management_backend.SharedKernel\hui_management_backend.SharedKernel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="PaymentAggregate\Handlers\" />
+  </ItemGroup>
+
 </Project>

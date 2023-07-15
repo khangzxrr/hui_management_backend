@@ -191,6 +191,60 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.ToTable("TakenSessionDetail");
                 });
 
+            modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Payment");
+                });
+
+            modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.PaymentTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<DateTimeOffset>("CreateAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Method")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PaymentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaymentId");
+
+                    b.ToTable("PaymentTransaction");
+                });
+
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -363,6 +417,25 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Navigation("fundMember");
                 });
 
+            modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.Payment", b =>
+                {
+                    b.HasOne("hui_management_backend.Core.UserAggregate.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.PaymentTransaction", b =>
+                {
+                    b.HasOne("hui_management_backend.Core.PaymentAggregate.Payment", null)
+                        .WithMany("PaymentTransactions")
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.ToDoItem", b =>
                 {
                     b.HasOne("hui_management_backend.Core.ProjectAggregate.Project", null)
@@ -383,6 +456,11 @@ namespace hui_management_backend.Infrastructure.Migrations
 
                     b.Navigation("takenSessionDetail")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.Payment", b =>
+                {
+                    b.Navigation("PaymentTransactions");
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.Project", b =>

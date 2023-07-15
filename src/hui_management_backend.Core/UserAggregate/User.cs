@@ -29,12 +29,7 @@ public class User : EntityBase, IAggregateRoot
     AdditionalInfo = Guard.Against.Null(additionalInfo);
 
     Role = Guard.Against.Null(role);
-  }
-
-  public void AddRole(RoleName role)
-  {
-    _roles.Add(Guard.Against.Null(role));
-  }
+  } 
 
   public void UpdateEmail(string email)
   {

@@ -43,7 +43,6 @@ public static class SeedData
       return;
     }
 
-    FundOwner.AddRole(RoleName.Owner);
 
     Fund.SetOwner(FundOwner);
     dbContext.Funds.Add(Fund);

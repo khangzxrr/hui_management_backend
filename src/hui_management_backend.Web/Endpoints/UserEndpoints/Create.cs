@@ -34,7 +34,7 @@ public class Create : EndpointBaseAsync
   ]
   public override async Task<ActionResult<CreateResponse>> HandleAsync([FromBody] CreateRequest request, CancellationToken cancellationToken = default)
   {
-    var user = new User(request.email, request.password, request.name, request.address, request.bankname, request.banknumber, request.phonenumber, request.additionalInfo);
+    var user = new User(request.email, request.password, request.name, request.address, request.bankname, request.banknumber, request.phonenumber, request.additionalInfo, RoleName.User);
 
     await _userRepository.AddAsync(user);
 

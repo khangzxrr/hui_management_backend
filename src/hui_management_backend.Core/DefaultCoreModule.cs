@@ -29,5 +29,6 @@ public class DefaultCoreModule : Module
 
     builder.RegisterType<GetPaymentService>()
         .As<IGetPaymentService>().InstancePerLifetimeScope();
+
   }
 }

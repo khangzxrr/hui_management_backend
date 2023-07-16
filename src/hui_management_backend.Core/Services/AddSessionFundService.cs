@@ -11,16 +11,21 @@ using MediatR;
 namespace hui_management_backend.Core.Services;
 public class AddSessionFundService : IAddSessionFundService
 {
+
+  private readonly IUnitOfWork _unitOfWork;
   private readonly IRepository<Fund> _fundRepository;
   private readonly IMediator _mediator;
-  public AddSessionFundService(IRepository<Fund> fundRepository, IMediator mediator)
+  public AddSessionFundService(IRepository<Fund> fundRepository, IMediator mediator, IUnitOfWork unitOfWork)
   {
     _fundRepository = fundRepository;
     _mediator = mediator;
+    _unitOfWork = unitOfWork;
   }
 
   public async Task<Result<bool>> AddSession(int fundId, int ownerId, int memberId, double predictedPrice)
   {
+    _unitOfWork.BeginTransaction();
+
     var spec = new FundDetailByIdAndOwnerIdSpec(fundId, ownerId);
     var fund = await _fundRepository.FirstOrDefaultAsync(spec);
 
@@ -81,11 +86,10 @@ public class AddSessionFundService : IAddSessionFundService
 
     fund.AddSession(newSession);
 
-    await _fundRepository.UpdateAsync(fund);
-    await _fundRepository.SaveChangesAsync();
-
     var domainEvent = new NewFundSessionAddedEvent(fund, newSession);
     await _mediator.Publish(domainEvent);
+
+    await  _unitOfWork.SaveAndCommitAsync();
 
     return new Result<bool>(true);
   }

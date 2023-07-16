@@ -13,7 +13,7 @@ public class NewFundSessionAddedHandler : INotificationHandler<NewFundSessionAdd
 
   private readonly IRepository<Payment> _paymentRepository;
   private readonly IGetPaymentService _getPaymentService;
-
+  
   public NewFundSessionAddedHandler(IRepository<Payment> repository, IGetPaymentService getPaymentService)
   {
     _paymentRepository = repository;
@@ -55,7 +55,5 @@ public class NewFundSessionAddedHandler : INotificationHandler<NewFundSessionAdd
     await _paymentRepository.UpdateAsync(takenPayment);
     await _paymentRepository.UpdateRangeAsync(normalPayments);
 
-
-    await _paymentRepository.SaveChangesAsync();
   }
 }

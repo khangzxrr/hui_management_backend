@@ -10,8 +10,8 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
   {
     builder.HasOne(b => b.Owner).WithMany().HasForeignKey(b => b.OwnerId).OnDelete(DeleteBehavior.Cascade);
 
-    builder.HasMany(p => p.PaymentTransactions).WithOne().OnDelete(DeleteBehavior.Cascade);
-    builder.HasMany(p => p.Bills).WithOne().OnDelete(DeleteBehavior.Cascade);
+    builder.HasMany(p => p.paymentTransactions).WithOne().OnDelete(DeleteBehavior.Cascade);
+    builder.HasMany(p => p.fundBills).WithOne().OnDelete(DeleteBehavior.Cascade);
 
     builder.Property(p => p.Status)
       .HasConversion(

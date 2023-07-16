@@ -17,17 +17,17 @@ public class Payment : EntityBase, IAggregateRoot
   public required PaymentStatus Status { get; set; } 
 
 
-  private readonly List<FundBill> _paymentBills = new List<FundBill>();
-  public IEnumerable<FundBill>  Bills => _paymentBills.AsReadOnly();
+  private readonly List<FundBill> _fundBills = new List<FundBill>();
+  public IEnumerable<FundBill>  fundBills => _fundBills.AsReadOnly();
 
 
   private readonly List<PaymentTransaction> _paymentTransactions = new List<PaymentTransaction>();
-  public IEnumerable<PaymentTransaction> PaymentTransactions => _paymentTransactions.AsReadOnly();
+  public IEnumerable<PaymentTransaction> paymentTransactions => _paymentTransactions.AsReadOnly();
 
   public void AddBill(FundBill bill)
   {
     Guard.Against.Null(bill);
-    _paymentBills.Add(bill);
+    _fundBills.Add(bill);
   }
 
 

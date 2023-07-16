@@ -10,4 +10,6 @@ public class ResponseMessageConstants
   public const string FundMemberAlreadyTakenFund = "FUND_MEMBER_ALREADY_TAKEN_FUND";
 
   public const string FundIsStarted = "FUND_IS_STARTED";
+
+  public const string FundNotContainUser = "FUND_NOT_CONTAIN_USER";
 }

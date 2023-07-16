@@ -12,7 +12,7 @@ public class Payment : EntityBase, IAggregateRoot
   public int OwnerId { get;  }
   public required DateTimeOffset CreateAt { get; set; }
 
-  public double Remain => _paymentTransactions.Sum(pt => pt.Amount);
+  public double TotalCost => _fundBills.Sum(fb => (fb.Type == PaymentType.TransferToOwner) ? fb.Amount : -fb.Amount);
 
   public required PaymentStatus Status { get; set; } 
 

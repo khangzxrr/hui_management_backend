@@ -26,5 +26,8 @@ public class DefaultCoreModule : Module
 
     builder.RegisterType<AddSessionFundService>()
         .As<IAddSessionFundService>().InstancePerLifetimeScope();
+
+    builder.RegisterType<GetPaymentService>()
+        .As<IGetPaymentService>().InstancePerLifetimeScope();
   }
 }

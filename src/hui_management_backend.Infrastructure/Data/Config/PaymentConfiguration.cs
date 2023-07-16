@@ -8,10 +8,10 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
 {
   public void Configure(EntityTypeBuilder<Payment> builder)
   {
-
-    builder.HasOne(p => p.Owner).WithMany().OnDelete(DeleteBehavior.Cascade).HasForeignKey(p => p.OwnerId);
+    builder.HasOne(b => b.Owner).WithMany().HasForeignKey(b => b.OwnerId).OnDelete(DeleteBehavior.Cascade);
 
     builder.HasMany(p => p.PaymentTransactions).WithOne().OnDelete(DeleteBehavior.Cascade);
+    builder.HasMany(p => p.Bills).WithOne().OnDelete(DeleteBehavior.Cascade);
 
     builder.Property(p => p.Status)
       .HasConversion(
@@ -20,9 +20,8 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
       .HasDefaultValue(PaymentStatus.Processing)
       .IsRequired();
 
-    builder.Property(p => p.Type)
-      .HasConversion(pt => pt.Value,v => PaymentType.FromValue(v))
-      .HasDefaultValue(PaymentType.TransferToOwner)
-      .IsRequired();
+    builder.HasIndex(p => p.CreateAt)
+      .IsUnique();
+   
   }
 }

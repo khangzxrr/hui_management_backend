@@ -46,7 +46,7 @@ public class AddSessionFundService : IAddSessionFundService
 
     var sessionNumber = fund.Sessions.Count() + 1;
 
-    var newSession = new FundSession(sessionNumber);
+   
 
     double normalMemberPayCost = fund.FundPrice - predictedPrice;
 
@@ -57,7 +57,13 @@ public class AddSessionFundService : IAddSessionFundService
     var takenSessionDetail = new TakenSessionDetail(predictedPrice, fundAmount, remainCost, fund.ServiceCost);
     takenSessionDetail.SetFundMember(fundMember);
 
-    newSession.SetTakenSessionDetail(takenSessionDetail);
+
+    var newSession = new FundSession
+    {
+      sessionNumber = sessionNumber,
+      takenDate = DateTimeOffset.UtcNow,
+      takenSessionDetail = takenSessionDetail
+    };
 
 
     foreach (FundMember member in fund.Members)
@@ -78,7 +84,7 @@ public class AddSessionFundService : IAddSessionFundService
     await _fundRepository.UpdateAsync(fund);
     await _fundRepository.SaveChangesAsync();
 
-    var domainEvent = new NewFundSessionAddedEvent(newSession);
+    var domainEvent = new NewFundSessionAddedEvent(fund, newSession);
     await _mediator.Publish(domainEvent);
 
     return new Result<bool>(true);

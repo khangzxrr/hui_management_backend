@@ -4,20 +4,18 @@ using hui_management_backend.SharedKernel;
 namespace hui_management_backend.Core.FundAggregate;
 public class FundSession : EntityBase
 {
-  public DateTimeOffset takenDate { get; private set; } 
-  public int sessionNumber { get; private set; }
+  public required DateTimeOffset takenDate { get; set; } 
+  public required int sessionNumber { get; set; }
 
-  public TakenSessionDetail takenSessionDetail { get; private set; } = null!;
+  public required TakenSessionDetail takenSessionDetail { get; set; }
 
-  private List<NormalSessionDetail> _normalSessionDetails = new List<NormalSessionDetail>();
+
+  private readonly List<NormalSessionDetail> _normalSessionDetails = new List<NormalSessionDetail>();
 
   public IEnumerable<NormalSessionDetail> normalSessionDetails => _normalSessionDetails.AsReadOnly();
+
   
-  public FundSession(int sessionNumber)
-  {
-    takenDate = DateTimeOffset.Now;
-    this.sessionNumber = sessionNumber;
-  }
+  
 
   public void SetTakenSessionDetail(TakenSessionDetail detail)
   {

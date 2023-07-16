@@ -2,6 +2,8 @@
 
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Events;
+using hui_management_backend.Core.Interfaces;
+using hui_management_backend.Core.PaymentAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
 using MediatR;
 
@@ -9,47 +11,51 @@ namespace hui_management_backend.Core.PaymentAggregate.Handlers;
 public class NewFundSessionAddedHandler : INotificationHandler<NewFundSessionAddedEvent>
 {
 
-  private readonly IRepository<Payment> _repository;
+  private readonly IRepository<Payment> _paymentRepository;
+  private readonly IGetPaymentService _getPaymentService;
 
-  public NewFundSessionAddedHandler(IRepository<Payment> repository)
+  public NewFundSessionAddedHandler(IRepository<Payment> repository, IGetPaymentService getPaymentService)
   {
-    _repository = repository;
+    _paymentRepository = repository;
+    _getPaymentService = getPaymentService;
   }
 
   public async Task Handle(NewFundSessionAddedEvent notification, CancellationToken cancellationToken)
   {
 
-    List<Payment> newPayments = new();
+    var takenPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTimeOffset.Now, notification.fundSession.takenSessionDetail.fundMember.User);
 
-    var takenPayment = new Payment
+    var takenBill = new FundBill
     {
-      Owner = notification.fundSession.takenSessionDetail.fundMember.User,
-      Status = PaymentStatus.Processing,
-      Type = PaymentType.TransferToMember,
       Amount = notification.fundSession.takenSessionDetail.remainPrice,
-      CreateAt = DateTimeOffset.UtcNow
+      fromFund = notification.fund,
+      Status = PaymentStatus.Processing,
+      Type = PaymentType.TransferToMember
     };
 
-    newPayments.Add(takenPayment);
+    takenPayment.AddBill(takenBill);
+
+    List<Payment> normalPayments = new();
      
     foreach(NormalSessionDetail normalSessionDetail in notification.fundSession.normalSessionDetails)
     {
-      var toOwnerPayment = new Payment
+      var normalPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTimeOffset.Now, normalSessionDetail.fundMember.User);
+
+      normalPayment.AddBill(new FundBill
       {
         Amount = normalSessionDetail.payCost,
-        CreateAt = DateTimeOffset.UtcNow,
-        Owner = normalSessionDetail.fundMember.User,
-        Status = PaymentStatus.Processing,
-        Type = PaymentType.TransferToOwner,
-      };
+        fromFund = notification.fund,
+        Status= PaymentStatus.Processing,
+        Type= PaymentType.TransferToOwner
+      });
 
-      newPayments.Add(toOwnerPayment);
+      normalPayments.Add(normalPayment);
     }
 
+    await _paymentRepository.UpdateAsync(takenPayment);
+    await _paymentRepository.UpdateRangeAsync(normalPayments);
 
-    await _repository.AddRangeAsync(newPayments);
-    await _repository.SaveChangesAsync();
 
-
+    await _paymentRepository.SaveChangesAsync();
   }
 }

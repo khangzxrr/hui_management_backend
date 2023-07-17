@@ -10,9 +10,7 @@ public class PaymentProfile : Profile
   {
     AllowNullCollections = false;
 
-    CreateMap<FundBill, FundBillRecord>()
-      .ForMember(r => r.status, opt => opt.MapFrom(s => s.Status.Name))
-      .ForMember(r => r.type, opt => opt.MapFrom(s => s.Type.Name));
+    CreateMap<FundBill, FundBillRecord>();
 
     CreateMap<PaymentTransaction, PaymentTransactionRecord>()
        .ForMember(r => r.method, opt => opt.MapFrom(s => s.Method.Name));

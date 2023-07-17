@@ -3,7 +3,6 @@
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Events;
 using hui_management_backend.Core.Interfaces;
-using hui_management_backend.Core.PaymentAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
 using MediatR;
 
@@ -23,36 +22,38 @@ public class NewFundSessionAddedHandler : INotificationHandler<NewFundSessionAdd
   public async Task Handle(NewFundSessionAddedEvent notification, CancellationToken cancellationToken)
   {
 
-    var takenPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTimeOffset.Now, notification.fundSession.takenSessionDetail.fundMember.User);
-
-    var takenBill = new FundBill
-    {
-      Amount = notification.fundSession.takenSessionDetail.remainPrice,
-      fromFund = notification.fund,
-      Status = PaymentStatus.Processing,
-      Type = PaymentType.TransferToMember
-    };
-
-    takenPayment.AddBill(takenBill);
-
     List<Payment> normalPayments = new();
      
     foreach(NormalSessionDetail normalSessionDetail in notification.fundSession.normalSessionDetails)
     {
       var normalPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTimeOffset.Now, normalSessionDetail.fundMember.User);
 
+      PaymentType paymentType;
+
+      if (normalSessionDetail.type == NormalSessionType.Alive)
+      {
+        paymentType = PaymentType.AliveFundSession;
+      }
+      else if (normalSessionDetail.type == NormalSessionType.Dead)
+      {
+        paymentType = PaymentType.DeadFundSession;
+      }
+      else
+      {
+        paymentType = PaymentType.TakenFundSession;
+      }
+
+
       normalPayment.AddBill(new FundBill
       {
-        Amount = normalSessionDetail.payCost,
-        fromFund = notification.fund,
-        Status= PaymentStatus.Processing,
-        Type= PaymentType.TransferToOwner
+        fromSession = notification.fundSession,
+        fromSessionDetail = normalSessionDetail,
+        fromFund = notification.fund
       });
 
       normalPayments.Add(normalPayment);
     }
 
-    await _paymentRepository.UpdateAsync(takenPayment);
     await _paymentRepository.UpdateRangeAsync(normalPayments);
 
   }

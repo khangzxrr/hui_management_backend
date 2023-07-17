@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddFundBill2 : Migration
+    public partial class RemapFundBill : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -176,35 +176,6 @@ namespace hui_management_backend.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FundBill",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    fromFundId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<double>(type: "float", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    PaymentId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FundBill", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_FundBill_Funds_fromFundId",
-                        column: x => x.fromFundId,
-                        principalTable: "Funds",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_FundBill_Payment_PaymentId",
-                        column: x => x.PaymentId,
-                        principalTable: "Payment",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PaymentTransaction",
                 columns: table => new
                 {
@@ -233,7 +204,11 @@ namespace hui_management_backend.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    predictedPrice = table.Column<double>(type: "float", nullable: false),
+                    fundAmount = table.Column<double>(type: "float", nullable: false),
+                    serviceCost = table.Column<double>(type: "float", nullable: false),
                     payCost = table.Column<double>(type: "float", nullable: false),
+                    type = table.Column<int>(type: "int", nullable: false),
                     fundMemberId = table.Column<int>(type: "int", nullable: false),
                     FundSessionId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -255,31 +230,41 @@ namespace hui_management_backend.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TakenSessionDetail",
+                name: "FundBill",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    sessionId = table.Column<int>(type: "int", nullable: false),
-                    fundMemberId = table.Column<int>(type: "int", nullable: false),
-                    predictedPrice = table.Column<double>(type: "float", nullable: false),
-                    fundAmount = table.Column<double>(type: "float", nullable: false),
-                    remainPrice = table.Column<double>(type: "float", nullable: false),
-                    serviceCost = table.Column<double>(type: "float", nullable: false)
+                    fromFundId = table.Column<int>(type: "int", nullable: false),
+                    fromSessionId = table.Column<int>(type: "int", nullable: false),
+                    fromSessionDetailId = table.Column<int>(type: "int", nullable: false),
+                    PaymentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TakenSessionDetail", x => x.Id);
+                    table.PrimaryKey("PK_FundBill", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TakenSessionDetail_FundMember_fundMemberId",
-                        column: x => x.fundMemberId,
-                        principalTable: "FundMember",
+                        name: "FK_FundBill_FundSession_fromSessionId",
+                        column: x => x.fromSessionId,
+                        principalTable: "FundSession",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TakenSessionDetail_FundSession_sessionId",
-                        column: x => x.sessionId,
-                        principalTable: "FundSession",
+                        name: "FK_FundBill_Funds_fromFundId",
+                        column: x => x.fromFundId,
+                        principalTable: "Funds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FundBill_NormalSessionDetail_fromSessionDetailId",
+                        column: x => x.fromSessionDetailId,
+                        principalTable: "NormalSessionDetail",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FundBill_Payment_PaymentId",
+                        column: x => x.PaymentId,
+                        principalTable: "Payment",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -288,6 +273,16 @@ namespace hui_management_backend.Infrastructure.Migrations
                 name: "IX_FundBill_fromFundId",
                 table: "FundBill",
                 column: "fromFundId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FundBill_fromSessionDetailId",
+                table: "FundBill",
+                column: "fromSessionDetailId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FundBill_fromSessionId",
+                table: "FundBill",
+                column: "fromSessionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FundBill_PaymentId",
@@ -325,6 +320,12 @@ namespace hui_management_backend.Infrastructure.Migrations
                 column: "FundSessionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Payment_CreateAt",
+                table: "Payment",
+                column: "CreateAt",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Payment_OwnerId",
                 table: "Payment",
                 column: "OwnerId");
@@ -333,17 +334,6 @@ namespace hui_management_backend.Infrastructure.Migrations
                 name: "IX_PaymentTransaction_PaymentId",
                 table: "PaymentTransaction",
                 column: "PaymentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TakenSessionDetail_fundMemberId",
-                table: "TakenSessionDetail",
-                column: "fundMemberId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TakenSessionDetail_sessionId",
-                table: "TakenSessionDetail",
-                column: "sessionId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ToDoItems_ProjectId",
@@ -373,28 +363,25 @@ namespace hui_management_backend.Infrastructure.Migrations
                 name: "FundBill");
 
             migrationBuilder.DropTable(
-                name: "NormalSessionDetail");
-
-            migrationBuilder.DropTable(
                 name: "PaymentTransaction");
-
-            migrationBuilder.DropTable(
-                name: "TakenSessionDetail");
 
             migrationBuilder.DropTable(
                 name: "ToDoItems");
 
             migrationBuilder.DropTable(
+                name: "NormalSessionDetail");
+
+            migrationBuilder.DropTable(
                 name: "Payment");
+
+            migrationBuilder.DropTable(
+                name: "Projects");
 
             migrationBuilder.DropTable(
                 name: "FundMember");
 
             migrationBuilder.DropTable(
                 name: "FundSession");
-
-            migrationBuilder.DropTable(
-                name: "Projects");
 
             migrationBuilder.DropTable(
                 name: "Funds");

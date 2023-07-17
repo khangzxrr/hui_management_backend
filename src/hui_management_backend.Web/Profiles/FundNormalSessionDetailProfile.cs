@@ -10,6 +10,7 @@ public class FundNormalSessionDetailProfile : Profile
   {
     AllowNullCollections = false;
 
-    CreateMap<NormalSessionDetail, FundNormalSessionDetailRecord>();
+    CreateMap<NormalSessionDetail, FundNormalSessionDetailRecord>()
+      .ForMember(fsd => fsd.type, opt => opt.MapFrom(nsd => nsd.type.Name));
   }
 }

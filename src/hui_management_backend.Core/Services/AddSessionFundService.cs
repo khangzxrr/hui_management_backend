@@ -22,6 +22,13 @@ public class AddSessionFundService : IAddSessionFundService
     _unitOfWork = unitOfWork;
   }
 
+  private bool isMemberAlreadyTakeFund(Fund fund, FundMember fundMember) { 
+    return fund.Sessions
+      .Where(
+        session => session.normalSessionDetails.Where(nsd => nsd.type == NormalSessionType.Taken && nsd.fundMember == fundMember).Any()
+      ).Any();
+  }
+
   public async Task<Result<bool>> AddSession(int fundId, int ownerId, int memberId, double predictedPrice)
   {
     _unitOfWork.BeginTransaction();
@@ -34,51 +41,67 @@ public class AddSessionFundService : IAddSessionFundService
       return Result<bool>.NotFound(ResponseMessageConstants.FundNotFound);
     }
 
-    var fundMember = fund.Members.Where(m => m.Id == memberId).FirstOrDefault();
+    var fundTakenMember = fund.Members.Where(m => m.Id == memberId).FirstOrDefault();
 
-    if (fundMember == null)
+    if (fundTakenMember == null)
     {
       return Result<bool>.NotFound(ResponseMessageConstants.FundMemberNotFound);
     }
 
     //check if member was taken fund already
-    if (fund.Sessions
-      .Where(
-        session => session.takenSessionDetail.fundMember == fundMember).Any())
+    if (isMemberAlreadyTakeFund(fund, fundTakenMember))
     {
       return Result<bool>.Error(ResponseMessageConstants.FundMemberAlreadyTakenFund);
     }
 
     var sessionNumber = fund.Sessions.Count() + 1;
 
-   
 
-    double normalMemberPayCost = fund.FundPrice - predictedPrice;
+    int deadMemberCount = fund.Sessions.Count();
+    double deadMemberPayCost = deadMemberCount * fund.FundPrice;
 
-    double fundAmount = (fund.Members.Count() - 1) * normalMemberPayCost;
+
+    double aliveMemberPayCost = fund.FundPrice - predictedPrice;
+    //-1 skip who taken fund
+    double fundAmount = (fund.Members.Count() - deadMemberCount - 1) * aliveMemberPayCost + deadMemberPayCost;
 
     double remainCost = fundAmount - fund.ServiceCost;
-
-    var takenSessionDetail = new TakenSessionDetail(predictedPrice, fundAmount, remainCost, fund.ServiceCost);
-    takenSessionDetail.SetFundMember(fundMember);
-
 
     var newSession = new FundSession
     {
       sessionNumber = sessionNumber,
-      takenDate = DateTimeOffset.UtcNow,
-      takenSessionDetail = takenSessionDetail
+      takenDate = DateTimeOffset.UtcNow
     };
+
+
+    var takenSessionDetail = new NormalSessionDetail {
+      fundAmount = fundAmount,
+      predictedPrice = predictedPrice,
+      payCost = remainCost,
+      serviceCost = fund.ServiceCost,
+      type = NormalSessionType.Taken,
+      fundMember = fundTakenMember,
+    };
+    newSession.AddNormalSessionDetail(takenSessionDetail);
 
 
     foreach (FundMember member in fund.Members)
     {
-      if (member == fundMember) continue;
+      if (member == fundTakenMember) continue;
+
+      bool isAlreadyTaken = isMemberAlreadyTakeFund(fund, member);
 
       var normalSessionDetail = new NormalSessionDetail
       {
         fundMember = member,
-        payCost = normalMemberPayCost
+        //take full price if dead, otherwise take good price
+        payCost = isAlreadyTaken ? fund.FundPrice : aliveMemberPayCost,
+        type = isAlreadyTaken ? NormalSessionType.Dead : NormalSessionType.Alive,
+
+
+        fundAmount = 0,
+        predictedPrice = 0,
+        serviceCost = 0,
       };
 
       newSession.AddNormalSessionDetail(normalSessionDetail);

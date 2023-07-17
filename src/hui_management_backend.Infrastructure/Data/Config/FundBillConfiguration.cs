@@ -9,15 +9,7 @@ public class FundBillConfiguration : IEntityTypeConfiguration<FundBill>
   public void Configure(EntityTypeBuilder<FundBill> builder)
   {
     builder.HasOne(b => b.fromFund).WithMany().OnDelete(DeleteBehavior.Restrict);
-
-
-    builder.Property(p => p.Type)
-      .HasConversion(pt => pt.Value, v => PaymentType.FromValue(v))
-      .IsRequired();
-
-    builder.Property(p => p.Status)
-      .HasConversion(pt => pt.Value, v => PaymentStatus.FromValue(v))
-      .HasDefaultValue(PaymentStatus.Processing)
-      .IsRequired();
+    builder.HasOne(b => b.fromSessionDetail).WithMany().OnDelete(DeleteBehavior.Restrict);
+    builder.HasOne(b => b.fromSession).WithMany().OnDelete(DeleteBehavior.Cascade);
   }
 }

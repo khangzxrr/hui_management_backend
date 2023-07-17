@@ -7,7 +7,6 @@ public class FundSessionConfiguration : IEntityTypeConfiguration<FundSession>
 {
   public void Configure(EntityTypeBuilder<FundSession> builder)
   {
-    builder.HasOne(fs => fs.takenSessionDetail).WithOne().HasForeignKey<TakenSessionDetail>(tsd => tsd.sessionId).OnDelete(DeleteBehavior.Restrict);
 
     builder.HasMany(fs => fs.normalSessionDetails).WithOne().OnDelete(DeleteBehavior.Restrict);
   }

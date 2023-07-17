@@ -140,11 +140,23 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<int?>("FundSessionId")
                         .HasColumnType("int");
 
+                    b.Property<double>("fundAmount")
+                        .HasColumnType("float");
+
                     b.Property<int>("fundMemberId")
                         .HasColumnType("int");
 
                     b.Property<double>("payCost")
                         .HasColumnType("float");
+
+                    b.Property<double>("predictedPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("serviceCost")
+                        .HasColumnType("float");
+
+                    b.Property<int>("type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -155,42 +167,6 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.ToTable("NormalSessionDetail");
                 });
 
-            modelBuilder.Entity("hui_management_backend.Core.FundAggregate.TakenSessionDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("fundAmount")
-                        .HasColumnType("float");
-
-                    b.Property<int>("fundMemberId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("predictedPrice")
-                        .HasColumnType("float");
-
-                    b.Property<double>("remainPrice")
-                        .HasColumnType("float");
-
-                    b.Property<double>("serviceCost")
-                        .HasColumnType("float");
-
-                    b.Property<int>("sessionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("fundMemberId");
-
-                    b.HasIndex("sessionId")
-                        .IsUnique();
-
-                    b.ToTable("TakenSessionDetail");
-                });
-
             modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.FundBill", b =>
                 {
                     b.Property<int>("Id")
@@ -199,21 +175,16 @@ namespace hui_management_backend.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
                     b.Property<int?>("PaymentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<int>("Type")
+                    b.Property<int>("fromFundId")
                         .HasColumnType("int");
 
-                    b.Property<int>("fromFundId")
+                    b.Property<int>("fromSessionDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("fromSessionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -221,6 +192,10 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasIndex("PaymentId");
 
                     b.HasIndex("fromFundId");
+
+                    b.HasIndex("fromSessionDetailId");
+
+                    b.HasIndex("fromSessionId");
 
                     b.ToTable("FundBill");
                 });
@@ -445,29 +420,12 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Navigation("fundMember");
                 });
 
-            modelBuilder.Entity("hui_management_backend.Core.FundAggregate.TakenSessionDetail", b =>
-                {
-                    b.HasOne("hui_management_backend.Core.FundAggregate.FundMember", "fundMember")
-                        .WithMany()
-                        .HasForeignKey("fundMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("hui_management_backend.Core.FundAggregate.FundSession", null)
-                        .WithOne("takenSessionDetail")
-                        .HasForeignKey("hui_management_backend.Core.FundAggregate.TakenSessionDetail", "sessionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("fundMember");
-                });
-
             modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.FundBill", b =>
                 {
                     b.HasOne("hui_management_backend.Core.PaymentAggregate.Payment", null)
                         .WithMany("fundBills")
                         .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", "fromFund")
                         .WithMany()
@@ -475,7 +433,23 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("hui_management_backend.Core.FundAggregate.NormalSessionDetail", "fromSessionDetail")
+                        .WithMany()
+                        .HasForeignKey("fromSessionDetailId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("hui_management_backend.Core.FundAggregate.FundSession", "fromSession")
+                        .WithMany()
+                        .HasForeignKey("fromSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("fromFund");
+
+                    b.Navigation("fromSession");
+
+                    b.Navigation("fromSessionDetail");
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.Payment", b =>
@@ -514,9 +488,6 @@ namespace hui_management_backend.Infrastructure.Migrations
             modelBuilder.Entity("hui_management_backend.Core.FundAggregate.FundSession", b =>
                 {
                     b.Navigation("normalSessionDetails");
-
-                    b.Navigation("takenSessionDetail")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.Payment", b =>

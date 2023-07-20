@@ -12,4 +12,12 @@ public class ResponseMessageConstants
   public const string FundIsStarted = "FUND_IS_STARTED";
 
   public const string FundNotContainUser = "FUND_NOT_CONTAIN_USER";
+
+  public const string PaymentNotFound = "PAYMENT_NOT_FOUND";
+  public const string PaymentIsFinished = "PAYMENT_IS_FINISHED";
+  public const string PaymentIsNotBelongToUser = "PAYMENT_IS_NOT_BELONG_TO_USER";
+
+  public const string UserIsNotBelongToFundOwner = "USER_IS_NOT_BELONG_TO_FUND_OWNER";
+
+  public const string TransactionMethodCannotBeParsed = "TRANSACTION_METHOD_CANNOT_BE_PARSED";
 }

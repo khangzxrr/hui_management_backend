@@ -17,6 +17,6 @@ public class PaymentTransaction : EntityBase
     Amount = Guard.Against.Negative(amount);
     Method = Guard.Against.Null(method);
 
-    CreateAt = DateTime.UtcNow;
+    CreateAt = DateTime.Now;
   }
 }

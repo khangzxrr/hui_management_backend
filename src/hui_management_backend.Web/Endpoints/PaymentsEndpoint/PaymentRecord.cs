@@ -7,6 +7,7 @@ public record PaymentRecord(
   UserRecord owner, 
   DateTimeOffset createAt, 
   double totalCost,
+  double totalTransactionCost,
   IEnumerable<PaymentTransactionRecord> paymentTransactions, 
   IEnumerable<FundBillRecord> fundBills, 
   string Status)

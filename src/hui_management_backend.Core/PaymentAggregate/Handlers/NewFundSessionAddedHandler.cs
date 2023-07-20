@@ -28,21 +28,6 @@ public class NewFundSessionAddedHandler : INotificationHandler<NewFundSessionAdd
     {
       var normalPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTimeOffset.Now, normalSessionDetail.fundMember.User);
 
-      PaymentType paymentType;
-
-      if (normalSessionDetail.type == NormalSessionType.Alive)
-      {
-        paymentType = PaymentType.AliveFundSession;
-      }
-      else if (normalSessionDetail.type == NormalSessionType.Dead)
-      {
-        paymentType = PaymentType.DeadFundSession;
-      }
-      else
-      {
-        paymentType = PaymentType.TakenFundSession;
-      }
-
 
       normalPayment.AddBill(new FundBill
       {

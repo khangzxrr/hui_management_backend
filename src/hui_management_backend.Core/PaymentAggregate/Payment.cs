@@ -1,6 +1,7 @@
 ﻿
 using Ardalis.GuardClauses;
 using hui_management_backend.Core.FundAggregate;
+using hui_management_backend.Core.PaymentAggregate.Events;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel;
 using hui_management_backend.SharedKernel.Interfaces;
@@ -14,6 +15,8 @@ public class Payment : EntityBase, IAggregateRoot
 
   public double TotalCost => 
     _fundBills.Sum(fb => (fb.fromSessionDetail.type == NormalSessionType.Taken) ? -fb.fromSessionDetail.payCost : fb.fromSessionDetail.payCost);
+
+  public double TotalTransactionCost => _paymentTransactions.Sum(p => p.Amount);
 
   public required PaymentStatus Status { get; set; } 
 
@@ -29,6 +32,20 @@ public class Payment : EntityBase, IAggregateRoot
   {
     Guard.Against.Null(bill);
     _fundBills.Add(bill);
+  }
+
+  public void AddPaymentTransaction(PaymentTransaction transaction)
+  {
+    Guard.Against.Null(transaction);
+    _paymentTransactions.Add(transaction);
+
+    var addTransactionEvent = new AddedTransactionEvent(this);
+    RegisterDomainEvent(addTransactionEvent);
+  }
+
+  public void SetStatus(PaymentStatus status)
+  {
+    Status = Guard.Against.Null(status);  
   }
 
 

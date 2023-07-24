@@ -8,4 +8,10 @@ public class GetUserPaymentsRequest
 
   [FromRoute]
   public int userId { get; set; }
+
+  [FromQuery]
+  public DateTimeOffset? filerByDate { get; set; }
+
+  [FromQuery]
+  public bool? filterByProcessingOrDebting { get; set; }
 }

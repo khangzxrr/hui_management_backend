@@ -1,6 +1,7 @@
 ﻿using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.SharedKernel;
 using Ardalis.GuardClauses;
+using hui_management_backend.Core.PaymentAggregate;
 
 namespace hui_management_backend.Core.UserAggregate;
 public class User : EntityBase, IAggregateRoot
@@ -16,6 +17,9 @@ public class User : EntityBase, IAggregateRoot
   public string Password { get; private set; }
 
   public RoleName Role { get; private set; }
+
+  private readonly List<Payment> _payments = new();
+  public IEnumerable<Payment> Payments => _payments.AsReadOnly();
 
   public User(string email, string password, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, RoleName role)
   {

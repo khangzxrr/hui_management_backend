@@ -1,5 +1,4 @@
 ﻿
-using Ardalis.Result;
 using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.Core.PaymentAggregate.Specifications;
@@ -19,7 +18,7 @@ public class GetPaymentService : IGetPaymentService
 
   public async Task<Payment> GetPaymentByDateAndOwnerId(DateTimeOffset dateTimeOffset, User owner)
   {
-    var spec = new PaymentByDateAndOwnerId(dateTimeOffset, owner.Id);
+    var spec = new PaymentByDateAndOwnerIdAndStatusSpec(dateTimeOffset, owner.Id, PaymentStatus.Processing);
 
     var payment = await _paymentRepository.FirstOrDefaultAsync(spec);
 

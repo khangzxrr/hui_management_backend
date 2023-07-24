@@ -43,17 +43,31 @@ public class GetUserPayments : EndpointBaseAsync
   ]
   public override async Task<ActionResult> HandleAsync([FromRoute] GetUserPaymentsRequest request, CancellationToken cancellationToken = default)
   {
-    //todo map status to record
     var fundSpec = new FundsByUserIdOwnerIdSpec(request.userId, _authorizeService.UserId);
     var isExistFundContainUser = await _fundRepository.AnyAsync(fundSpec);
 
     if (!isExistFundContainUser)
     {
-      return BadRequest(ResponseMessageConstants.FundNotContainUser);
+      List<PaymentRecord> emptyRecords = new();
+      return Ok(new GetUserPaymentsResponse(emptyRecords));
     }
 
     var paymentSpec = new PaymentsByUserIdSpec(request.userId);
     var payments = await _paymentRepository.ListAsync(paymentSpec);
+
+    IEnumerable<Payment> filteredPayments = payments;
+
+    if (request.filerByDate != null)
+    {
+      filteredPayments = filteredPayments.Where(p => p.CreateAt.Date == request.filerByDate.Value.Date);
+    }
+
+    if (request.filterByProcessingOrDebting != null)
+    {
+      filteredPayments = filteredPayments.Where(p => p.Status != PaymentStatus.Finish);
+    }
+
+
 
     var paymentRecords = payments.Select(_mapper.Map<PaymentRecord>);
     var response = new GetUserPaymentsResponse(paymentRecords);

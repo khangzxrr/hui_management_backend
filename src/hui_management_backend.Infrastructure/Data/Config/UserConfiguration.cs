@@ -11,6 +11,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     builder.HasIndex(u => u.Email).IsUnique(); 
     builder.HasIndex(u => u.PhoneNumber).IsUnique();
 
+    builder.HasMany(u => u.Payments).WithOne(p => p.Owner).HasForeignKey(p => p.OwnerId).OnDelete(DeleteBehavior.Restrict);
+
     builder.Property(u => u.Role).HasConversion(u => u.Value, v => RoleName.FromValue(v)).HasDefaultValue(RoleName.User).IsRequired();
   }
 }

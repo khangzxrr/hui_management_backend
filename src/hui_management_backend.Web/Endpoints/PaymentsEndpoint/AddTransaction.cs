@@ -42,7 +42,7 @@ public class AddTransaction : EndpointBaseAsync
   ]
   public override async Task<ActionResult> HandleAsync([FromRoute] AddTransactionRequest request, CancellationToken cancellationToken = default)
   {
-    var paymentSpec = new PaymentsByUserIdSpec(request.userId);
+    var paymentSpec = new PaymentByUserIdAndPaymentIdSpec(request.userId, request.paymentId);
     var payment = await _paymentRepository.FirstOrDefaultAsync(paymentSpec);
 
     if (payment == null)

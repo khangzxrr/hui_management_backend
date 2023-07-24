@@ -10,7 +10,7 @@ namespace hui_management_backend.Core.PaymentAggregate;
 public class Payment : EntityBase, IAggregateRoot
 {
   public required User Owner { get; set;  } 
-  public int OwnerId { get;  }
+  public int OwnerId { get; set; }
   public required DateTimeOffset CreateAt { get; set; }
 
   public double TotalCost => 

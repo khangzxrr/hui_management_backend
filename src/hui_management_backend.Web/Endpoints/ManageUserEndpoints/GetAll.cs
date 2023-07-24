@@ -1,6 +1,9 @@
 ﻿using Ardalis.ApiEndpoints;
+using AutoMapper;
 using hui_management_backend.Core.Constants;
+using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.Core.UserAggregate;
+using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,15 +12,18 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace hui_management_backend.Web.Endpoints.UserEndpoints;
 
 public class GetAll : EndpointBaseAsync
-  .WithoutRequest
+  .WithRequest<GetAllRequest>
   .WithActionResult<GetAllResponse>
 {
 
+  private readonly IMapper _mapper;
   private readonly IRepository<User> _userRepository;
 
-  public GetAll(IRepository<User> userRepository)
+  public GetAll(IRepository<User> userRepository, IMapper mapper)
   {
     _userRepository = userRepository;
+    _mapper = mapper;
+
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -29,8 +35,23 @@ public class GetAll : EndpointBaseAsync
     Tags = new[] { "Users" }
     )
   ]
-  public override async Task<ActionResult<GetAllResponse>> HandleAsync(CancellationToken cancellationToken = default)
+  public override async Task<ActionResult<GetAllResponse>> HandleAsync([FromRoute] GetAllRequest request, CancellationToken cancellationToken = default)
   {
+    IEnumerable<User> users;
+
+    var userWithPaymentSpec = new UserWithPaymentSpec();
+    users = await _userRepository.ListAsync(userWithPaymentSpec);
+
+    if (request.filterByAnyPayment.HasValue)
+    {
+      users = users.Where(u => u.Payments.Any());
+    }
+
+    if (request.filterByNotFinishedPayment.HasValue)
+    {
+      users = users.Where(u => u.Payments.Where(p => p.Status != PaymentStatus.Finish).Any());
+    }
+
 
     var result = await _userRepository.ListAsync();
 
@@ -41,7 +62,7 @@ public class GetAll : EndpointBaseAsync
 
     var response = new GetAllResponse
     {
-      Users = result.Select(u => new UserRecord(u.Id, u.Name, u.Email, u.Password, u.PhoneNumber, u.BankName, u.BankNumber, u.Address, u.AdditionalInfo))
+      Users = users.Select(_mapper.Map<UserRecord>)
     };
 
     return Ok(response);

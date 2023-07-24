@@ -8,7 +8,6 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
 {
   public void Configure(EntityTypeBuilder<Payment> builder)
   {
-    builder.HasOne(b => b.Owner).WithMany().HasForeignKey(b => b.OwnerId).OnDelete(DeleteBehavior.Cascade);
 
     builder.HasMany(p => p.paymentTransactions).WithOne().OnDelete(DeleteBehavior.Cascade);
     builder.HasMany(p => p.fundBills).WithOne().OnDelete(DeleteBehavior.Restrict);

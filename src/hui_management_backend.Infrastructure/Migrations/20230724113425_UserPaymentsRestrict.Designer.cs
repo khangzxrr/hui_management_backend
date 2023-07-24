@@ -12,8 +12,8 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230717192746_RemapFundBill")]
-    partial class RemapFundBill
+    [Migration("20230724113425_UserPaymentsRestrict")]
+    partial class UserPaymentsRestrict
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -458,9 +458,9 @@ namespace hui_management_backend.Infrastructure.Migrations
             modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.Payment", b =>
                 {
                     b.HasOne("hui_management_backend.Core.UserAggregate.User", "Owner")
-                        .WithMany()
+                        .WithMany("Payments")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -503,6 +503,11 @@ namespace hui_management_backend.Infrastructure.Migrations
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.Project", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("hui_management_backend.Core.UserAggregate.User", b =>
+                {
+                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

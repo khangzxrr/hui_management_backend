@@ -1,3 +1,5 @@
 Add-Migration AddPasswordUser -StartupProject hui_management_backend.Web -Context AppDbContext -Project hui_management_backend.Infrastructure
 
 Update-Database -StartupProject hui_management_backend.Web -Context AppDbContext -Project hui_management_backend.Infrastructure
+
+Remove-Migration -StartupProject hui_management_backend.Web -Context AppDbContext -Project hui_management_backend.Infrastructure

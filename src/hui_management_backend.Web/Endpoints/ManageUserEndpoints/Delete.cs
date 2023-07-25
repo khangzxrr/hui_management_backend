@@ -2,6 +2,8 @@
 using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel.Interfaces;
+using hui_management_backend.Web.Constants;
+using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -13,11 +15,14 @@ public class Delete : EndpointBaseAsync
   .WithActionResult
 {
 
+
+  private readonly IAuthorizeService _authorizeService;
   private readonly IRepository<User> _userRepository;
 
-  public Delete(IRepository<User> userRepository)
+  public Delete(IRepository<User> userRepository, IAuthorizeService authorizeService)
   {
     _userRepository = userRepository;
+    _authorizeService = authorizeService;
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -32,6 +37,13 @@ public class Delete : EndpointBaseAsync
   public override async Task<ActionResult> HandleAsync([FromRoute] DeleteRequest request, CancellationToken cancellationToken = default)
   {
 
+    var owner = await _userRepository.GetByIdAsync(_authorizeService.UserId);
+
+    if (owner == null)
+    {
+      return BadRequest(ResponseMessageConstants.OwnerNotFound);
+    }
+
     var user = await _userRepository.GetByIdAsync(request.id);
 
     if (user == null)
@@ -39,8 +51,7 @@ public class Delete : EndpointBaseAsync
       return NotFound();
     }
 
-
-    await _userRepository.DeleteAsync(user);
+    user.RemoveCreateBy(owner);
 
     await _userRepository.SaveChangesAsync();
 

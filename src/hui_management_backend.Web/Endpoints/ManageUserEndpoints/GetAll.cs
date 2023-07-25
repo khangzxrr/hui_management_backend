@@ -5,6 +5,7 @@ using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
+using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -15,15 +16,15 @@ public class GetAll : EndpointBaseAsync
   .WithRequest<GetAllRequest>
   .WithActionResult<GetAllResponse>
 {
-
+  private readonly IAuthorizeService _authorizeService;
   private readonly IMapper _mapper;
   private readonly IRepository<User> _userRepository;
 
-  public GetAll(IRepository<User> userRepository, IMapper mapper)
+  public GetAll(IRepository<User> userRepository, IMapper mapper, IAuthorizeService authorizeService)
   {
     _userRepository = userRepository;
     _mapper = mapper;
-
+    _authorizeService = authorizeService;
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -39,7 +40,7 @@ public class GetAll : EndpointBaseAsync
   {
     IEnumerable<User> users;
 
-    var userWithPaymentSpec = new UserWithPaymentSpec();
+    var userWithPaymentSpec = new UserByCreatorIdSpec(_authorizeService.UserId);
     users = await _userRepository.ListAsync(userWithPaymentSpec);
 
     if (request.filterByAnyPayment.HasValue)

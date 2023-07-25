@@ -18,6 +18,10 @@ public class User : EntityBase, IAggregateRoot
 
   public RoleName Role { get; private set; }
 
+  private readonly List<User> _createBy = new();
+  public IEnumerable<User> CreateBy => _createBy.AsReadOnly();
+
+
   private readonly List<Payment> _payments = new();
   public IEnumerable<Payment> Payments => _payments.AsReadOnly();
 
@@ -34,6 +38,26 @@ public class User : EntityBase, IAggregateRoot
 
     Role = Guard.Against.Null(role);
   } 
+
+  public bool IsCreateByCreatorId(int creatorId)
+  {
+    return _createBy.Any(u => u.Id == creatorId);
+  }
+
+  public void AddCreateBy(User user)
+  {
+    if (user == this) return;
+
+    _createBy.Add(Guard.Against.Null(user));
+  }
+
+  //remove creator from _createBy
+  public void RemoveCreateBy(User user)
+  {
+    if (user == this) return;
+
+    _createBy.Remove(Guard.Against.Null(user));
+  }
 
   public void UpdateEmail(string email)
   {

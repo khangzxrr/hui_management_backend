@@ -2,6 +2,7 @@
 using hui_management_backend.Core.ContributorAggregate;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.ProjectAggregate;
+using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel;
 using hui_management_backend.SharedKernel.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,8 @@ public class AppDbContext : DbContext
   public DbSet<Contributor> Contributors => Set<Contributor>(); 
 
   public DbSet<Fund> Funds => Set<Fund>();
+
+  public DbSet<User> Users => Set<User>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

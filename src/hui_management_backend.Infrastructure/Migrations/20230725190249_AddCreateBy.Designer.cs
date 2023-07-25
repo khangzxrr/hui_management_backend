@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hui_management_backend.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230725190249_AddCreateBy")]
+    partial class AddCreateBy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace hui_management_backend.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("UserUser", b =>
-                {
-                    b.Property<int>("CreateById")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CreateById", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserCreateBy", (string)null);
-                });
 
             modelBuilder.Entity("hui_management_backend.Core.ContributorAggregate.Contributor", b =>
                 {
@@ -352,6 +340,9 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CreateById")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -366,7 +357,7 @@ namespace hui_management_backend.Infrastructure.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Role")
                         .ValueGeneratedOnAdd()
@@ -375,25 +366,9 @@ namespace hui_management_backend.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PhoneNumber")
-                        .IsUnique();
+                    b.HasIndex("CreateById");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("UserUser", b =>
-                {
-                    b.HasOne("hui_management_backend.Core.UserAggregate.User", null)
-                        .WithMany()
-                        .HasForeignKey("CreateById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("hui_management_backend.Core.UserAggregate.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.FundAggregate.Fund", b =>
@@ -503,6 +478,16 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasOne("hui_management_backend.Core.ProjectAggregate.Project", null)
                         .WithMany("Items")
                         .HasForeignKey("ProjectId");
+                });
+
+            modelBuilder.Entity("hui_management_backend.Core.UserAggregate.User", b =>
+                {
+                    b.HasOne("hui_management_backend.Core.UserAggregate.User", "CreateBy")
+                        .WithMany()
+                        .HasForeignKey("CreateById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CreateBy");
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.FundAggregate.Fund", b =>

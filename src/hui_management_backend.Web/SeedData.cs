@@ -13,9 +13,13 @@ public static class SeedData
 
   public static readonly User FundOwner = new User("khangzxrr@gmail.com", "123123aaa", "võ ngọc khang", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106650", "Con của Chị Nhiễn", RoleName.Owner);
 
-  public static readonly User FundMember1 = new User("khang1@gmail.com", "123123aaa", "đoàn văn bơ", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106651", "Con của Chị Nhiễn 1", RoleName.User);
+  public static readonly User FundMember1 = new User("khang1@gmail.com", "123123aaa", "đoàn văn bơ", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106651", "Thích ăn nhiều bơ", RoleName.User);
 
-  public static readonly User FundMember2 = new User("khang2@gmail.com", "123123aaa", "nguyễn ngọc ngạn", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106652", "Con của Chị Nhiễn 2", RoleName.User);
+  public static readonly User FundMember2 = new User("khang2@gmail.com", "123123aaa", "nguyễn ngọc ngạn", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "0862106652", "Thích đọc truyện tranh", RoleName.User);
+
+  public static readonly User FundOwner2 = new User("khangzxrr2@gmail.com", "123123aaa", "đoàn kim nhiễn", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "09123235323", "Nhiễn pro vip", RoleName.Owner);
+
+  public static readonly User FundMemberOfBoth = new User("khang1@gmail.com", "123123aaa", "Bùi Phạm Hà Linh", "159 xa lộ hà nội quận 2", "MB bank", "0862106650", "093334435312", "Thích ăn nhiều bơ", RoleName.User);
 
 
   public static void Initialize(IServiceProvider serviceProvider)
@@ -43,6 +47,14 @@ public static class SeedData
       return;
     }
 
+    
+    FundMember1.AddCreateBy(FundOwner);
+    FundMember2.AddCreateBy(FundOwner);
+
+    FundMemberOfBoth.AddCreateBy(FundOwner);
+    FundMemberOfBoth.AddCreateBy(FundOwner2);
+
+    dbContext.Users.Add(FundMemberOfBoth);
 
     Fund.SetOwner(FundOwner);
     dbContext.Funds.Add(Fund);
@@ -51,13 +63,13 @@ public static class SeedData
     FundMember fundMember1 = new FundMember
     {
       User = FundMember1,
-      NickName = "võ ngọc khang-1"
+      NickName = "đoàn văn bơ-1"
     };
 
     FundMember fundMember2 = new FundMember
     {
       User = FundMember2,
-      NickName = "võ ngọc khang-2"
+      NickName = "nguyễn ngọc ngạn-2"
     };
 
 

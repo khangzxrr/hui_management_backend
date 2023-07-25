@@ -2,7 +2,10 @@
 using AutoMapper;
 using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.UserAggregate;
+using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
+using hui_management_backend.Web.Constants;
+using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -14,13 +17,15 @@ public class Create : EndpointBaseAsync
   .WithActionResult<CreateResponse>
 {
 
+  private readonly IAuthorizeService _authorizeService;
   private readonly IRepository<User> _userRepository;
   private readonly IMapper _mapper;
 
-  public Create(IRepository<User> userRepository, IMapper mapper)
+  public Create(IRepository<User> userRepository, IMapper mapper, IAuthorizeService authorizeService)
   {
     _userRepository = userRepository;
     _mapper = mapper;
+    _authorizeService = authorizeService;
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -34,9 +39,30 @@ public class Create : EndpointBaseAsync
   ]
   public override async Task<ActionResult<CreateResponse>> HandleAsync([FromBody] CreateRequest request, CancellationToken cancellationToken = default)
   {
-    var user = new User(request.email, request.password, request.name, request.address, request.bankname, request.banknumber, request.phonenumber, request.additionalInfo, RoleName.User);
+    var owner = await _userRepository.GetByIdAsync(_authorizeService.UserId);
 
-    await _userRepository.AddAsync(user);
+    if (owner == null)
+    {
+      return BadRequest(ResponseMessageConstants.OwnerNotFound);
+    }
+
+    var userSpec = new UserByPhoneNumberSpec(request.phonenumber);
+    var user = await _userRepository.FirstOrDefaultAsync(userSpec);
+
+    // if user already exist, add create by owner ortherwise create new user
+    if (user != null)
+    {
+      user.AddCreateBy(owner);
+
+      await _userRepository.UpdateAsync(user);  
+
+    } else
+    {
+      user = new User(request.email, request.password, request.name, request.address, request.bankname, request.banknumber, request.phonenumber, request.additionalInfo, RoleName.User);
+      user.AddCreateBy(owner);
+
+      await _userRepository.AddAsync(user);
+    }
 
     await _userRepository.SaveChangesAsync();
 

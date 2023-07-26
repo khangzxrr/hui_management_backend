@@ -25,7 +25,16 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
   options.MinimumSameSitePolicy = SameSiteMode.None;
 });
 
-string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");  //Configuration.GetConnectionString("DefaultConnection");
+string? connectionString;
+
+if (builder.Environment.EnvironmentName == "Development")
+{
+  connectionString = builder.Configuration.GetConnectionString("DefaultConnection"); 
+} else
+{
+  connectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+}
+
 
 
 builder.Services.AddDbContext(connectionString!);

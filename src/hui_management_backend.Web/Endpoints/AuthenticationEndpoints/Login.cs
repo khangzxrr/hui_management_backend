@@ -1,7 +1,8 @@
 ﻿using Ardalis.ApiEndpoints;
-using Ardalis.Result;
-using Ardalis.Result.AspNetCore;
+using AutoMapper;
 using hui_management_backend.Core.Interfaces;
+using hui_management_backend.Web.Constants;
+using hui_management_backend.Web.Endpoints.UserEndpoints;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -13,13 +14,15 @@ public class Login : EndpointBaseAsync
   .WithActionResult<LoginResponse>
 {
 
+  private readonly IMapper _mapper;
   private readonly IAuthenticationService _authenticationService;
   private readonly ITokenService _tokenService;
 
-  public Login(IAuthenticationService authenticationService, ITokenService tokenService)
+  public Login(IAuthenticationService authenticationService, ITokenService tokenService, IMapper mapper)
   {
     _authenticationService = authenticationService;
     _tokenService = tokenService;
+    _mapper = mapper;
   }
 
 
@@ -37,18 +40,12 @@ public class Login : EndpointBaseAsync
 
     if (!result.IsSuccess)
     {
-      return result.Map(u => new LoginResponse()).ToActionResult(this);
+      return BadRequest(ResponseMessageConstants.WrongPhoneNumerOrPassword);
     }
 
     string token = _tokenService.GenerateToken(result.Value);
 
-    var response = new LoginResponse
-    {
-      Email = result.Value.Email,
-      Name = result.Value.Name,
-      Phonenumber = result.Value.PhoneNumber,
-      Token = token
-    };
+    var response = new LoginResponse(token, _mapper.Map<UserRecord>(result.Value));
 
     return Ok(response);
   }

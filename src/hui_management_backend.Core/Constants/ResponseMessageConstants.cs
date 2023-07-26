@@ -2,6 +2,9 @@
 
 public class ResponseMessageConstants
 {
+  public const string WrongPhoneNumerOrPassword = "WRONG_PHONE_NUMBER_OR_PASSWORD";
+
+
   public const string OwnerNotFound = "OWNER_NOT_FOUND";
 
   public const string FundNotFound = "FUND_NOT_FOUND";

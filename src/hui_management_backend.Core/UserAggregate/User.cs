@@ -6,7 +6,8 @@ using hui_management_backend.Core.PaymentAggregate;
 namespace hui_management_backend.Core.UserAggregate;
 public class User : EntityBase, IAggregateRoot
 {
-  public string Email { get; private set; }
+  public string ImageUrl { get; private set; }
+  public string Identity { get; private set; }
   public string Name { get; private set; }
   public string Address { get; private set; }
   public string BankName { get; private set; }
@@ -25,9 +26,10 @@ public class User : EntityBase, IAggregateRoot
   private readonly List<Payment> _payments = new();
   public IEnumerable<Payment> Payments => _payments.AsReadOnly();
 
-  public User(string email, string password, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, RoleName role)
+  public User(string imageUrl, string identity, string password, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, RoleName role)
   {
-    Email = Guard.Against.NullOrEmpty(email);
+    ImageUrl = Guard.Against.NullOrEmpty(imageUrl);
+    Identity = Guard.Against.NullOrEmpty(identity);
     Password = Guard.Against.NullOrEmpty(password);
     Name = Guard.Against.NullOrEmpty(name);
     Address = Guard.Against.NullOrEmpty(address);
@@ -59,9 +61,14 @@ public class User : EntityBase, IAggregateRoot
     _createBy.Remove(Guard.Against.Null(user));
   }
 
-  public void UpdateEmail(string email)
+  public void UpdateIdentity(string email)
   {
-    Email = Guard.Against.NullOrEmpty(email);
+    Identity = Guard.Against.NullOrEmpty(email);
+  }
+
+  public void UpdateImageUrl(string imageUrl)
+  {
+    ImageUrl = Guard.Against.NullOrEmpty(imageUrl);
   }
 
   public void UpdateName(string name)

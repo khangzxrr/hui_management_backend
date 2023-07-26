@@ -42,7 +42,8 @@ public class Update : EndpointBaseAsync
       return NotFound();
     }
 
-    user.UpdateEmail(request.email);
+    user.UpdateImageUrl(request.imageUrl);
+    user.UpdateIdentity(request.identity);
     user.UpdateName(request.name);
     user.UpdatePhoneNumber(request.phonenumber);
     user.UpdateBankNumber(request.banknumber);

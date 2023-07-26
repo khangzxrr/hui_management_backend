@@ -12,7 +12,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
     builder.HasMany(u => u.Payments).WithOne(p => p.Owner).HasForeignKey(p => p.OwnerId).OnDelete(DeleteBehavior.Restrict);
 
-    builder.Property(u => u.Email).IsRequired();
+    builder.Property(u => u.Identity).IsRequired();
     builder.Property(u => u.Password).IsRequired();
     builder.Property(u => u.Name).IsRequired();
     builder.Property(u => u.Address).IsRequired();

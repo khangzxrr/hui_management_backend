@@ -6,13 +6,16 @@ public class UpdateRequest
 {
   public const string Route = "/users";
   [Required]
-  public int id { get; set; } 
+  public int id { get; set; }
+  [Required]
+  public string imageUrl { get; set; } = null!;
+
   [Required]
   public string name { get; set; } = null!;
   [Required]
   public string password { get; set; } = null!;
   [Required]
-  public string email { get; set; } = null!;
+  public string identity { get; set; } = null!;
   [Required]
   public string phonenumber { get; set; } = null!;
   [Required]

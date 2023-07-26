@@ -8,12 +8,14 @@ public class CreateRequest
   public const string Route = "/users";
 
   [Required]
+  public string imageUrl { get; set; } = null!;
+  [Required]
   public string name { get; set; } = null!;
   [Required]
   public string password { get; set; } = null!;
   [Required]
-  [DataType(DataType.EmailAddress)]
-  public string email { get; set; } = null!;
+  [RegularExpression("^[0-9]*$", ErrorMessage = "identity must be numeric")]
+  public string identity { get; set; } = null!;
   [Required]
   [RegularExpression("^[0-9]*$", ErrorMessage = "phone number must be numeric")]
   public string phonenumber { get; set; } = null!;

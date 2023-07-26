@@ -2,7 +2,7 @@ name: Build and deploy .NET application to container app hui-management-app-2023
 on:
   push:
     branches:
-    - main
+    - master
 env:
   CONTAINER_APP_CONTAINER_NAME: hui-management-backend
   CONTAINER_APP_NAME: hui-management-app-2023

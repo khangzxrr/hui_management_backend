@@ -32,7 +32,7 @@ if (builder.Environment.EnvironmentName == "Development")
   connectionString = builder.Configuration.GetConnectionString("DefaultConnection"); 
 } else
 {
-  connectionString = builder.Configuration["azure-sql-connectionstring-4bc52"];
+  connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 }
 
 

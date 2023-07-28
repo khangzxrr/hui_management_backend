@@ -2,6 +2,7 @@
 using Autofac;
 using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Core.ProjectAggregate;
+using hui_management_backend.Core.Services;
 using hui_management_backend.Infrastructure.Data;
 using hui_management_backend.SharedKernel;
 using hui_management_backend.SharedKernel.Interfaces;
@@ -72,7 +73,10 @@ public class DefaultInfrastructureModule : Module
     builder
       .RegisterType<UnitOfWork>()
       .As<IUnitOfWork>()
-      .InstancePerLifetimeScope();  
+      .InstancePerLifetimeScope();
+
+    builder.RegisterType<MediaService>().As<IMediaService>()
+      .InstancePerLifetimeScope();
 
     //builder.Register<ServiceFactory>(context =>
     //{

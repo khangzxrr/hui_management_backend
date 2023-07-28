@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hui_management_backend.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230728194359_AddNickName")]
+    partial class AddNickName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,28 +295,6 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.ToTable("PaymentTransaction");
                 });
 
-            modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.TransactionImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PaymentTransactionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PaymentTransactionId");
-
-                    b.ToTable("TransactionImage");
-                });
-
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -402,7 +383,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("IdentityCreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
-                        .HasDefaultValue(new DateTimeOffset(new DateTime(2023, 7, 29, 6, 2, 21, 903, DateTimeKind.Unspecified).AddTicks(7955), new TimeSpan(0, 7, 0, 0, 0)));
+                        .HasDefaultValue(new DateTimeOffset(new DateTime(2023, 7, 29, 2, 43, 59, 636, DateTimeKind.Unspecified).AddTicks(4601), new TimeSpan(0, 7, 0, 0, 0)));
 
                     b.Property<string>("IdentityImageBackUrl")
                         .IsRequired()
@@ -422,9 +403,7 @@ namespace hui_management_backend.Infrastructure.Migrations
 
                     b.Property<string>("NickName")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Chưa có nick name");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -564,14 +543,6 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.TransactionImage", b =>
-                {
-                    b.HasOne("hui_management_backend.Core.PaymentAggregate.PaymentTransaction", null)
-                        .WithMany("transactionImages")
-                        .HasForeignKey("PaymentTransactionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.ToDoItem", b =>
                 {
                     b.HasOne("hui_management_backend.Core.ProjectAggregate.Project", null)
@@ -596,11 +567,6 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Navigation("fundBills");
 
                     b.Navigation("paymentTransactions");
-                });
-
-            modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.PaymentTransaction", b =>
-                {
-                    b.Navigation("transactionImages");
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.Project", b =>

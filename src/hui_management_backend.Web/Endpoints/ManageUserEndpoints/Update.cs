@@ -47,6 +47,7 @@ public class Update : EndpointBaseAsync
     user.UpdateIdentityAddress(request.identityAddress);
     user.UpdateIdentityCreateDate(request.identityCreateDate);
     user.UpdateName(request.name);
+    user.UpdateNickName(request.nickName);
     user.UpdatePhoneNumber(request.phonenumber);
     user.UpdateBankNumber(request.banknumber);
     user.UpdateBankName(request.bankname);

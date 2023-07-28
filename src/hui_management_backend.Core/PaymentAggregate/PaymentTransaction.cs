@@ -11,6 +11,9 @@ public class PaymentTransaction : EntityBase
   public DateTimeOffset CreateAt { get; private set; }
   public TransactionMethod Method { get; private set; } = null!;
 
+  private readonly List<TransactionImage> _transactionImages = new List<TransactionImage>();
+  public IEnumerable<TransactionImage> transactionImages => _transactionImages.AsReadOnly();
+
   public PaymentTransaction(string description, double amount, TransactionMethod method)
   {
     Description = description;

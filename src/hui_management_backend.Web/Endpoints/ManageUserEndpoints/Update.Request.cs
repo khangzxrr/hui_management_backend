@@ -11,6 +11,9 @@ public class UpdateRequest
   public string imageUrl { get; set; } = null!;
 
   [Required]
+  public string nickName { get; set; } = null!;
+
+  [Required]
   public string name { get; set; } = null!;
   [Required]
   public string password { get; set; } = null!;

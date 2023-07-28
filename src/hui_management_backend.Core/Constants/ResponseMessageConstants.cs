@@ -25,4 +25,10 @@ public class ResponseMessageConstants
   public const string UserIsNotBelongToFundOwner = "USER_IS_NOT_BELONG_TO_FUND_OWNER";
 
   public const string TransactionMethodCannotBeParsed = "TRANSACTION_METHOD_CANNOT_BE_PARSED";
+
+  public const string FileExtensionNotExist = "FILE_EXTENSION_NOT_EXIST";
+  public const string FileExtensionNotSupport = "FILE_EXTENSION_NOT_SUPPORT";
+  public const string FirebaseKeyNotExist = "FIREBASE_KEY_NOT_EXIST";
+
+  public const string MediaNotFound = "MEDIA_NOT_FOUND";
 }

@@ -10,5 +10,7 @@ public class PaymentTransactionConfiguration : IEntityTypeConfiguration<PaymentT
   {
     builder.Property(pt => pt.Method)
       .HasConversion(pm => pm.Value, v => TransactionMethod.FromValue(v));
+
+    builder.HasMany(builder => builder.transactionImages).WithOne().OnDelete(DeleteBehavior.Cascade);
   }
 }

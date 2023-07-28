@@ -22,6 +22,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
     builder.HasIndex(u => u.PhoneNumber).IsUnique();
 
+    builder.Property(u => u.NickName).IsRequired().HasDefaultValue("Chưa có nick name");
+
     builder.Property(u => u.IdentityCreateDate).IsRequired().HasDefaultValue(DateTimeOffset.Now);
 
 

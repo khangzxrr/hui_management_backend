@@ -14,6 +14,7 @@ public class User : EntityBase, IAggregateRoot
   public string IdentityImageFrontUrl { get; private set; }
   public string IdentityImageBackUrl { get; private set; }
 
+  public string NickName { get; private set; }
   public string Name { get; private set; }
   public string Address { get; private set; }
   public string BankName { get; private set; }
@@ -32,12 +33,13 @@ public class User : EntityBase, IAggregateRoot
   private readonly List<Payment> _payments = new();
   public IEnumerable<Payment> Payments => _payments.AsReadOnly();
 
-  public User(string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string password, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, RoleName role, string identityImageFrontUrl = "", string identityImageBackUrl = "")
+  public User(string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string password, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, RoleName role, string identityImageFrontUrl = "", string identityImageBackUrl = "")
   {
     ImageUrl = Guard.Against.NullOrEmpty(imageUrl);
     
     Password = Guard.Against.NullOrEmpty(password);
     Name = Guard.Against.NullOrEmpty(name);
+    NickName = Guard.Against.NullOrEmpty(nickName);
     Address = Guard.Against.NullOrEmpty(address);
     BankName = Guard.Against.NullOrEmpty(bankName);
     BankNumber = Guard.Against.NullOrEmpty(bankNumber);
@@ -64,6 +66,12 @@ public class User : EntityBase, IAggregateRoot
   public void UpdateIdentityImageFrontUrl(string identityImageFrontUrl)
   {
     IdentityImageFrontUrl = Guard.Against.Null(identityImageFrontUrl);
+  }
+
+  //update nick name
+  public void UpdateNickName(string nickName)
+  {
+    NickName = Guard.Against.NullOrEmpty(nickName);
   }
 
    //update identity image back url

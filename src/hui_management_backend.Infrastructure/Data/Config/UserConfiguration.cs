@@ -22,6 +22,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
     builder.HasIndex(u => u.PhoneNumber).IsUnique();
 
+    builder.Property(u => u.IdentityCreateDate).IsRequired().HasDefaultValue(DateTimeOffset.Now);
+
 
     builder.Property(u => u.Role).HasConversion(u => u.Value, v => RoleName.FromValue(v)).HasDefaultValue(RoleName.User).IsRequired();
   }

@@ -44,14 +44,20 @@ public class Update : EndpointBaseAsync
 
     user.UpdateImageUrl(request.imageUrl);
     user.UpdateIdentity(request.identity);
+    user.UpdateIdentityAddress(request.identityAddress);
+    user.UpdateIdentityCreateDate(request.identityCreateDate);
     user.UpdateName(request.name);
     user.UpdatePhoneNumber(request.phonenumber);
     user.UpdateBankNumber(request.banknumber);
     user.UpdateBankName(request.bankname);
     user.UpdateAddress(request.address);
     user.UpdateAdditionalInfo(request.additionalInfo);
+    user.UpdateIdentityImageBackUrl(request.identityImageBackUrl);
+    user.UpdateIdentityImageFrontUrl(request.identityImageFrontUrl);
 
     await _userRepository.UpdateAsync(user);
+
+    await _userRepository.SaveChangesAsync();
 
     var response = new UpdateResponse(_mapper.Map<UserRecord>(user));
 

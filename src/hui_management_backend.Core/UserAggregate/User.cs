@@ -8,6 +8,12 @@ public class User : EntityBase, IAggregateRoot
 {
   public string ImageUrl { get; private set; }
   public string Identity { get; private set; }
+  public DateTimeOffset IdentityCreateDate { get; private set; }
+  public string IdentityAddress { get; private set; }
+
+  public string IdentityImageFrontUrl { get; private set; }
+  public string IdentityImageBackUrl { get; private set; }
+
   public string Name { get; private set; }
   public string Address { get; private set; }
   public string BankName { get; private set; }
@@ -26,10 +32,10 @@ public class User : EntityBase, IAggregateRoot
   private readonly List<Payment> _payments = new();
   public IEnumerable<Payment> Payments => _payments.AsReadOnly();
 
-  public User(string imageUrl, string identity, string password, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, RoleName role)
+  public User(string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string password, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, RoleName role, string identityImageFrontUrl = "", string identityImageBackUrl = "")
   {
     ImageUrl = Guard.Against.NullOrEmpty(imageUrl);
-    Identity = Guard.Against.NullOrEmpty(identity);
+    
     Password = Guard.Against.NullOrEmpty(password);
     Name = Guard.Against.NullOrEmpty(name);
     Address = Guard.Against.NullOrEmpty(address);
@@ -38,9 +44,39 @@ public class User : EntityBase, IAggregateRoot
     PhoneNumber = Guard.Against.NullOrEmpty(phoneNumber);
     AdditionalInfo = Guard.Against.Null(additionalInfo);
 
+    Identity = Guard.Against.NullOrEmpty(identity);
+    IdentityCreateDate = Guard.Against.Null(identityCreateDate);
+    IdentityAddress = Guard.Against.Null(identityAddress);
+
+    IdentityImageFrontUrl = identityImageFrontUrl;
+    IdentityImageBackUrl = identityImageBackUrl;
+
     Role = Guard.Against.Null(role);
   } 
 
+  //update identity create date
+  public void UpdateIdentityCreateDate(DateTimeOffset identityCreateDate)
+  {
+    IdentityCreateDate = Guard.Against.Null(identityCreateDate);
+  }
+
+  //update identity image front url
+  public void UpdateIdentityImageFrontUrl(string identityImageFrontUrl)
+  {
+    IdentityImageFrontUrl = Guard.Against.Null(identityImageFrontUrl);
+  }
+
+   //update identity image back url
+   public void UpdateIdentityImageBackUrl(string identityImageBackUrl)
+  {
+      IdentityImageBackUrl = Guard.Against.Null(identityImageBackUrl);
+    }
+
+  //update identity address
+  public void UpdateIdentityAddress(string identityAddress)
+  {
+    IdentityAddress = Guard.Against.NullOrEmpty(identityAddress);
+  }
   public bool IsCreateByCreatorId(int creatorId)
   {
     return _createBy.Any(u => u.Id == creatorId);

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hui_management_backend.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230727100909_AddIdentityInfo")]
+    partial class AddIdentityInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -361,9 +364,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("IdentityCreateDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValue(new DateTimeOffset(new DateTime(2023, 7, 27, 19, 16, 50, 102, DateTimeKind.Unspecified).AddTicks(2674), new TimeSpan(0, 7, 0, 0, 0)));
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("IdentityImageBackUrl")
                         .IsRequired()

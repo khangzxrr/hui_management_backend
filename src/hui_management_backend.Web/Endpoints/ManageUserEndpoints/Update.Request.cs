@@ -17,6 +17,11 @@ public class UpdateRequest
   [Required]
   public string identity { get; set; } = null!;
   [Required]
+  public string identityAddress { get; set; } = null!;
+  [Required]
+  public DateTimeOffset identityCreateDate { get; set; }
+
+  [Required]
   public string phonenumber { get; set; } = null!;
   [Required]
   public string bankname { get; set; } = null!;
@@ -25,4 +30,6 @@ public class UpdateRequest
   [Required]
   public string address { get; set; } = null!;
   public string additionalInfo { get; set; } = "";
+  public string identityImageFrontUrl { get; set; } = "";
+  public string identityImageBackUrl { get; set; } = "";
 }

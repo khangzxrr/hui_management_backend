@@ -13,9 +13,16 @@ public class CreateRequest
   public string name { get; set; } = null!;
   [Required]
   public string password { get; set; } = null!;
+
   [Required]
   [RegularExpression("^[0-9]*$", ErrorMessage = "identity must be numeric")]
   public string identity { get; set; } = null!;
+  [Required]
+  public DateTimeOffset identityCreateAt { get; set; }
+  [Required]
+  public string identityAddress { get; set; } = null!;
+
+
   [Required]
   [RegularExpression("^[0-9]*$", ErrorMessage = "phone number must be numeric")]
   public string phonenumber { get; set; } = null!;
@@ -27,5 +34,8 @@ public class CreateRequest
   [Required]
   public string address { get; set; } = null!;
   public string additionalInfo { get; set; } = "";
+
+  public string identityFrontImageUrl { get; set; } = "";
+  public string identityBackImageUrl { get; set; } = "";
 
 }

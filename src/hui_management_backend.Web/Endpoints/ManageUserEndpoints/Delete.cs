@@ -1,6 +1,8 @@
 ﻿using Ardalis.ApiEndpoints;
 using hui_management_backend.Core.Constants;
+using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Core.UserAggregate;
+using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Constants;
 using hui_management_backend.Web.Interfaces;
@@ -14,7 +16,6 @@ public class Delete : EndpointBaseAsync
   .WithRequest<DeleteRequest>
   .WithActionResult
 {
-
 
   private readonly IAuthorizeService _authorizeService;
   private readonly IRepository<User> _userRepository;
@@ -44,7 +45,10 @@ public class Delete : EndpointBaseAsync
       return BadRequest(ResponseMessageConstants.OwnerNotFound);
     }
 
-    var user = await _userRepository.GetByIdAsync(request.id);
+
+    var userSpec = new UserWithCreatorByIdSpec(request.id);
+
+    var user = await _userRepository.FirstOrDefaultAsync(userSpec);
 
     if (user == null)
     {
@@ -52,6 +56,8 @@ public class Delete : EndpointBaseAsync
     }
 
     user.RemoveCreateBy(owner);
+
+    await _userRepository.UpdateAsync(user);
 
     await _userRepository.SaveChangesAsync();
 

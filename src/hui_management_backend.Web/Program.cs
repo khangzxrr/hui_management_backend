@@ -78,7 +78,7 @@ builder.Services.AddCors(options =>
   options.AddPolicy(name: CORS_POLICY,
                     corsPolicyBuilder =>
                     {
-                      corsPolicyBuilder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost" || new Uri(origin).Host.Contains(".web.app"))
+                      corsPolicyBuilder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost" || new Uri(origin).Host.Contains(".web.app") || new Uri(origin).Host.Contains("azurecontainerapps.io"))
                       .AllowAnyMethod()
                       .AllowAnyHeader()
                       .AllowCredentials();

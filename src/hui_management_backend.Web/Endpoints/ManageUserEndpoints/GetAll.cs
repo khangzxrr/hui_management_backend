@@ -44,7 +44,7 @@ public class GetAll : EndpointBaseAsync
   {
     IEnumerable<User> users;
 
-    var userWithPaymentSpec = new UserByCreatorIdSpec(_authorizeService.UserId);
+    var userWithPaymentSpec = new UserWithPaymentByCreatorIdSpec(_authorizeService.UserId);
     users = await _userRepository.ListAsync(userWithPaymentSpec);
 
     if (request.filterByAnyPayment.HasValue)

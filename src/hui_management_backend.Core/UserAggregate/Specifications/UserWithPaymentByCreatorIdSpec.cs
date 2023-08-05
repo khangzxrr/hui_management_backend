@@ -1,11 +1,13 @@
-﻿using Ardalis.Specification;
+﻿
+using Ardalis.Specification;
 
 namespace hui_management_backend.Core.UserAggregate.Specifications;
-public class UserByCreatorIdSpec : Specification<User>
+public class UserWithPaymentByCreatorIdSpec : Specification<User>
 {
-  public UserByCreatorIdSpec(int creatorId)
+  public UserWithPaymentByCreatorIdSpec(int creatorId)
   {
     Query
+      .Include(u => u.Payments)
       .Include(u => u.CreateBy)
       .Where(u => u.CreateBy.Where(c => c.Id == creatorId).Any());
   }

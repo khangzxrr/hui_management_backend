@@ -33,6 +33,6 @@ public class UpdateRequest
   [Required]
   public string address { get; set; } = null!;
   public string additionalInfo { get; set; } = "";
-  public string identityImageFrontUrl { get; set; } = "";
-  public string identityImageBackUrl { get; set; } = "";
+  public string? identityImageFrontUrl { get; set; }
+  public string? identityImageBackUrl { get; set; }
 }

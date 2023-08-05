@@ -143,12 +143,12 @@ public class MediaService : IMediaService
 
       Media media = new Media
       {
-        name = newFileName,
+        name = downloadUrl,
       };
       await _mediaRepository.AddAsync(media);
       await _mediaRepository.SaveChangesAsync();
 
-      return Result<string>.Success("Media/" + newFileName);
+      return Result<string>.Success(downloadUrl);
 
     }catch(Exception e)
     {

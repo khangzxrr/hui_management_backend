@@ -1,6 +1,8 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
 using hui_management_backend.Core.Constants;
+using hui_management_backend.Core.FundAggregate;
+using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Specifications;
@@ -19,12 +21,14 @@ public class GetAll : EndpointBaseAsync
   private readonly IAuthorizeService _authorizeService;
   private readonly IMapper _mapper;
   private readonly IRepository<User> _userRepository;
+  private readonly IRepository<Fund> _fundRepository;
 
-  public GetAll(IRepository<User> userRepository, IMapper mapper, IAuthorizeService authorizeService)
+  public GetAll(IRepository<User> userRepository, IMapper mapper, IAuthorizeService authorizeService, IRepository<Fund> fundRepository)
   {
     _userRepository = userRepository;
     _mapper = mapper;
     _authorizeService = authorizeService;
+    _fundRepository = fundRepository;
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -53,7 +57,6 @@ public class GetAll : EndpointBaseAsync
       users = users.Where(u => u.Payments.Where(p => p.Status != PaymentStatus.Finish).Any());
     }
 
-
     var result = await _userRepository.ListAsync();
 
     if (result == null)
@@ -61,9 +64,51 @@ public class GetAll : EndpointBaseAsync
       return BadRequest();
     }
 
+    List<UserRecord> userRecords = new List<UserRecord>();
+
+    //if (request.getFundRatio.HasValue)
+    //{
+    //  foreach (var user in users)
+    //  {
+    //    var spec = new FundByOwnerAndMemberSpec(_authorizeService.UserId, user.Id);
+    //    var funds = await _fundRepository.ListAsync(spec);
+
+    //    //fund => sessions => normalSessionDetails 
+
+    //    double fundRatio = 0;
+
+    //    foreach (var fund in funds)
+    //    {
+    //      foreach (var session in fund.Sessions)
+    //      {
+    //        foreach (var sessionDetail in session.normalSessionDetails)
+    //        {
+    //          if (sessionDetail.fundMember.User != user)
+    //          {
+    //            continue;
+    //          }
+    //          if (sessionDetail.type == NormalSessionType.Alive)
+    //          {
+    //            fundRatio += sessionDetail.payCost;
+    //          }
+    //          else
+    //          {
+    //            fundRatio -= sessionDetail.payCost;
+    //          }
+    //        }
+
+    //      }
+    //    }
+
+    //    var userRecord = _mapper.Map<UserWithFundRatioRecord>(user, opt => opt.Items["fundRatio"] = fundRatio);
+    //    userRecords.Add(userRecord);
+
+    //  }
+    //}
+
     var response = new GetAllResponse
     {
-      Users = users.Select(_mapper.Map<UserRecord>)
+      Users = userRecords
     };
 
     return Ok(response);

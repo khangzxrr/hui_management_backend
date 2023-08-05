@@ -11,8 +11,8 @@ public class User : EntityBase, IAggregateRoot
   public DateTimeOffset IdentityCreateDate { get; private set; }
   public string IdentityAddress { get; private set; }
 
-  public string IdentityImageFrontUrl { get; private set; }
-  public string IdentityImageBackUrl { get; private set; }
+  public string? IdentityImageFrontUrl { get; private set; }
+  public string? IdentityImageBackUrl { get; private set; }
 
   public string NickName { get; private set; }
   public string Name { get; private set; }
@@ -28,12 +28,12 @@ public class User : EntityBase, IAggregateRoot
 
   private readonly List<User> _createBy = new();
   public IEnumerable<User> CreateBy => _createBy.AsReadOnly();
-
+    
 
   private readonly List<Payment> _payments = new();
   public IEnumerable<Payment> Payments => _payments.AsReadOnly();
 
-  public User(string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string password, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, RoleName role, string identityImageFrontUrl = "", string identityImageBackUrl = "")
+  public User(string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string password, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, RoleName role, string? identityImageFrontUrl = null, string? identityImageBackUrl = null)
   {
     ImageUrl = Guard.Against.NullOrEmpty(imageUrl);
     
@@ -63,9 +63,9 @@ public class User : EntityBase, IAggregateRoot
   }
 
   //update identity image front url
-  public void UpdateIdentityImageFrontUrl(string identityImageFrontUrl)
+  public void UpdateIdentityImageFrontUrl(string? identityImageFrontUrl)
   {
-    IdentityImageFrontUrl = Guard.Against.Null(identityImageFrontUrl);
+    IdentityImageFrontUrl = identityImageFrontUrl;
   }
 
   //update nick name
@@ -75,9 +75,9 @@ public class User : EntityBase, IAggregateRoot
   }
 
    //update identity image back url
-   public void UpdateIdentityImageBackUrl(string identityImageBackUrl)
+   public void UpdateIdentityImageBackUrl(string? identityImageBackUrl)
   {
-      IdentityImageBackUrl = Guard.Against.Null(identityImageBackUrl);
+      IdentityImageBackUrl = identityImageBackUrl;
     }
 
   //update identity address

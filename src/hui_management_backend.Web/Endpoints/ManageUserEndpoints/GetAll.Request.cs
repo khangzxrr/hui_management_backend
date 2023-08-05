@@ -8,6 +8,10 @@ public class GetAllRequest
 
   [FromQuery]
   public bool? filterByAnyPayment { get; set; }
+
+  [FromQuery]
+  public bool? getFundRatio { get; set; }
+
   [FromQuery]
   public bool? filterByNotFinishedPayment { get; set; }
 

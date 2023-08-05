@@ -6,11 +6,11 @@ public class NormalSessionDetail : EntityBase
 {
   public required double predictedPrice { get; set; }
   public required double fundAmount { get; set; }
+  public required double lossCost { get; set; }
+
   public required double serviceCost { get; set; }
 
-
   public required double payCost { get; set; }
-
 
   public required NormalSessionType type { get; set; }
 

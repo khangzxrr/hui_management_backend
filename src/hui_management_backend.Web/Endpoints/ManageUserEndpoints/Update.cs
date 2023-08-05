@@ -5,6 +5,7 @@ using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace hui_management_backend.Web.Endpoints.UserEndpoints;
@@ -53,8 +54,11 @@ public class Update : EndpointBaseAsync
     user.UpdateBankName(request.bankname);
     user.UpdateAddress(request.address);
     user.UpdateAdditionalInfo(request.additionalInfo);
+
     user.UpdateIdentityImageBackUrl(request.identityImageBackUrl);
     user.UpdateIdentityImageFrontUrl(request.identityImageFrontUrl);
+
+
 
     await _userRepository.UpdateAsync(user);
 

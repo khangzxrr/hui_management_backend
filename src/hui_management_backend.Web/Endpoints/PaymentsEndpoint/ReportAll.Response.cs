@@ -1,4 +1,6 @@
-﻿namespace hui_management_backend.Web.Endpoints.ManageUserEndpoints;
+﻿
+
+using hui_management_backend.Web.Endpoints.PaymentsEndpoint;
 
 public class ReportAllResponse
 {

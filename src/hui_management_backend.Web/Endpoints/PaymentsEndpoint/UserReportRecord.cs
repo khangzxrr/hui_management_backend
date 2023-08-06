@@ -1,4 +1,4 @@
-﻿namespace hui_management_backend.Web.Endpoints.ManageUserEndpoints;
+﻿namespace hui_management_backend.Web.Endpoints.PaymentsEndpoint;
 
 public class UserReport
 {
@@ -21,6 +21,8 @@ public class UserReport
   public string AdditionalInfo { get; set; }
 
   public double fundRatio { get; set; }
+  public double totalCost { get; set; }
+  public double totalTransactionCost { get; set; }
 
   public UserReport(int id, string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo)
   {

@@ -6,4 +6,9 @@ public class ReportAllRequest
 {
   public const string Route = "/users/report";
 
+  [FromQuery]
+  public bool? getFundRatio { get; set; }
+
+  [FromQuery]
+  public bool? getTotalCostRemain { get; set; }
 }

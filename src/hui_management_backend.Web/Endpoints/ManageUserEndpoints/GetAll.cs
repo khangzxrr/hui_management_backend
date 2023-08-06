@@ -2,7 +2,6 @@
 using AutoMapper;
 using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.FundAggregate;
-using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Specifications;
@@ -64,51 +63,9 @@ public class GetAll : EndpointBaseAsync
       return BadRequest();
     }
 
-    List<UserRecord> userRecords = new List<UserRecord>();
-
-    //if (request.getFundRatio.HasValue)
-    //{
-    //  foreach (var user in users)
-    //  {
-    //    var spec = new FundByOwnerAndMemberSpec(_authorizeService.UserId, user.Id);
-    //    var funds = await _fundRepository.ListAsync(spec);
-
-    //    //fund => sessions => normalSessionDetails 
-
-    //    double fundRatio = 0;
-
-    //    foreach (var fund in funds)
-    //    {
-    //      foreach (var session in fund.Sessions)
-    //      {
-    //        foreach (var sessionDetail in session.normalSessionDetails)
-    //        {
-    //          if (sessionDetail.fundMember.User != user)
-    //          {
-    //            continue;
-    //          }
-    //          if (sessionDetail.type == NormalSessionType.Alive)
-    //          {
-    //            fundRatio += sessionDetail.payCost;
-    //          }
-    //          else
-    //          {
-    //            fundRatio -= sessionDetail.payCost;
-    //          }
-    //        }
-
-    //      }
-    //    }
-
-    //    var userRecord = _mapper.Map<UserWithFundRatioRecord>(user, opt => opt.Items["fundRatio"] = fundRatio);
-    //    userRecords.Add(userRecord);
-
-    //  }
-    //}
-
     var response = new GetAllResponse
     {
-      Users = userRecords
+      Users = users.Select(_mapper.Map<UserRecord>)
     };
 
     return Ok(response);

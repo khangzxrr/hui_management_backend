@@ -93,7 +93,7 @@ public class MediaService : IMediaService
       return Result.Error(ResponseMessageConstants.FileExtensionNotExist);
     }
 
-    if (fileExtension != ".jpg" && fileExtension != ".png")
+    if (fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".jpeg")
     {
       return Result.Error(ResponseMessageConstants.FileExtensionNotSupport);
     }

@@ -2,6 +2,8 @@
 
 public class UserReport
 {
+
+  public int Id { get; set; }
   public string ImageUrl { get; set; }
   public string Identity { get; set; }
   public DateTimeOffset IdentityCreateDate { get; set; }
@@ -20,8 +22,9 @@ public class UserReport
 
   public double fundRatio { get; set; }
 
-  public UserReport(string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo)
+  public UserReport(int id, string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo)
   {
+    Id = id;
     ImageUrl = imageUrl;
     Identity = identity;
     IdentityCreateDate = identityCreateDate;

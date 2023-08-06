@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
 using hui_management_backend.Core.Constants;
+using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Specifications;
@@ -19,12 +20,14 @@ public class GetAll : EndpointBaseAsync
   private readonly IAuthorizeService _authorizeService;
   private readonly IMapper _mapper;
   private readonly IRepository<User> _userRepository;
+  private readonly IRepository<Fund> _fundRepository;
 
-  public GetAll(IRepository<User> userRepository, IMapper mapper, IAuthorizeService authorizeService)
+  public GetAll(IRepository<User> userRepository, IMapper mapper, IAuthorizeService authorizeService, IRepository<Fund> fundRepository)
   {
     _userRepository = userRepository;
     _mapper = mapper;
     _authorizeService = authorizeService;
+    _fundRepository = fundRepository;
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -40,7 +43,7 @@ public class GetAll : EndpointBaseAsync
   {
     IEnumerable<User> users;
 
-    var userWithPaymentSpec = new UserByCreatorIdSpec(_authorizeService.UserId);
+    var userWithPaymentSpec = new UserWithPaymentByCreatorIdSpec(_authorizeService.UserId);
     users = await _userRepository.ListAsync(userWithPaymentSpec);
 
     if (request.filterByAnyPayment.HasValue)
@@ -52,7 +55,6 @@ public class GetAll : EndpointBaseAsync
     {
       users = users.Where(u => u.Payments.Where(p => p.Status != PaymentStatus.Finish).Any());
     }
-
 
     var result = await _userRepository.ListAsync();
 

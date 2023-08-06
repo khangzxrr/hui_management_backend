@@ -3,3 +3,9 @@ Add-Migration AddPasswordUser -StartupProject hui_management_backend.Web -Contex
 Update-Database -StartupProject hui_management_backend.Web -Context AppDbContext -Project hui_management_backend.Infrastructure
 
 Remove-Migration -StartupProject hui_management_backend.Web -Context AppDbContext -Project hui_management_backend.Infrastructure
+
+
+MAC:
+
+dotnet ef database update --startup-project src/hui_management_backend.Web --context AppDbContext --project src/hui_management_backend.Infrastructure
+

@@ -64,6 +64,7 @@ public class AddSessionFundService : IAddSessionFundService
     double aliveMemberPayCost = fund.FundPrice - predictedPrice;
     //-1 skip who taken fund
     double fundAmount = (fund.Members.Count() - deadMemberCount - 1) * aliveMemberPayCost + deadMemberPayCost;
+    double lossCost = (fund.Members.Count() - 1) * fund.FundPrice - fundAmount;
 
     double remainCost = fundAmount - fund.ServiceCost;
 
@@ -76,6 +77,7 @@ public class AddSessionFundService : IAddSessionFundService
 
     var takenSessionDetail = new NormalSessionDetail {
       fundAmount = fundAmount,
+      lossCost = lossCost,
       predictedPrice = predictedPrice,
       payCost = remainCost,
       serviceCost = fund.ServiceCost,
@@ -97,8 +99,7 @@ public class AddSessionFundService : IAddSessionFundService
         //take full price if dead, otherwise take good price
         payCost = isAlreadyTaken ? fund.FundPrice : aliveMemberPayCost,
         type = isAlreadyTaken ? NormalSessionType.Dead : NormalSessionType.Alive,
-
-
+        lossCost = 0,
         fundAmount = 0,
         predictedPrice = 0,
         serviceCost = 0,

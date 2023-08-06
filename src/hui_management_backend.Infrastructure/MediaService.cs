@@ -93,7 +93,7 @@ public class MediaService : IMediaService
       return Result.Error(ResponseMessageConstants.FileExtensionNotExist);
     }
 
-    if (fileExtension != ".jpg" && fileExtension != ".png")
+    if (fileExtension != ".jpg" && fileExtension != ".png" && fileExtension != ".jpeg")
     {
       return Result.Error(ResponseMessageConstants.FileExtensionNotSupport);
     }
@@ -143,12 +143,12 @@ public class MediaService : IMediaService
 
       Media media = new Media
       {
-        name = newFileName,
+        name = downloadUrl,
       };
       await _mediaRepository.AddAsync(media);
       await _mediaRepository.SaveChangesAsync();
 
-      return Result<string>.Success("Media/" + newFileName);
+      return Result<string>.Success(downloadUrl);
 
     }catch(Exception e)
     {

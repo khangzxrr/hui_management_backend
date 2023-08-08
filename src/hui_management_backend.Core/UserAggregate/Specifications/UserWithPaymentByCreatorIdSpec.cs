@@ -8,6 +8,10 @@ public class UserWithPaymentByCreatorIdSpec : Specification<User>
   {
     Query
       .Include(u => u.Payments)
+        .ThenInclude(p => p.paymentTransactions)
+      .Include(u => u.Payments)
+        .ThenInclude(p => p.fundBills)
+          .ThenInclude(fb => fb.fromSessionDetail)
       .Include(u => u.CreateBy)
       .Where(u => u.CreateBy.Where(c => c.Id == creatorId).Any());
   }

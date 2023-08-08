@@ -1,5 +1,4 @@
-﻿using hui_management_backend.Core.UserAggregate;
-using hui_management_backend.Web.Endpoints.UserEndpoints;
+﻿using hui_management_backend.Web.Endpoints.DTOs;
 
 namespace hui_management_backend.Web.Endpoints.AuthenticationEndpoints;
 

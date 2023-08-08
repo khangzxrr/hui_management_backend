@@ -1,4 +1,6 @@
-﻿namespace hui_management_backend.Web.Endpoints.UserEndpoints;
+﻿using hui_management_backend.Web.Endpoints.DTOs;
+
+namespace hui_management_backend.Web.Endpoints.UserEndpoints;
 
 public class GetAllResponse
 {

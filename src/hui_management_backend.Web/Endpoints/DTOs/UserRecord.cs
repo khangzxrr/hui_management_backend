@@ -1,6 +1,6 @@
-﻿namespace hui_management_backend.Web.Endpoints.PaymentsEndpoint;
+﻿namespace hui_management_backend.Web.Endpoints.DTOs;
 
-public class UserReport
+public class UserRecord
 {
 
   public int Id { get; set; }
@@ -15,16 +15,20 @@ public class UserReport
   public string NickName { get; set; }
   public string Name { get; set; }
   public string Address { get; set; }
+
+  public string Password { get; set; }
   public string BankName { get; set; }
   public string BankNumber { get; set; }
   public string PhoneNumber { get; set; }
   public string AdditionalInfo { get; set; }
 
+  public double totalAliveAmount { get; set; }
+  public double totalDeadAmount { get; set; }
   public double fundRatio { get; set; }
   public double totalCost { get; set; }
   public double totalTransactionCost { get; set; }
 
-  public UserReport(int id, string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo)
+  public UserRecord(int id, string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, string password)
   {
     Id = id;
     ImageUrl = imageUrl;
@@ -40,5 +44,6 @@ public class UserReport
     BankNumber = bankNumber;
     PhoneNumber = phoneNumber;
     AdditionalInfo = additionalInfo;
+    Password = password;
   }
 }

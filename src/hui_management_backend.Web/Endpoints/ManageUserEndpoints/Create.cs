@@ -5,6 +5,7 @@ using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Constants;
+using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

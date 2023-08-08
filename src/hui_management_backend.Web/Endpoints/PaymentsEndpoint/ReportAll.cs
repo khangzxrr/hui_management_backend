@@ -9,6 +9,7 @@ using hui_management_backend.Core.PaymentAggregate.Specifications;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
+using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Endpoints.ManageUserEndpoints;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -58,7 +59,7 @@ public class ReportAll : EndpointBaseAsync
     }
 
 
-    List<UserReport> userReports = users.Select(_mapper.Map<UserReport>).ToList();
+    List<UserRecord> userReports = users.Select(_mapper.Map<UserRecord>).ToList();
 
     if (request.getTotalCostRemain.HasValue)
     {
@@ -96,13 +97,16 @@ public class ReportAll : EndpointBaseAsync
               continue;
             }
 
+            
 
             if (sessionDetail.type == NormalSessionType.Alive)
             {
+              userReport.totalAliveAmount += sessionDetail.payCost;
               userReport.fundRatio += sessionDetail.payCost;
             }
             else if (sessionDetail.type == NormalSessionType.Dead)
             {
+              userReport.totalDeadAmount += sessionDetail.payCost;
               userReport.fundRatio -= sessionDetail.payCost;
             }
 

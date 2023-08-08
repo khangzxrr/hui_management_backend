@@ -2,7 +2,7 @@
 using AutoMapper;
 using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Web.Constants;
-using hui_management_backend.Web.Endpoints.UserEndpoints;
+using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

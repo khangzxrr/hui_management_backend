@@ -3,6 +3,7 @@ using AutoMapper;
 using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel.Interfaces;
+using hui_management_backend.Web.Endpoints.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

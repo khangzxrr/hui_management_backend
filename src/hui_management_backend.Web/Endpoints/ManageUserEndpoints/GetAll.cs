@@ -6,6 +6,7 @@ using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
+using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -46,26 +47,39 @@ public class GetAll : EndpointBaseAsync
     var userWithPaymentSpec = new UserWithPaymentByCreatorIdSpec(_authorizeService.UserId);
     users = await _userRepository.ListAsync(userWithPaymentSpec);
 
+    var userRecords = users.Select(_mapper.Map<UserRecord>);
+
+
     if (request.filterByAnyPayment.HasValue)
     {
       users = users.Where(u => u.Payments.Any());
+
+      var filteredUserRecord = new List<UserRecord>();
+
+      foreach(var user in users)
+      {
+        var userRecord = _mapper.Map<UserRecord>(user);
+
+        userRecord.totalCost = user.Payments.Sum(p => p.TotalCost);
+        userRecord.totalTransactionCost = user.Payments.Sum(p => p.TotalTransactionCost);
+
+        filteredUserRecord.Add(userRecord);
+      }
+
+      userRecords = filteredUserRecord;
     }
+
 
     if (request.filterByNotFinishedPayment.HasValue)
     {
-      users = users.Where(u => u.Payments.Where(p => p.Status != PaymentStatus.Finish).Any());
-    }
+      var unfinishedPaymentUser = users.Where(u => u.Payments.Where(p => p.Status != PaymentStatus.Finish).Any());
 
-    var result = await _userRepository.ListAsync();
-
-    if (result == null)
-    {
-      return BadRequest();
+      userRecords = unfinishedPaymentUser.Select(_mapper.Map<UserRecord>);
     }
 
     var response = new GetAllResponse
     {
-      Users = users.Select(_mapper.Map<UserRecord>)
+      Users = userRecords
     };
 
     return Ok(response);

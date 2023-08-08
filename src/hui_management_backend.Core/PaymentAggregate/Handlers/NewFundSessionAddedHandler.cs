@@ -22,23 +22,25 @@ public class NewFundSessionAddedHandler : INotificationHandler<NewFundSessionAdd
   public async Task Handle(NewFundSessionAddedEvent notification, CancellationToken cancellationToken)
   {
 
-    List<Payment> normalPayments = new();
+    List<Payment> payments = new();
      
-    foreach(NormalSessionDetail normalSessionDetail in notification.fundSession.normalSessionDetails)
+    foreach(NormalSessionDetail sessionDetail in notification.fundSession.normalSessionDetails)
     {
-      var normalPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTimeOffset.Now, normalSessionDetail.fundMember.User);
+
+      var normalPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTimeOffset.Now, sessionDetail.fundMember.User);
 
       normalPayment.AddBill(new FundBill
       {
         fromSession = notification.fundSession,
-        fromSessionDetail = normalSessionDetail,
+        fromSessionDetail = sessionDetail,
         fromFund = notification.fund
       });
 
-      normalPayments.Add(normalPayment);
+
+      payments.Add(normalPayment);
     }
 
-    await _paymentRepository.UpdateRangeAsync(normalPayments);
+    await _paymentRepository.UpdateRangeAsync(payments);
 
   }
 }

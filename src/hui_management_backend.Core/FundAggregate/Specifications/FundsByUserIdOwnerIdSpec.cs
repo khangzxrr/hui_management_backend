@@ -8,8 +8,11 @@ public class FundsByUserIdOwnerIdSpec : Specification<Fund>
     Query
       .Include(f => f.Owner)
       .Include(f => f.Members)
-        .ThenInclude(fm => fm.User)
+        .ThenInclude(fm => fm.subUser)
       .Include(f => f.Sessions)
-      .Where(f => f.Owner.Id == ownerId && f.Members.Where(fm => fm.User.Id == userId).Any());
+        .ThenInclude(s => s.normalSessionDetails)
+          .ThenInclude(nsd => nsd.fundMember)
+             .ThenInclude(fm => fm.subUser)
+      .Where(f => f.Owner.Id == ownerId && f.Members.Where(fm => fm.subUser.Id == userId).Any());
   }
 }

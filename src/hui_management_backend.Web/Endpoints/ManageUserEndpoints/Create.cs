@@ -34,8 +34,8 @@ public class Create : EndpointBaseAsync
   [SwaggerOperation(
     Summary = "Create new user",
     Description = "Create new user",
-    OperationId = "Users.create",
-    Tags = new[] { "Users" }
+    OperationId = "SubUsers.create",
+    Tags = new[] { "SubUsers" }
     )
   ]
   public override async Task<ActionResult<CreateResponse>> HandleAsync([FromBody] CreateRequest request, CancellationToken cancellationToken = default)
@@ -50,24 +50,30 @@ public class Create : EndpointBaseAsync
     var userSpec = new UserByPhoneNumberSpec(request.phonenumber);
     var user = await _userRepository.FirstOrDefaultAsync(userSpec);
 
-    // if user already exist, add create by owner ortherwise create new user
+    SubUser subUser = null!;
+   
     if (user != null)
     {
-      user.AddCreateBy(owner);
+      if (user.SubUserOfOwnerById(owner.Id) != null)
+      {
+        return BadRequest(ResponseMessageConstants.SubUserAlreadyExist);
+      }
+
+      subUser = user.AddSubUser(request.imageUrl, request.identity, request.identityCreateAt, request.identityAddress, null, null, request.name, request.address, request.bankname, request.banknumber, request.phonenumber, request.additionalInfo, owner);
 
       await _userRepository.UpdateAsync(user);  
 
     } else
     {
-      user = new User(request.imageUrl, request.identity, request.identityCreateAt, request.identityAddress, request.password, request.nickName, request.name, request.address, request.bankname, request.banknumber, request.phonenumber, request.additionalInfo, RoleName.User);
-      user.AddCreateBy(owner);
+      user = new User(request.phonenumber, "123123aaa", RoleName.User);
+      subUser = user.AddSubUser(request.imageUrl, request.identity, request.identityCreateAt, request.identityAddress, null, null, request.name, request.address, request.bankname, request.banknumber, request.phonenumber, request.additionalInfo, owner);
 
       await _userRepository.AddAsync(user);
     }
 
     await _userRepository.SaveChangesAsync();
 
-    var response = new CreateResponse(_mapper.Map<UserRecord>(user));
+    var response = new CreateResponse(_mapper.Map<SubUserRecord>(subUser));
 
 
     return Ok(response);

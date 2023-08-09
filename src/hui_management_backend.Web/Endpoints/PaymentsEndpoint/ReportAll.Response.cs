@@ -1,16 +1,15 @@
 ﻿
 
 using hui_management_backend.Web.Endpoints.DTOs;
-using hui_management_backend.Web.Endpoints.PaymentsEndpoint;
 
 public class ReportAllResponse
 {
-  public IEnumerable<UserRecord> Users { get; set; }
+  public IEnumerable<SubUserRecord> SubUsers { get; set; }
 
   //generate constructor
-  public ReportAllResponse(IEnumerable<UserRecord> users)
+  public ReportAllResponse(IEnumerable<SubUserRecord> subUsers)
   {
-    Users = users;
+    SubUsers = subUsers;
   }
 
 }

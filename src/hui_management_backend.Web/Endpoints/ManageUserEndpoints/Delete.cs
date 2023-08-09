@@ -18,11 +18,11 @@ public class Delete : EndpointBaseAsync
 {
 
   private readonly IAuthorizeService _authorizeService;
-  private readonly IRepository<User> _userRepository;
+  private readonly IRepository<SubUser> _subuserRepository;
 
-  public Delete(IRepository<User> userRepository, IAuthorizeService authorizeService)
+  public Delete(IRepository<SubUser> subuserRepository, IAuthorizeService authorizeService)
   {
-    _userRepository = userRepository;
+    _subuserRepository = subuserRepository;
     _authorizeService = authorizeService;
   }
 
@@ -31,35 +31,26 @@ public class Delete : EndpointBaseAsync
   [SwaggerOperation(
     Summary = "Delete a user",
     Description = "Delete a user",
-    OperationId = "Users.delete",
-    Tags = new[] { "Users" }
+    OperationId = "SubUsers.delete",
+    Tags = new[] { "SubUsers" }
     )
   ]
   public override async Task<ActionResult> HandleAsync([FromRoute] DeleteRequest request, CancellationToken cancellationToken = default)
   {
 
-    var owner = await _userRepository.GetByIdAsync(_authorizeService.UserId);
 
-    if (owner == null)
+    var userSpec = new SubUserByIdSpec(request.id);
+
+    var subUser = await _subuserRepository.FirstOrDefaultAsync(userSpec);
+
+    if (subUser == null)
     {
-      return BadRequest(ResponseMessageConstants.OwnerNotFound);
+      return NotFound(ResponseMessageConstants.SubUserIsNotFound);
     }
 
+    await _subuserRepository.DeleteAsync(subUser);
 
-    var userSpec = new UserWithCreatorByIdSpec(request.id);
-
-    var user = await _userRepository.FirstOrDefaultAsync(userSpec);
-
-    if (user == null)
-    {
-      return NotFound();
-    }
-
-    user.RemoveCreateBy(owner);
-
-    await _userRepository.UpdateAsync(user);
-
-    await _userRepository.SaveChangesAsync();
+    await _subuserRepository.SaveChangesAsync();
 
     return Ok();
   }

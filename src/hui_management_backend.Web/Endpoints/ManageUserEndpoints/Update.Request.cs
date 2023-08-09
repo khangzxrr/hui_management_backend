@@ -4,7 +4,7 @@ namespace hui_management_backend.Web.Endpoints.UserEndpoints;
 
 public class UpdateRequest
 {
-  public const string Route = "/users";
+  public const string Route = "/subusers";
   [Required]
   public int id { get; set; }
   [Required]
@@ -15,8 +15,6 @@ public class UpdateRequest
 
   [Required]
   public string name { get; set; } = null!;
-  [Required]
-  public string password { get; set; } = null!;
   [Required]
   public string identity { get; set; } = null!;
   [Required]

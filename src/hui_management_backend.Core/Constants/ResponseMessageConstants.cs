@@ -31,4 +31,9 @@ public class ResponseMessageConstants
   public const string FirebaseKeyNotExist = "FIREBASE_KEY_NOT_EXIST";
 
   public const string MediaNotFound = "MEDIA_NOT_FOUND";
+
+  public const string SubUserIsNotFound = "SUB_USER_IS_NOT_FOUND";
+  public const string SubUserAlreadyExist = "SUB_USER_ALREADY_EXIST";
+
+  public const string NoSubUserInfoYet = "NO_SUB_USER_INFO_YET";
 }

@@ -5,7 +5,7 @@ namespace hui_management_backend.Web.Endpoints.UserEndpoints;
 public class CreateRequest
 {
 
-  public const string Route = "/users";
+  public const string Route = "/subusers";
 
   [Required]
   public string imageUrl { get; set; } = null!;
@@ -13,8 +13,6 @@ public class CreateRequest
   public string name { get; set; } = null!;
   [Required]
   public string nickName { get; set; } = null!;
-  [Required]
-  public string password { get; set; } = null!;
 
   [Required]
   [RegularExpression("^[0-9]*$", ErrorMessage = "identity must be numeric")]

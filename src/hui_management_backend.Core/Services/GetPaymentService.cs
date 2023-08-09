@@ -16,7 +16,7 @@ public class GetPaymentService : IGetPaymentService
     _paymentRepository = paymentRepository;
   }
 
-  public async Task<Payment> GetPaymentByDateAndOwnerId(DateTimeOffset dateTimeOffset, User owner)
+  public async Task<Payment> GetPaymentByDateAndOwnerId(DateTimeOffset dateTimeOffset, SubUser owner)
   {
     var spec = new PaymentByDateAndOwnerIdAndStatusSpec(dateTimeOffset, owner.Id, PaymentStatus.Processing);
 

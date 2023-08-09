@@ -2,7 +2,7 @@
 
 public class DeleteRequest
 {
-  public const string Route = "/users/{id:int}";
+  public const string Route = "/subusers/{id:int}";
 
   public static string BuildRoute(int id) => Route.Replace("{id:int}", id.ToString());
 

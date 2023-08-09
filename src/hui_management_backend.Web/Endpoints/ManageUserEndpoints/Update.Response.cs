@@ -3,10 +3,10 @@ namespace hui_management_backend.Web.Endpoints.UserEndpoints;
 
 public class UpdateResponse
 {
-  public UserRecord user { set; get; }
+  public SubUserRecord SubUser { set; get; }
 
-  public UpdateResponse(UserRecord user)
+  public UpdateResponse(SubUserRecord subUser)
   {
-    this.user = user;
+    this.SubUser = subUser;
   }
 }

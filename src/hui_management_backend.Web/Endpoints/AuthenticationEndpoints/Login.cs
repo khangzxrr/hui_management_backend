@@ -45,7 +45,12 @@ public class Login : EndpointBaseAsync
 
     string token = _tokenService.GenerateToken(result.Value);
 
-    var response = new LoginResponse(token, _mapper.Map<UserRecord>(result.Value));
+    if (result.Value.SubUsers.Count() == 0)
+    {
+      return BadRequest(ResponseMessageConstants.NoSubUserInfoYet);
+    }
+    
+    var response = new LoginResponse(token, _mapper.Map<SubUserRecord>(result.Value.SubUsers.First()));
 
     return Ok(response);
   }

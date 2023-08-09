@@ -9,7 +9,7 @@ using hui_management_backend.SharedKernel.Interfaces;
 namespace hui_management_backend.Core.PaymentAggregate;
 public class Payment : EntityBase, IAggregateRoot
 {
-  public required User Owner { get; set;  } 
+  public required SubUser Owner { get; set;  } 
   public int OwnerId { get; set; }
   public required DateTimeOffset CreateAt { get; set; }
 

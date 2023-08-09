@@ -11,7 +11,7 @@ public class FundByOwnerAndMemberSpec : Specification<Fund>
       .Include(f => f.Sessions)
         .ThenInclude(s => s.normalSessionDetails)
       .Include(f => f.Members)
-        .ThenInclude(m => m.User)
-      .Where(f => f.Members.Any(m => m.User.Id == userId) && f.Owner.Id == ownerId);
+        .ThenInclude(m => m.subUser)
+      .Where(f => f.Members.Any(m => m.subUser.Id == userId) && f.Owner.Id == ownerId);
   }
 }

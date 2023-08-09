@@ -4,6 +4,7 @@ using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Core.UserAggregate;
+using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Constants;
 
@@ -11,23 +12,18 @@ namespace hui_management_backend.Core.Services;
 public class AddMemberFundService : IAddMemberFundService
 {
 
-  private readonly IRepository<User> _userRepository;
+  private readonly IRepository<SubUser> _subUserRepository;
   private readonly IRepository<Fund> _fundRepository;
 
-  public AddMemberFundService(IRepository<User> userRepository, IRepository<Fund> fundRepository)
+  public AddMemberFundService(IRepository<Fund> fundRepository, IRepository<SubUser> subuserRepository)
   {
-    _userRepository = userRepository;
     _fundRepository = fundRepository;
+    _subUserRepository = subuserRepository;
   }
 
-  public async Task<Result<bool>> AddMember(int fundId, int ownerId, int userId)
+  public async Task<Result<bool>> AddMember(int fundId, int ownerId, int subUserId)
   {
-    var user = await _userRepository.GetByIdAsync(userId);
 
-    if (user == null)
-    {
-      return Result<bool>.NotFound(ResponseMessageConstants.UserNotFound);
-    }
 
     var fundSpec = new FundByIdAndOwnerIdSpec(fundId, ownerId);
     var fund = await _fundRepository.FirstOrDefaultAsync(fundSpec); 
@@ -37,15 +33,26 @@ public class AddMemberFundService : IAddMemberFundService
       return Result<bool>.NotFound(ResponseMessageConstants.FundNotFound);
     }
 
-    var totalExistFundMember = fund.Members.Where(m => m.User == user).Count();
+    var subUserSpec = new SubUserByIdSpec(subUserId);
+    var subUser = await _subUserRepository.FirstOrDefaultAsync(subUserSpec);
 
 
+    if (subUser == null)
+    {
+      return Result<bool>.NotFound(ResponseMessageConstants.SubUserIsNotFound);
+    }
+
+
+    var totalExistFundMember = fund.Members.Where(m => m.subUser == subUser).Count();
+
+
+    
 
     var fundMember = new FundMember
     {
-      NickName = $"{user.Name}-{totalExistFundMember + 1}",
+      NickName = $"{subUser.Name}-{totalExistFundMember + 1}",
 
-      User = user,
+      subUser = subUser,
     };
 
     fund.AddMember(fundMember);

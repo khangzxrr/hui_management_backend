@@ -5,8 +5,11 @@ using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.Core.PaymentAggregate.Specifications;
+using hui_management_backend.Core.UserAggregate;
+using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Constants;
+using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,12 +27,15 @@ public class GetUserPayments : EndpointBaseAsync
   private readonly IRepository<Payment> _paymentRepository;
   private readonly IRepository<Fund> _fundRepository;
 
-  public GetUserPayments(IRepository<Payment> paymentRepository, IAuthorizeService authorizeService, IRepository<Fund> fundRepository, IMapper mapper)
+  private readonly IRepository<SubUser> _subuserRepository;
+
+  public GetUserPayments(IRepository<Payment> paymentRepository, IAuthorizeService authorizeService, IRepository<Fund> fundRepository, IMapper mapper, IRepository<SubUser> subuserRepository)
   {
     _paymentRepository = paymentRepository;
     _authorizeService = authorizeService;
     _fundRepository = fundRepository;
     _mapper = mapper;
+    _subuserRepository = subuserRepository;
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -43,7 +49,18 @@ public class GetUserPayments : EndpointBaseAsync
   ]
   public override async Task<ActionResult> HandleAsync([FromRoute] GetUserPaymentsRequest request, CancellationToken cancellationToken = default)
   {
-    var fundSpec = new FundsByUserIdOwnerIdSpec(request.userId, _authorizeService.UserId);
+
+    var subUserSpec = new SubUserByIdSpec(request.subUserId);
+    var subuser = await _subuserRepository.FirstOrDefaultAsync(subUserSpec);
+
+    if (subuser == null)
+    {
+      return NotFound(ResponseMessageConstants.SubUserIsNotFound);
+    }
+
+
+
+    var fundSpec = new FundsByUserIdOwnerIdSpec(request.subUserId, _authorizeService.UserId);
     var isExistFundContainUser = await _fundRepository.AnyAsync(fundSpec);
 
     if (!isExistFundContainUser)
@@ -52,7 +69,7 @@ public class GetUserPayments : EndpointBaseAsync
       return Ok(new GetUserPaymentsResponse(emptyRecords));
     }
 
-    var paymentSpec = new PaymentsByUserIdSpec(request.userId);
+    var paymentSpec = new PaymentsByUserIdSpec(subuser.rootUser.Id);
     var payments = await _paymentRepository.ListAsync(paymentSpec);
 
     IEnumerable<Payment> filteredPayments = payments;

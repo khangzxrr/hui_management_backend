@@ -26,15 +26,15 @@ public class ReportAll : EndpointBaseAsync
   private readonly IAuthorizeService _authorizeService;
   private readonly IRepository<Fund> _fundRepository;
   private readonly IRepository<Payment> _paymentRepository;
-  private readonly IRepository<User> _userRepository;
+  private readonly IRepository<SubUser> _subuserRepository;
   private readonly IMapper _mapper;
 
-  public ReportAll(IAuthorizeService authorizeService, IRepository<Fund> fundRepository, IRepository<User> userRepository, IMapper mapper, IRepository<Payment> paymentRepository)
+  public ReportAll(IAuthorizeService authorizeService, IRepository<Fund> fundRepository, IRepository<SubUser> subuserRepository, IMapper mapper, IRepository<Payment> paymentRepository)
   {
     _authorizeService = authorizeService;
     _paymentRepository = paymentRepository;
     _fundRepository = fundRepository;
-    _userRepository = userRepository;
+    _subuserRepository = subuserRepository;
     _mapper = mapper;
   }
 
@@ -50,75 +50,67 @@ public class ReportAll : EndpointBaseAsync
 
   public override async Task<ActionResult<ReportAllResponse>> HandleAsync([FromRoute] ReportAllRequest request, CancellationToken cancellationToken = default)
   {
-    var userByCreatorIdSpec = new UserByCreatorIdSpec(_authorizeService.UserId);
-    var users = await _userRepository.ListAsync(userByCreatorIdSpec);
+    var subuserSpec = new SubUserWithPaymentByCreatorIdSpec(_authorizeService.UserId);
+    var subusers = await _subuserRepository.ListAsync(subuserSpec);
 
-    if (users == null)
+    List<SubUserRecord> subuserReports = new();
+
+    foreach (var subuser in subusers)
     {
-      return BadRequest();
-    }
-
-
-    List<UserRecord> userReports = users.Select(_mapper.Map<UserRecord>).ToList();
-
-    if (request.getTotalCostRemain.HasValue)
-    {
-
-      foreach(var user in userReports)
+      if (subuser.rootUser.Id == _authorizeService.UserId)
       {
-        var paymentSpec = new PaymentsByUserIdSpec(user.Id);
-        var payments = await _paymentRepository.ListAsync(paymentSpec);
-
-        user.totalCost = payments.Where(p => p.Status != PaymentStatus.Finish)
-                .Sum(p => p.TotalCost);
-
-        user.totalTransactionCost = payments.Where(p => p.Status != PaymentStatus.Finish)
-                                            .Sum(p => p.TotalTransactionCost);
-                
+        continue;
       }
+
+      var subuserReport = _mapper.Map<SubUserRecord>(subuser);
+
+      subuserReport.totalProcessingAmount = subuser.Payments.Where(p => p.Status == PaymentStatus.Processing)
+              .Sum(p => p.TotalCost);
+
+      subuserReport.totalDebtAmount = subuser.Payments.Where(p => p.Status == PaymentStatus.Debting).Sum(p => p.TotalCost);
+
+      subuserReports.Add(subuserReport);
     }
 
-    if (request.getFundRatio.HasValue)
+    var spec = new FundsByOwnerIdSpec(_authorizeService.UserId);
+    var funds = await _fundRepository.ListAsync(spec);
+
+    foreach (var fund in funds)
     {
-      var spec = new FundsByOwnerIdSpec(_authorizeService.UserId);
-      var funds = await _fundRepository.ListAsync(spec);
-
-      foreach (var fund in funds)
+      foreach (var session in fund.Sessions)
       {
-        foreach (var session in fund.Sessions)
+        foreach (var sessionDetail in session.normalSessionDetails)
         {
-          foreach (var sessionDetail in session.normalSessionDetails)
+
+          var userReport = subuserReports.Where(u => u.Id == sessionDetail.fundMember.subUser.Id).FirstOrDefault();
+
+          if (userReport == null)
           {
-
-            var userReport = userReports.Where(u => u.Id == sessionDetail.fundMember.User.Id).FirstOrDefault();
-
-            if (userReport == null)
-            {
-              continue;
-            }
-
-            
-
-            if (sessionDetail.type == NormalSessionType.Alive)
-            {
-              userReport.totalAliveAmount += sessionDetail.payCost;
-              userReport.fundRatio += sessionDetail.payCost;
-            }
-            else if (sessionDetail.type == NormalSessionType.Dead)
-            {
-              userReport.totalDeadAmount += sessionDetail.payCost;
-              userReport.fundRatio -= sessionDetail.payCost;
-            }
-
+            continue;
           }
+
+
+
+          if (sessionDetail.type == NormalSessionType.Alive)
+          {
+            userReport.totalAliveAmount += sessionDetail.payCost;
+            userReport.fundRatio += sessionDetail.payCost;
+          }
+          else if (sessionDetail.type == NormalSessionType.Dead)
+          {
+            userReport.totalDeadAmount += sessionDetail.payCost;
+            userReport.fundRatio -= sessionDetail.payCost;
+          } else if (sessionDetail.type == NormalSessionType.Taken)
+          {
+            userReport.totalTakenAmount += sessionDetail.payCost;
+          }
+
         }
       }
-
     }
 
 
-
-    var response = new ReportAllResponse(userReports);
+    var response = new ReportAllResponse(subuserReports);
 
     return Ok(response);
   }

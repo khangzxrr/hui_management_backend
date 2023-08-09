@@ -5,11 +5,11 @@ namespace hui_management_backend.Web.Endpoints.AuthenticationEndpoints;
 public class LoginResponse
 {
   public string Token { get; set; } 
-  public UserRecord User { get; set; }
+  public SubUserRecord SubUser { get; set; }
 
-  public LoginResponse(string token, UserRecord user)
+  public LoginResponse(string token, SubUserRecord subUser)
   {
     Token = token;
-    User = user;
+    SubUser = subUser;
   }
 }

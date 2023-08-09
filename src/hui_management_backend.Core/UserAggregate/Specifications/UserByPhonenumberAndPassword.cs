@@ -6,6 +6,8 @@ public class UserByPhonenumberAndPassword : Specification<User>, ISingleResultSp
 
   public UserByPhonenumberAndPassword(string phonenumber, string password)
   {
-    Query.Where(u => u.PhoneNumber == phonenumber && u.Password == password);
+    Query
+      .Include( u => u.SubUsers)
+      .Where(u => u.PhoneNumber == phonenumber && u.Password == password);
   }
 }

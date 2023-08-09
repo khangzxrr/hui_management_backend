@@ -5,10 +5,10 @@ namespace hui_management_backend.Web.Endpoints.PaymentsEndpoint;
 
 public class AddTransactionRequest
 {
-  public const string Route = "/owner/users/{userId}/payments/{paymentId}/transactions/add";
+  public const string Route = "/owner/subusers/{subuserId}/payments/{paymentId}/transactions/add";
 
   [FromRoute]
-  public int userId { get; set; }
+  public int subuserId { get; set; }
 
   [FromRoute]
   public int paymentId { get; set; }

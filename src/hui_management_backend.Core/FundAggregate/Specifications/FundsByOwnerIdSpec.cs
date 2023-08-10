@@ -8,9 +8,11 @@ public class FundsByOwnerIdSpec : Specification<Fund>
     Query
       .Include(f => f.Owner)
       .Include(f => f.Members)
-        .ThenInclude(m => m.User)
+        .ThenInclude(m => m.subUser)
       .Include(f => f.Sessions)
         .ThenInclude(s => s.normalSessionDetails)
+          .ThenInclude(nsd => nsd.fundMember)
+            .ThenInclude(fm => fm.subUser)
       .Where(f => f.Owner.Id == ownerId && f.IsArchived == isArchived);
   }
 }

@@ -3,6 +3,8 @@ using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.Core.PaymentAggregate.Specifications;
+using hui_management_backend.Core.UserAggregate;
+using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Constants;
 using hui_management_backend.Web.Interfaces;
@@ -18,17 +20,19 @@ public class AddTransaction : EndpointBaseAsync
   .WithActionResult
 {
 
+  private IRepository<SubUser> _subuserRepository;
   private IRepository<Payment> _paymentRepository;
   private readonly IAuthorizeService _authorizeService;
   private readonly IUnitOfWork _unitOfWork;
   private IMediator _mediator;
 
-  public AddTransaction(IRepository<Payment> paymentRepository, IMediator mediator, IAuthorizeService authorizeService, IUnitOfWork unitOfWork)
+  public AddTransaction(IRepository<Payment> paymentRepository, IMediator mediator, IAuthorizeService authorizeService, IUnitOfWork unitOfWork, IRepository<SubUser> subuserRepository)
   {
     _paymentRepository = paymentRepository;
     _mediator = mediator;
     _authorizeService = authorizeService;
     _unitOfWork = unitOfWork;
+    _subuserRepository = subuserRepository;
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -42,7 +46,19 @@ public class AddTransaction : EndpointBaseAsync
   ]
   public override async Task<ActionResult> HandleAsync([FromRoute] AddTransactionRequest request, CancellationToken cancellationToken = default)
   {
-    var paymentSpec = new PaymentByUserIdAndPaymentIdSpec(request.userId, request.paymentId);
+    var subuserSpec = new SubUserByIdSpec(request.subuserId);
+
+    var subuser = await _subuserRepository.FirstOrDefaultAsync(subuserSpec);
+
+    if (subuser == null)
+    {
+      return NotFound(ResponseMessageConstants.SubUserIsNotFound);
+    }
+
+
+
+
+    var paymentSpec = new PaymentByUserIdAndPaymentIdSpec(subuser.rootUser.Id, request.paymentId);
     var payment = await _paymentRepository.FirstOrDefaultAsync(paymentSpec);
 
     if (payment == null)

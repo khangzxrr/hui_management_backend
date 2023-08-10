@@ -1,6 +1,6 @@
 ﻿namespace hui_management_backend.Web.Endpoints.DTOs;
 
-public class UserRecord
+public class SubUserRecord
 {
 
   public int Id { get; set; }
@@ -16,7 +16,6 @@ public class UserRecord
   public string Name { get; set; }
   public string Address { get; set; }
 
-  public string Password { get; set; }
   public string BankName { get; set; }
   public string BankNumber { get; set; }
   public string PhoneNumber { get; set; }
@@ -25,10 +24,12 @@ public class UserRecord
   public double totalAliveAmount { get; set; }
   public double totalDeadAmount { get; set; }
   public double fundRatio { get; set; }
-  public double totalCost { get; set; }
-  public double totalTransactionCost { get; set; }
+  public double totalProcessingAmount { get; set; }
+  public double totalDebtAmount { get; set; }
+  public double totalTakenAmount { get; set; }
+  
 
-  public UserRecord(int id, string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo, string password)
+  public SubUserRecord(int id, string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo)
   {
     Id = id;
     ImageUrl = imageUrl;
@@ -44,6 +45,5 @@ public class UserRecord
     BankNumber = bankNumber;
     PhoneNumber = phoneNumber;
     AdditionalInfo = additionalInfo;
-    Password = password;
   }
 }

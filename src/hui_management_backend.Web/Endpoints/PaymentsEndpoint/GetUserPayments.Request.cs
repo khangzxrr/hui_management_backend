@@ -4,10 +4,10 @@ namespace hui_management_backend.Web.Endpoints.PaymentsEndpoint;
 
 public class GetUserPaymentsRequest
 {
-  public const string Route = "/owner/users/{userId}/payments";
+  public const string Route = "/owner/subusers/{subUserId}/payments";
 
   [FromRoute]
-  public int userId { get; set; }
+  public int subUserId { get; set; }
 
   [FromQuery]
   public DateTimeOffset? filerByDate { get; set; }

@@ -19,6 +19,7 @@ public class PaymentsByUserIdSpec: Specification<Payment>
       .Include(p => p.fundBills)
         .ThenInclude(b => b.fromSessionDetail)
           .ThenInclude(sd => sd.fundMember)
+            .ThenInclude(fm => fm.subUser)
       .Where(p => p.Owner.Id == userId);
   }
 }

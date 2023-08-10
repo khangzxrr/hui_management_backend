@@ -7,8 +7,10 @@ public class UserByPhoneNumberSpec : Specification<User>, ISingleResultSpecifica
   public UserByPhoneNumberSpec(string phoneNumber)
   {
     Query
-      .Include(u => u.Payments)
-      .Include(u => u.CreateBy)
+      .Include(u => u.SubUsers)
+        .ThenInclude(s => s.Payments)
+      .Include(u => u.SubUsers)
+        .ThenInclude(s => s.createBy)
       .Where(u => u.PhoneNumber == phoneNumber);
   }
 }

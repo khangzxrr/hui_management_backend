@@ -35,7 +35,7 @@ public class CreateRequest
   public string address { get; set; } = null!;
   public string additionalInfo { get; set; } = "";
 
-  public string identityFrontImageUrl { get; set; } = "";
-  public string identityBackImageUrl { get; set; } = "";
+  public string? identityFrontImageUrl { get; set; }
+  public string? identityBackImageUrl { get; set; }
 
 }

@@ -60,13 +60,13 @@ public static class SeedData
     FundMember fundMember1 = new FundMember
     {
       subUser = subUser1,
-      NickName = $"{subUser1.Name}-1"
+      replicationCount = 1
     };
 
     FundMember fundMember2 = new FundMember
     {
       subUser = subUser2,
-      NickName = $"{subUser2.Name}-2"
+      replicationCount = 1
     };
 
 

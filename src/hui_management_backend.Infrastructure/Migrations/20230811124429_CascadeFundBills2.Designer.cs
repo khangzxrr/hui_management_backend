@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hui_management_backend.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230811124429_CascadeFundBills2")]
+    partial class CascadeFundBills2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,8 +92,9 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<int?>("FundId")
                         .HasColumnType("int");
 
-                    b.Property<int>("replicationCount")
-                        .HasColumnType("int");
+                    b.Property<string>("NickName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("subUserId")
                         .HasColumnType("int");
@@ -194,6 +198,9 @@ namespace hui_management_backend.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("FundSessionId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("PaymentId")
                         .HasColumnType("int");
 
@@ -207,6 +214,8 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FundSessionId");
 
                     b.HasIndex("PaymentId");
 
@@ -389,7 +398,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("IdentityCreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
-                        .HasDefaultValue(new DateTimeOffset(new DateTime(2023, 8, 11, 23, 45, 19, 547, DateTimeKind.Unspecified).AddTicks(1740), new TimeSpan(0, 7, 0, 0, 0)));
+                        .HasDefaultValue(new DateTimeOffset(new DateTime(2023, 8, 11, 19, 44, 29, 163, DateTimeKind.Unspecified).AddTicks(8905), new TimeSpan(0, 7, 0, 0, 0)));
 
                     b.Property<string>("IdentityImageBackUrl")
                         .HasColumnType("nvarchar(max)");
@@ -471,12 +480,12 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", null)
                         .WithMany("Members")
                         .HasForeignKey("FundId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("hui_management_backend.Core.UserAggregate.SubUser", "subUser")
                         .WithMany()
                         .HasForeignKey("subUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("subUser");
@@ -500,7 +509,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasOne("hui_management_backend.Core.FundAggregate.FundMember", "fundMember")
                         .WithMany()
                         .HasForeignKey("fundMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("fundMember");
@@ -508,10 +517,15 @@ namespace hui_management_backend.Infrastructure.Migrations
 
             modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.FundBill", b =>
                 {
+                    b.HasOne("hui_management_backend.Core.FundAggregate.FundSession", null)
+                        .WithMany("fundBills")
+                        .HasForeignKey("FundSessionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("hui_management_backend.Core.PaymentAggregate.Payment", null)
                         .WithMany("fundBills")
                         .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", "fromFund")
                         .WithMany()
@@ -600,6 +614,8 @@ namespace hui_management_backend.Infrastructure.Migrations
 
             modelBuilder.Entity("hui_management_backend.Core.FundAggregate.FundSession", b =>
                 {
+                    b.Navigation("fundBills");
+
                     b.Navigation("normalSessionDetails");
                 });
 

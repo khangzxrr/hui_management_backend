@@ -8,6 +8,6 @@ public class FundMemberConfiguration : IEntityTypeConfiguration<FundMember>
 {
   public void Configure(EntityTypeBuilder<FundMember> builder)
   {
-    builder.HasOne(f => f.subUser).WithMany().OnDelete(DeleteBehavior.Restrict);
+    builder.HasOne(f => f.subUser).WithMany().OnDelete(DeleteBehavior.Cascade);
   }
 }

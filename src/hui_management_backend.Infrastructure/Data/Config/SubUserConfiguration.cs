@@ -20,9 +20,14 @@ public class SubUserConfiguration : IEntityTypeConfiguration<SubUser>
 
     builder.Property(u => u.IdentityCreateDate).IsRequired().HasDefaultValue(DateTimeOffset.Now);
 
-    builder.HasOne(su => su.createBy).WithMany().OnDelete(DeleteBehavior.Restrict);
+    builder.HasOne(su => su.createBy).WithMany().HasForeignKey(su => su.createById)
+      .OnDelete(DeleteBehavior.Restrict);
+
+    builder.HasOne(su => su.rootUser).WithMany(u => u.SubUsers).HasForeignKey(su => su.rootUserId)
+      .OnDelete(DeleteBehavior.Restrict);
 
     builder.HasMany(su => su.Payments).WithOne(p => p.Owner).HasForeignKey(p => p.OwnerId).OnDelete(DeleteBehavior.Restrict);
 
+    builder.HasIndex(u => new { u.rootUserId, u.createById }).IsUnique();
   }
 }

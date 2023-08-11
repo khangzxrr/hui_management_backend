@@ -7,8 +7,10 @@ using hui_management_backend.SharedKernel.Interfaces;
 namespace hui_management_backend.Core.UserAggregate;
 public class SubUser : EntityBase, IAggregateRoot
 {
+  public int rootUserId { get; set; }
   public User rootUser { get; set; } = null!;
 
+  public int createById { get; set; }
   public User createBy { get; set; } = null!;
 
   public string ImageUrl { get; private set; }

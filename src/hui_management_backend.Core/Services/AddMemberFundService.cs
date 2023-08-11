@@ -50,8 +50,7 @@ public class AddMemberFundService : IAddMemberFundService
 
     var fundMember = new FundMember
     {
-      NickName = $"{subUser.Name}-{totalExistFundMember + 1}",
-
+      replicationCount = totalExistFundMember + 1,
       subUser = subUser,
     };
 

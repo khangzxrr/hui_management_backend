@@ -1,10 +1,14 @@
 ﻿using Ardalis.ApiEndpoints;
 using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.FundAggregate;
+using hui_management_backend.Core.FundAggregate.Events;
 using hui_management_backend.Core.FundAggregate.Specifications;
+using hui_management_backend.Core.Interfaces;
+using hui_management_backend.Infrastructure;
 using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Constants;
 using hui_management_backend.Web.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -18,11 +22,15 @@ public class FundRemoveSession : EndpointBaseAsync
 
   private readonly IAuthorizeService _authorizeService;
   private readonly IRepository<Fund> _fundRepository;
+  private readonly IUnitOfWork _unitOfWork;
+  private readonly IMediator _mediator;
 
-  public FundRemoveSession(IAuthorizeService authorizeService, IRepository<Fund> fundRepository)
+  public FundRemoveSession(IAuthorizeService authorizeService, IRepository<Fund> fundRepository, IUnitOfWork unitOfWork, IMediator mediator)
   {
     _authorizeService = authorizeService;
     _fundRepository = fundRepository;
+    _unitOfWork = unitOfWork;
+    _mediator = mediator;
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -52,11 +60,16 @@ public class FundRemoveSession : EndpointBaseAsync
       return NotFound(ResponseMessageConstants.SessionNotFound);
     }
 
+    _unitOfWork.BeginTransaction(); 
+
     fund.RemoveSession(session);
 
     await _fundRepository.UpdateAsync(fund);
 
-    await _fundRepository.SaveChangesAsync();
+    var fundSessionDeleteEvent = new FundSessionDeleteEvent(session);
+    await _mediator.Publish(fundSessionDeleteEvent);
+
+    await _unitOfWork.SaveAndCommitAsync();   
 
 
     return Ok();

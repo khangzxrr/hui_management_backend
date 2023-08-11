@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.SharedKernel;
 
 namespace hui_management_backend.Core.FundAggregate;
@@ -11,7 +12,6 @@ public class FundSession : EntityBase
 
   public IEnumerable<NormalSessionDetail> normalSessionDetails => _normalSessionDetails.AsReadOnly();
 
- 
 
   public void AddNormalSessionDetail(NormalSessionDetail detail)
   {

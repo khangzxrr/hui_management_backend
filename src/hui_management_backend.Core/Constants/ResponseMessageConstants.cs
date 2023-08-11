@@ -36,4 +36,6 @@ public class ResponseMessageConstants
   public const string SubUserAlreadyExist = "SUB_USER_ALREADY_EXIST";
 
   public const string NoSubUserInfoYet = "NO_SUB_USER_INFO_YET";
+
+  public const string UserHasBillsOrAttendInFunds = "USER_HAS_BILLS_OR_ATTEND_IN_FUNDS";
 }

@@ -48,9 +48,19 @@ public class Delete : EndpointBaseAsync
       return NotFound(ResponseMessageConstants.SubUserIsNotFound);
     }
 
-    await _subuserRepository.DeleteAsync(subUser);
+    try
+    {
+      await _subuserRepository.DeleteAsync(subUser);
 
-    await _subuserRepository.SaveChangesAsync();
+      await _subuserRepository.SaveChangesAsync();
+
+    }
+    catch
+    {
+      return BadRequest(ResponseMessageConstants.UserHasBillsOrAttendInFunds);
+    }
+
+    
 
     return Ok();
   }

@@ -10,6 +10,6 @@ public class FundBillConfiguration : IEntityTypeConfiguration<FundBill>
   {
     builder.HasOne(b => b.fromFund).WithMany().OnDelete(DeleteBehavior.Restrict);
     builder.HasOne(b => b.fromSessionDetail).WithMany().OnDelete(DeleteBehavior.Restrict);
-    builder.HasOne(b => b.fromSession).WithMany().OnDelete(DeleteBehavior.Cascade);
+    builder.HasOne(b => b.fromSession).WithMany().OnDelete(DeleteBehavior.Restrict);
   }
 }

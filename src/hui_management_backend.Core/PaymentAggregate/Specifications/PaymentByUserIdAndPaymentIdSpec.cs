@@ -8,6 +8,7 @@ public class PaymentByUserIdAndPaymentIdSpec : Specification<Payment>
   {
     Query
       .Include(p => p.Owner)
+        .ThenInclude(u => u.rootUser)
       .Include(p => p.paymentTransactions)
       .Include(p => p.fundBills)
         .ThenInclude(b => b.fromFund)
@@ -20,6 +21,6 @@ public class PaymentByUserIdAndPaymentIdSpec : Specification<Payment>
       .Include(p => p.fundBills)
         .ThenInclude(b => b.fromSessionDetail)
           .ThenInclude(sd => sd.fundMember)
-      .Where(p => p.Owner.Id == userId && p.Id == paymentId);
+      .Where(p => p.Owner.rootUser.Id == userId && p.Id == paymentId);
   }
 }

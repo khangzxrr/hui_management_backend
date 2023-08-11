@@ -11,5 +11,7 @@ public class NormalSessionDetailConfiguration : IEntityTypeConfiguration<NormalS
     builder.Property(nsd => nsd.type)
       .HasConversion(nsd => nsd.Value, v => NormalSessionType.FromValue(v))
       .IsRequired();
+
+    builder.HasOne(nsd => nsd.fundMember).WithMany().OnDelete(DeleteBehavior.Cascade);
   }
 }

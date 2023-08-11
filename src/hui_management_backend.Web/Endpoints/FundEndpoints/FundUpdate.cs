@@ -2,11 +2,12 @@
 using AutoMapper;
 using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.FundAggregate;
+using hui_management_backend.Core.FundAggregate.Events;
 using hui_management_backend.Core.FundAggregate.Specifications;
-using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -24,11 +25,14 @@ public class FundUpdate : EndpointBaseAsync
 
   private readonly IMapper _mapper;
 
-  public FundUpdate(IRepository<Fund> fundRepository, IAuthorizeService authoizeService, IMapper mapper)
+  private readonly IMediator _mediator;
+
+  public FundUpdate(IRepository<Fund> fundRepository, IAuthorizeService authoizeService, IMapper mapper, IMediator mediator)
   {
     _fundRepository = fundRepository;
     _authorizeService = authoizeService;
     _mapper = mapper;
+    _mediator = mediator;
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -51,6 +55,9 @@ public class FundUpdate : EndpointBaseAsync
       return NotFound();
     }
 
+    var oldFundPrice = fund.FundPrice;
+    var oldServicePrice = fund.ServiceCost; 
+
     fund.SetName(request.name);
     fund.SetServiceCost(request.serviceCost);
     fund.SetOpenDate(request.openDate);
@@ -58,6 +65,10 @@ public class FundUpdate : EndpointBaseAsync
     fund.SetFundPrice(request.fundPrice);
 
     await _fundRepository.UpdateAsync(fund);
+
+    //FundUpdateEvent fundUpdateEvent = new FundUpdateEvent(fund, oldFundPrice, oldServicePrice);
+    //await _mediator.Publish(fundUpdateEvent);
+
     await _fundRepository.SaveChangesAsync();
 
     var fundRecord = _mapper.Map<FundRecord>(fund);

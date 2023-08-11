@@ -48,5 +48,8 @@ public class Payment : EntityBase, IAggregateRoot
     Status = Guard.Against.Null(status);  
   }
 
-
+  public void RemoveAllFundBillWithSessionId(int fundBillId)
+  {
+    _fundBills.RemoveAll(fb => fb.fromSession.Id == fundBillId);
+  }
 }

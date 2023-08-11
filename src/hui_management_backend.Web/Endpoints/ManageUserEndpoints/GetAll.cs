@@ -61,8 +61,8 @@ public class GetAll : EndpointBaseAsync
       {
         var subuserRecord = _mapper.Map<SubUserRecord>(subuser);
 
-        subuserRecord.totalProcessingAmount = subuser.Payments.Sum(p => p.TotalCost);
-        subuserRecord.totalDebtAmount = subuser.Payments.Sum(p => p.TotalTransactionCost);
+        subuserRecord.totalProcessingAmount = subuser.Payments.Where(p => p.Status != PaymentStatus.Finish).Sum(p => p.TotalCost);
+        subuserRecord.totalDebtAmount = subuser.Payments.Where(p => p.Status != PaymentStatus.Finish).Sum(p => p.TotalTransactionCost);
 
         filteredUserRecord.Add(subuserRecord);
       }

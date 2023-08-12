@@ -66,7 +66,7 @@ public class Create : EndpointBaseAsync
     } else
     {
       user = new User(request.phonenumber, "123123aaa", RoleName.User);
-      subUser = user.AddSubUser(request.imageUrl, request.identity, request.identityCreateAt, request.identityAddress, null, null, request.name, request.address, request.bankname, request.banknumber, request.phonenumber, request.additionalInfo, owner);
+      subUser = user.AddSubUser(request.imageUrl, request.identity, request.identityCreateAt, request.identityAddress, request.identityFrontImageUrl, request.identityBackImageUrl, request.nickName, request.name, request.address, request.bankname, request.phonenumber, request.additionalInfo, owner);
 
       await _userRepository.AddAsync(user);
     }

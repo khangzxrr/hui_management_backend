@@ -36,7 +36,19 @@ public class SubUser : EntityBase, IAggregateRoot
   private readonly List<Payment> _payments = new();
   public IEnumerable<Payment> Payments => _payments.AsReadOnly();
 
-  public SubUser(string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string additionalInfo)
+  public SubUser(
+    string imageUrl, 
+    string identity, 
+    DateTimeOffset identityCreateDate, 
+    string identityAddress, 
+    string? identityImageFrontUrl, 
+    string? identityImageBackUrl, 
+    string nickName, 
+    string name, 
+    string address, 
+    string bankName, 
+    string bankNumber, 
+    string additionalInfo)
   {
     ImageUrl = imageUrl;
     Identity = identity;

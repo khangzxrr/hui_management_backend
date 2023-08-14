@@ -25,14 +25,12 @@ public class ReportAll : EndpointBaseAsync
 
   private readonly IAuthorizeService _authorizeService;
   private readonly IRepository<Fund> _fundRepository;
-  private readonly IRepository<Payment> _paymentRepository;
   private readonly IRepository<SubUser> _subuserRepository;
   private readonly IMapper _mapper;
 
-  public ReportAll(IAuthorizeService authorizeService, IRepository<Fund> fundRepository, IRepository<SubUser> subuserRepository, IMapper mapper, IRepository<Payment> paymentRepository)
+  public ReportAll(IAuthorizeService authorizeService, IRepository<Fund> fundRepository, IRepository<SubUser> subuserRepository, IMapper mapper)
   {
     _authorizeService = authorizeService;
-    _paymentRepository = paymentRepository;
     _fundRepository = fundRepository;
     _subuserRepository = subuserRepository;
     _mapper = mapper;
@@ -103,6 +101,7 @@ public class ReportAll : EndpointBaseAsync
           } else if (sessionDetail.type == NormalSessionType.Taken)
           {
             userReport.totalTakenAmount += sessionDetail.payCost;
+            userReport.fundRatio -= sessionDetail.payCost;
           }
 
         }

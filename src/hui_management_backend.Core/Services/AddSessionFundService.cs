@@ -87,6 +87,7 @@ public class AddSessionFundService : IAddSessionFundService
     newSession.AddNormalSessionDetail(takenSessionDetail);
 
 
+
     foreach (FundMember member in fund.Members)
     {
       if (member == fundTakenMember) continue;
@@ -99,10 +100,10 @@ public class AddSessionFundService : IAddSessionFundService
         //take full price if dead, otherwise take good price
         payCost = isAlreadyTaken ? fund.FundPrice : aliveMemberPayCost,
         type = isAlreadyTaken ? NormalSessionType.Dead : NormalSessionType.Alive,
-        lossCost = 0,
-        fundAmount = 0,
-        predictedPrice = 0,
-        serviceCost = 0,
+        lossCost = isAlreadyTaken ? 0 : -predictedPrice,
+        fundAmount = fundAmount,
+        predictedPrice = predictedPrice,
+        serviceCost = fund.ServiceCost,
       };
 
       newSession.AddNormalSessionDetail(normalSessionDetail);

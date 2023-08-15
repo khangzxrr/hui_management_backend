@@ -12,7 +12,9 @@ public class FundUpdateRequest
   [Required]
   public string name { get; set; } = null!;
   [Required]
-  public string openDateText { get; set; } = null!;
+  public int newSessionDurationDayCount { get; set; }
+  [Required]
+  public int takenSessionDeliveryDayCount { get; set; }
   [Required]
   public DateTimeOffset openDate { get; set; }
   [Required]

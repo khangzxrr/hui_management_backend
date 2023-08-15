@@ -9,7 +9,7 @@ namespace hui_management_backend.Web;
 public static class SeedData
 {
   
-  public static readonly Fund Fund = new Fund("Hụi ngày", "Khui vào mỗi ngày", DateTimeOffset.Now, 1500000.0, 300000.0);
+  public static readonly Fund Fund = new Fund("Hụi ngày", 1, 1 ,DateTimeOffset.Now, 1500000.0, 300000.0);
 
   public static readonly User FundOwner = new User("0862106650", "123123aaa", RoleName.Owner);
   

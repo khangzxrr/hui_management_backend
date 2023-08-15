@@ -11,7 +11,10 @@ public class Fund : EntityBase, IAggregateRoot
 
   public bool IsArchived { get; private set; }
 
-  public string OpenDateText { get; private set; }
+
+  public int NewSessionDurationDayCount { get; private set; }
+
+  public int TakenSessionDeliveryDayCount { get; private set; }
   public DateTimeOffset OpenDate { get; private set; }
 
   public double FundPrice { get; private set; }
@@ -27,10 +30,13 @@ public class Fund : EntityBase, IAggregateRoot
   private readonly List<FundSession> _sessions = new List<FundSession>();
   public IEnumerable<FundSession> Sessions => _sessions.AsReadOnly();
 
-  public Fund(string name, string openDateText, DateTimeOffset openDate, double fundPrice, double serviceCost)
+  public Fund(string name, int newSessionDurationDayCount, int takenSessionDeliveryDayCount, DateTimeOffset openDate, double fundPrice, double serviceCost)
   {
     Name = name;
-    OpenDateText = openDateText;
+
+    NewSessionDurationDayCount = newSessionDurationDayCount;
+    TakenSessionDeliveryDayCount = takenSessionDeliveryDayCount;
+
     OpenDate = openDate;
     FundPrice = fundPrice;
     ServiceCost = serviceCost;
@@ -65,10 +71,15 @@ public class Fund : EntityBase, IAggregateRoot
   {
     Name = Guard.Against.NullOrEmpty(name);
   }
-
-  public void SetOpenDateText(string openDateText)
+  
+  public void SetNewSessionDurationDayCount(int newSessionDurationDayCount)
   {
-    OpenDateText = Guard.Against.NullOrEmpty(openDateText);
+    NewSessionDurationDayCount = Guard.Against.NegativeOrZero(newSessionDurationDayCount);
+  }
+
+  public void SetTakenSessionDeliveryDayCount(int takenSessionDeliveryDayCount)
+  {
+    TakenSessionDeliveryDayCount = Guard.Against.Negative(takenSessionDeliveryDayCount);
   }
 
   public void SetOpenDate(DateTimeOffset openDate)

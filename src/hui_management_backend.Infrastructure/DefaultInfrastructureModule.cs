@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Autofac;
+using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.Interfaces;
-using hui_management_backend.Core.ProjectAggregate;
 using hui_management_backend.Core.Services;
 using hui_management_backend.Infrastructure.Data;
 using hui_management_backend.SharedKernel;
@@ -21,7 +21,7 @@ public class DefaultInfrastructureModule : Module
   {
     _isDevelopment = isDevelopment;
     var coreAssembly =
-      Assembly.GetAssembly(typeof(Project)); // TODO: Replace "Project" with any type from your Core project
+      Assembly.GetAssembly(typeof(Fund)); 
     var infrastructureAssembly = Assembly.GetAssembly(typeof(StartupSetup));
     if (coreAssembly != null)
     {
@@ -75,6 +75,11 @@ public class DefaultInfrastructureModule : Module
       .As<IUnitOfWork>()
       .InstancePerLifetimeScope();
 
+    builder
+      .RegisterType<PushNotificationSender>()
+      .As<IPushNotificationSender>()
+      .SingleInstance();
+
     builder.RegisterType<MediaService>().As<IMediaService>()
       .InstancePerLifetimeScope();
 
@@ -104,15 +109,11 @@ public class DefaultInfrastructureModule : Module
 
   private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
   {
-    // NOTE: Add any development only services here
-    builder.RegisterType<FakeEmailSender>().As<IEmailSender>()
-      .InstancePerLifetimeScope();
+   
   }
 
   private void RegisterProductionOnlyDependencies(ContainerBuilder builder)
   {
-    // NOTE: Add any production only services here
-    builder.RegisterType<SmtpEmailSender>().As<IEmailSender>()
-      .InstancePerLifetimeScope();
+  
   }
 }

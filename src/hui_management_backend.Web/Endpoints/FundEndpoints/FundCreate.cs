@@ -50,7 +50,7 @@ public class FundCreate : EndpointBaseAsync
     }
 
 
-    var fund = new Fund(request.name, request.openDateText, request.openDate, request.fundPrice, request.serviceCost);
+    var fund = new Fund(request.name, request.NewSessionDurationDayCount, request.TakenSessionDeliveryDayCount, request.openDate, request.fundPrice, request.serviceCost);
     fund.SetOwner(user);
 
     await _fundRepository.AddAsync(fund);

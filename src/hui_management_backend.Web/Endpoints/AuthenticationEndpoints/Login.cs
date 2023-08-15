@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
 using hui_management_backend.Core.Interfaces;
+using hui_management_backend.Infrastructure;
 using hui_management_backend.Web.Constants;
 using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
@@ -17,12 +18,14 @@ public class Login : EndpointBaseAsync
   private readonly IMapper _mapper;
   private readonly IAuthenticationService _authenticationService;
   private readonly ITokenService _tokenService;
+  private readonly IPushNotificationSender _pushNotificationSender;
 
-  public Login(IAuthenticationService authenticationService, ITokenService tokenService, IMapper mapper)
+  public Login(IAuthenticationService authenticationService, ITokenService tokenService, IMapper mapper, IPushNotificationSender pushNotificationSender)
   {
     _authenticationService = authenticationService;
     _tokenService = tokenService;
     _mapper = mapper;
+    _pushNotificationSender = pushNotificationSender;
   }
 
 
@@ -49,7 +52,9 @@ public class Login : EndpointBaseAsync
     {
       return BadRequest(ResponseMessageConstants.NoSubUserInfoYet);
     }
-    
+
+    await _pushNotificationSender.SendPushNotificationAsync("e9i0WRAlYVO6z2PeV2iaeR:APA91bGzGpqImL_u7JY2NlkRM4AJjH-s2xi-gKZ2BTRkyfOttVQd1GGNDS5z5V38HnHRKT0vL00jmYXU57tOMRDmJvDMN6eJLwbORB_PEw6e8FDK48VVvVCQ53nrJ7ei76hrvb_gIfjI", "login", "bạn vừa đăng nhập");
+
     var response = new LoginResponse(token, _mapper.Map<SubUserRecord>(result.Value.SubUsers.First()));
 
     return Ok(response);

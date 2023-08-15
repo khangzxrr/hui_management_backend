@@ -61,7 +61,8 @@ public class FundUpdate : EndpointBaseAsync
     fund.SetName(request.name);
     fund.SetServiceCost(request.serviceCost);
     fund.SetOpenDate(request.openDate);
-    fund.SetOpenDateText(request.openDateText);
+    fund.SetNewSessionDurationDayCount(request.newSessionDurationDayCount);
+    fund.SetTakenSessionDeliveryDayCount(request.takenSessionDeliveryDayCount);
     fund.SetFundPrice(request.fundPrice);
 
     await _fundRepository.UpdateAsync(fund);

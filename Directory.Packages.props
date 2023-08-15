@@ -18,6 +18,7 @@
     <PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.0.1" />
     <PackageVersion Include="FastEndpoints.Swagger" Version="5.5.0" />
     <PackageVersion Include="FastEndpoints.Swagger.Swashbuckle" Version="2.0.1" />
+    <PackageVersion Include="FirebaseAdmin" Version="2.4.0" />
     <PackageVersion Include="FirebaseAuthentication.net" Version="4.0.2" />
     <PackageVersion Include="FirebaseStorage.net" Version="1.0.3" />
     <PackageVersion Include="MediatR" Version="12.0.1" />

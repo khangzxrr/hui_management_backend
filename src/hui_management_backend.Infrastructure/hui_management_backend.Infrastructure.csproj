@@ -10,6 +10,7 @@
     <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" />
     <PackageReference Include="Autofac" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" />
+    <PackageReference Include="FirebaseAdmin" />
     <PackageReference Include="FirebaseAuthentication.net" />
     <PackageReference Include="FirebaseStorage.net" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" />

@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
-using hui_management_backend.Core.ContributorAggregate;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.MediaAggregate;
-using hui_management_backend.Core.ProjectAggregate;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel;
 using hui_management_backend.SharedKernel.Interfaces;
@@ -20,11 +18,6 @@ public class AppDbContext : DbContext
   {
     _dispatcher = dispatcher;
   }
-
-  public DbSet<ToDoItem> ToDoItems => Set<ToDoItem>();
-  public DbSet<Project> Projects => Set<Project>();
-  public DbSet<Contributor> Contributors => Set<Contributor>(); 
-
   public DbSet<Media> Medias => Set<Media>();
 
   public DbSet<Fund> Funds => Set<Fund>();

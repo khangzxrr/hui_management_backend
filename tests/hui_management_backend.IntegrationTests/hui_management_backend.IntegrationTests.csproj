@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\hui_management_backend.Infrastructure\hui_management_backend.Infrastructure.csproj" />
-    <ProjectReference Include="..\hui_management_backend.UnitTests\hui_management_backend.UnitTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

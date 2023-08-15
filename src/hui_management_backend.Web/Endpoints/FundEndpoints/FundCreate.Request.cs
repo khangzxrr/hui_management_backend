@@ -9,9 +9,11 @@ public class FundCreateRequest
   [Required]
   public string name { get; set; } = null!;
   [Required]
-  public string openDateText { get; set; } = null!;
-  [Required]
   public DateTimeOffset openDate { get; set; }
+  [Required]
+  public int NewSessionDurationDayCount { get; set; }
+  [Required]
+  public int TakenSessionDeliveryDayCount { get; set; }
   [Required]
   public double fundPrice { get; set; }
   [Required]

@@ -55,9 +55,6 @@ public class FundUpdate : EndpointBaseAsync
       return NotFound();
     }
 
-    var oldFundPrice = fund.FundPrice;
-    var oldServicePrice = fund.ServiceCost; 
-
     fund.SetName(request.name);
     fund.SetServiceCost(request.serviceCost);
     fund.SetOpenDate(request.openDate);

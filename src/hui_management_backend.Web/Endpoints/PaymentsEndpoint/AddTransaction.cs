@@ -85,7 +85,7 @@ public class AddTransaction : EndpointBaseAsync
       return BadRequest(ResponseMessageConstants.TransactionMethodCannotBeParsed);
     }
 
-    if (payment.fundBills.First().fromFund.Owner.Id != _authorizeService.UserId)
+    if (payment.fundBills.First().fromFund!.Owner.Id != _authorizeService.UserId)
     {
       return BadRequest(ResponseMessageConstants.UserIsNotBelongToFundOwner);
     }

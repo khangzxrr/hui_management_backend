@@ -12,15 +12,15 @@ public class PaymentByUserIdAndPaymentIdSpec : Specification<Payment>
       .Include(p => p.paymentTransactions)
       .Include(p => p.fundBills)
         .ThenInclude(b => b.fromFund)
-          .ThenInclude(f => f.Members)
+          .ThenInclude(f => f!.Members)
       .Include(p => p.fundBills)
         .ThenInclude(b => b.fromFund)
-          .ThenInclude(b => b.Owner)
+          .ThenInclude(b => b!.Owner)
       .Include(p => p.fundBills)
         .ThenInclude(b => b.fromSession)
       .Include(p => p.fundBills)
         .ThenInclude(b => b.fromSessionDetail)
-          .ThenInclude(sd => sd.fundMember)
+          .ThenInclude(sd => sd!.fundMember)
       .Where(p => p.Owner.rootUser.Id == userId && p.Id == paymentId);
   }
 }

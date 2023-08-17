@@ -11,6 +11,6 @@ public class PaymentByFundSessionIdSpec : Specification<Payment>
         .ThenInclude(fb => fb.fromSession)
        .Include(p => p.fundBills)
         .ThenInclude(fb => fb.fromSessionDetail)
-      .Where(p => p.fundBills.Where(fb => fb.fromSession.Id == fundSesionId).Any());
+      .Where(p => p.fundBills.Where(fb => fb.fromSession!.Id == fundSesionId).Any());
   }
 }

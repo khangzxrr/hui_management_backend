@@ -14,7 +14,7 @@ public class Payment : EntityBase, IAggregateRoot
   public required DateTimeOffset CreateAt { get; set; }
 
   public double TotalCost => 
-    _fundBills.Sum(fb => (fb.fromSessionDetail.type == NormalSessionType.Taken) ? -fb.fromSessionDetail.payCost : fb.fromSessionDetail.payCost);
+    _fundBills.Sum(fb => (fb.fromSessionDetail!.type == NormalSessionType.Taken) ? -fb.fromSessionDetail.payCost : fb.fromSessionDetail.payCost);
 
   public double TotalTransactionCost => _paymentTransactions.Sum(p => p.Amount);
 
@@ -34,6 +34,11 @@ public class Payment : EntityBase, IAggregateRoot
     _fundBills.Add(bill);
   }
 
+  public void RemoveAllFundBillByFundId(int fundId)
+  {
+    _fundBills.RemoveAll(fb => fb.fromFund!.Id == fundId);
+  }
+
   public void AddPaymentTransaction(PaymentTransaction transaction)
   {
     Guard.Against.Null(transaction);
@@ -50,6 +55,6 @@ public class Payment : EntityBase, IAggregateRoot
 
   public void RemoveAllFundBillWithSessionId(int fundBillId)
   {
-    _fundBills.RemoveAll(fb => fb.fromSession.Id == fundBillId);
+    _fundBills.RemoveAll(fb => fb.fromSession!.Id == fundBillId);
   }
 }

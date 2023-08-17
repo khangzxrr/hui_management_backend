@@ -3,5 +3,5 @@
 public class FundAddSessionRequestBody
 {
   public int memberId { get; set; }
-  public int predictPrice { get; set; }
+  public double predictPrice { get; set; }
 }

@@ -21,7 +21,7 @@ public class SubUserWithPaymentByRootUserIdSpec : Specification<SubUser>
     .Include(u => u.Payments)
         .ThenInclude(p => p.fundBills)
           .ThenInclude(fb => fb.fromSession)
-            .ThenInclude(fs => fs.normalSessionDetails)
+            .ThenInclude(fs => fs!.normalSessionDetails)
               .ThenInclude(nsd => nsd.fundMember)
                 .ThenInclude(fm => fm.subUser)
                   .ThenInclude(su => su.rootUser)

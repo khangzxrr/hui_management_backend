@@ -49,6 +49,10 @@ public class Fund : EntityBase, IAggregateRoot
     IsArchived = false;
   }
 
+  public void RemoveAllMember()
+  {
+    _members.RemoveAll(_members => true);
+  }
   public void AddMember(FundMember member)
   {
     Guard.Against.Null(member);

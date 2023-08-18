@@ -17,5 +17,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     builder.Property(u => u.Password).IsRequired();
 
     builder.Property(u => u.Role).HasConversion(u => u.Value, v => RoleName.FromValue(v)).HasDefaultValue(RoleName.User).IsRequired();
+
+    builder.HasMany(u => u.NotificationTokens).WithOne().OnDelete(DeleteBehavior.Cascade);
   }
 }

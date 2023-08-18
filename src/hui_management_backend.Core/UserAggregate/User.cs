@@ -12,6 +12,9 @@ public class User : EntityBase, IAggregateRoot
 
   public RoleName Role { get; private set; }
 
+  private readonly List<NotificationToken> _notificationTokens = new();
+  public IEnumerable<NotificationToken> NotificationTokens => _notificationTokens.AsReadOnly();
+
   private readonly List<SubUser> _subUsers = new();
   public IEnumerable<SubUser> SubUsers => _subUsers.AsReadOnly();
 
@@ -59,4 +62,9 @@ public class User : EntityBase, IAggregateRoot
     PhoneNumber = Guard.Against.NullOrEmpty(phoneNumber);
   }
 
+  public void AddNotificationToken(string token)
+  {
+    Guard.Against.NullOrEmpty(token);
+    _notificationTokens.Add(new NotificationToken(token));
+  }
 }

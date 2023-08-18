@@ -7,4 +7,6 @@ public class RoleNameConstants
 
   public const string User = "User";
   public const int UserValue = 0;
+
+  public const string OwnerUser = $"{Owner},{User}";
 }

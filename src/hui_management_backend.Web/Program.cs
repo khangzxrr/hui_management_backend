@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using hui_management_backend.Web.Interfaces;
 using hui_management_backend.Web.Services;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +36,7 @@ if (builder.Environment.EnvironmentName == "Development")
   connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
 }
 
-
+builder.Services.AddHangfireService(connectionString!);
 
 builder.Services.AddDbContext(connectionString!);
 
@@ -154,6 +155,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCookiePolicy();
 
+app.UseHangfireDashboard();
 
 // Enable middleware to serve generated Swagger as a JSON endpoint.
 app.UseSwagger();

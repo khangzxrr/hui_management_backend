@@ -26,7 +26,7 @@ public class UserAddNotificationToken : EndpointBaseAsync
   }
 
   [Authorize]
-  [HttpGet(UserAddNotificationTokenRequest.Route)]
+  [HttpPost(UserAddNotificationTokenRequest.Route)]
   [SwaggerOperation(
        Summary = "Add new notification token",
        Description = "Ad new notification token",
@@ -34,7 +34,7 @@ public class UserAddNotificationToken : EndpointBaseAsync
        Tags = new[] { "UserEndpoints" }
           )
      ]
-  public override async Task<ActionResult> HandleAsync(UserAddNotificationTokenRequest request, CancellationToken cancellationToken = default)
+  public override async Task<ActionResult> HandleAsync([FromBody] UserAddNotificationTokenRequest request, CancellationToken cancellationToken = default)
   {
     var userSpec = new NotificationTokensByUserIdSpec(_authorizeService.UserId);
 

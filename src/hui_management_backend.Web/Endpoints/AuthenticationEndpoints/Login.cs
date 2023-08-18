@@ -53,7 +53,7 @@ public class Login : EndpointBaseAsync
       return BadRequest(ResponseMessageConstants.NoSubUserInfoYet);
     }
 
-    await _pushNotificationSender.SendPushNotificationAsync("e9i0WRAlYVO6z2PeV2iaeR:APA91bGzGpqImL_u7JY2NlkRM4AJjH-s2xi-gKZ2BTRkyfOttVQd1GGNDS5z5V38HnHRKT0vL00jmYXU57tOMRDmJvDMN6eJLwbORB_PEw6e8FDK48VVvVCQ53nrJ7ei76hrvb_gIfjI", "login", "bạn vừa đăng nhập");
+    await _pushNotificationSender.SendPushNotificationAsync(result.Value.Id, "Đăng nhập", "Bạn vừa đăng nhập vào tài khoản");
 
     var response = new LoginResponse(token, _mapper.Map<SubUserRecord>(result.Value.SubUsers.First()));
 

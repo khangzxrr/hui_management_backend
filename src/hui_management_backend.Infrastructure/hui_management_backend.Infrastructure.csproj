@@ -13,6 +13,9 @@
     <PackageReference Include="FirebaseAdmin" />
     <PackageReference Include="FirebaseAuthentication.net" />
     <PackageReference Include="FirebaseStorage.net" />
+    <PackageReference Include="Hangfire.AspNetCore" />
+    <PackageReference Include="Hangfire.Core" />
+    <PackageReference Include="Hangfire.SqlServer" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />

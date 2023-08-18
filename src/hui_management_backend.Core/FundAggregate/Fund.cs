@@ -13,10 +13,13 @@ public class Fund : EntityBase, IAggregateRoot
 
 
   public int NewSessionDurationDayCount { get; private set; }
-  public DateTimeOffset NextSessionDurationDate => OpenDate.AddDays(NewSessionDurationDayCount * (_sessions.Count + 1));
+  public DateTimeOffset CurrentSessionDurationDate => OpenDate.AddDays(NewSessionDurationDayCount * (_sessions.Count + 1));
+  public DateTimeOffset NextSessionDurationDate => OpenDate.AddDays(NewSessionDurationDayCount * (_sessions.Count + 2));
+
 
   public int TakenSessionDeliveryDayCount { get; private set; }
-  public DateTimeOffset NextTakenSessionDeliveryDate => OpenDate.AddDays(TakenSessionDeliveryDayCount * (_sessions.Count + 1));
+  public DateTimeOffset CurrentTakenSessionDeliveryDate => OpenDate.AddDays(TakenSessionDeliveryDayCount * (_sessions.Count + 1));
+  public DateTimeOffset NextTakenSessionDeliveryDate => OpenDate.AddDays(TakenSessionDeliveryDayCount * (_sessions.Count + 2));
   
   public DateTimeOffset OpenDate { get; private set; }
   public DateTimeOffset EndDate => OpenDate.AddDays(NewSessionDurationDayCount * _members.Count);

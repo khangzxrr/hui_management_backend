@@ -13,6 +13,7 @@ using System.Text;
 using hui_management_backend.Web.Interfaces;
 using hui_management_backend.Web.Services;
 using Hangfire;
+using hui_management_backend.Core.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -180,6 +181,8 @@ using (var scope = app.Services.CreateScope())
     var logger = services.GetRequiredService<ILogger<Program>>();
     logger.LogError(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
   }
+
+  RecurringJob.AddOrUpdate<ICreateSessionRemindingService>("remindingCreateSession", (createSessionRemindService) => createSessionRemindService.RemindCreateSession(), "0 0 12 * * ?"); 
 }
 
 app.Run();

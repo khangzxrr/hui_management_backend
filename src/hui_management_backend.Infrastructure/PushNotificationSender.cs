@@ -1,7 +1,6 @@
 ﻿using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
 using Google.Apis.Auth.OAuth2;
-using Hangfire;
 using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Specifications;
@@ -55,7 +54,26 @@ public class PushNotificationSender : IPushNotificationSender
 
 
     var tokens = user.NotificationTokens.Select(t => t.Token).ToList();
-
-    //RecurringJob.AddOrUpdate($"SendPushNotificationAsync-{userId}", (IPushNotificationSender pushNotificationSender) => pushNotificationSender.sendMultiMessage(tokens, subject, body), Cron.Hourly);
   }
+
+  public async Task SendPushNotificationForMultipleUsersAsync(IEnumerable<int> userIds, string subject, string body)
+  {
+    List<string> tokens = new List<string>();
+
+    foreach(int userId in userIds)
+    {
+      var userSpec = new NotificationTokensByUserIdSpec(userId);
+      var user = await _userRepository.FirstOrDefaultAsync(userSpec);
+
+      if (user == null)
+      {
+        continue;
+      }
+
+      tokens.AddRange(user.NotificationTokens.Select(t => t.Token));  
+    }
+
+    await sendMultiMessage(tokens, subject, body);
+  }
+
 }

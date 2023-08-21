@@ -25,5 +25,8 @@ public class DefaultCoreModule : Module
     builder.RegisterType<GetPaymentService>()
         .As<IGetPaymentService>().InstancePerLifetimeScope();
 
+    builder.RegisterType<CreateSessionRemindService>()
+        .As<ICreateSessionRemindingService>().SingleInstance();
+
   }
 }

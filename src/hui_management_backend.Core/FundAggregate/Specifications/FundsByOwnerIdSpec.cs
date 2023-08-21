@@ -3,7 +3,7 @@
 namespace hui_management_backend.Core.FundAggregate.Specifications;
 public class FundsByOwnerIdSpec : Specification<Fund>
 {
-  public FundsByOwnerIdSpec(int ownerId, bool isArchived = false)
+  public FundsByOwnerIdSpec(int ownerId)
   {
     Query
       .Include(f => f.Owner)
@@ -13,6 +13,6 @@ public class FundsByOwnerIdSpec : Specification<Fund>
         .ThenInclude(s => s.normalSessionDetails)
           .ThenInclude(nsd => nsd.fundMember)
             .ThenInclude(fm => fm.subUser)
-      .Where(f => f.Owner.Id == ownerId && f.IsArchived == isArchived);
+      .Where(f => f.Owner.Id == ownerId);
   }
 }

@@ -3,18 +3,17 @@
 public record GeneralFundRecord(
   int id, 
   string name, 
-  int newSessionDurationDayCount,
-  int takenSessionDeliveryDayCount,
-  DateTimeOffset currentSessionDurationDate, 
-  DateTimeOffset nextSessionDurationDate,
-  DateTimeOffset currentTakenSessionDeliveryDate, 
-  DateTimeOffset nextTakenSessionDeliveryDate,
-  DateTimeOffset openDate, 
-  DateTimeOffset endDate, 
+  string fundType,
+  int NewSessionDurationCount,
+  int TakenSessionDeliveryCount,
+  int NewSessionCreateDayOfMonth,
+  DateTimeOffset NewSessionCreateHourOfDay,
+  DateTimeOffset openDate,
+  DateTimeOffset endDate,
   double fundPrice, 
   double serviceCost, 
-  double lastSessionFundPrice, 
   int membersCount, 
-  int sessionsCount)
+  int sessionsCount,
+  IEnumerable<DateTimeOffset> newSessionCreateDates)
 {
 }

@@ -5,6 +5,7 @@ using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Events;
 using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
+using hui_management_backend.Web.Constants;
 using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
 using MediatR;
@@ -46,6 +47,13 @@ public class FundUpdate : EndpointBaseAsync
   ]
   public override async Task<ActionResult<FundUpdateResponse>> HandleAsync([FromBody] FundUpdateRequest request, CancellationToken cancellationToken = default)
   {
+    FundType fundType;
+    bool successParsedFundType = FundType.TryFromName(request.fundType, true, out fundType);
+    if (!successParsedFundType)
+    {
+      return BadRequest(ResponseMessageConstants.CannotParseFundType);
+    }
+
     var spec = new FundByIdAndOwnerIdSpec(request.id, _authorizeService.UserId);
 
     var fund = await _fundRepository.FirstOrDefaultAsync(spec);
@@ -58,9 +66,12 @@ public class FundUpdate : EndpointBaseAsync
     fund.SetName(request.name);
     fund.SetServiceCost(request.serviceCost);
     fund.SetOpenDate(request.openDate);
-    fund.SetNewSessionDurationDayCount(request.newSessionDurationDayCount);
-    fund.SetTakenSessionDeliveryDayCount(request.takenSessionDeliveryDayCount);
+    fund.SetNewSessionDurationDayCount(request.newSessionDurationCount);
+    fund.SetTakenSessionDeliveryDayCount(request.takenSessionDeliveryCount);
     fund.SetFundPrice(request.fundPrice);
+    fund.SetFundType(fundType);
+    fund.SetNewSessionCreateDayOfMonth(request.newSessionCreateDayOfMonth);
+    fund.SetNewSessionCreateHourOfDay(request.newSessionCreateHourOfDay);
 
     await _fundRepository.UpdateAsync(fund);
 

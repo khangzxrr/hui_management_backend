@@ -4,6 +4,7 @@ using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.SharedKernel.Interfaces;
+using hui_management_backend.Web.Constants;
 using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -42,6 +43,14 @@ public class FundCreate : EndpointBaseAsync
   ]
   public override async Task<ActionResult<FundCreateResponse>> HandleAsync([FromBody] FundCreateRequest request, CancellationToken cancellationToken = default)
   {
+    FundType fundType;
+    bool successParsedFundType = FundType.TryFromName(request.fundType, true, out fundType);
+
+    if (!successParsedFundType)
+    {
+      return BadRequest(ResponseMessageConstants.CannotParseFundType);
+    }
+
     var user = await _userRepository.GetByIdAsync(_authoizeService.UserId);
 
     if (user == null)
@@ -49,8 +58,17 @@ public class FundCreate : EndpointBaseAsync
       return BadRequest();
     }
 
+    Fund fund = new Fund(
+        request.name,
+        request.NewSessionDurationCount,
+        request.TakenSessionDeliveryCount,
+        request.NewSessionCreateDayOfMonth,
+        request.NewSessionCreateHourOfDay,
+        request.openDate,
+        request.fundPrice,
+        request.serviceCost,
+        fundType);
 
-    var fund = new Fund(request.name, request.NewSessionDurationDayCount, request.TakenSessionDeliveryDayCount, request.openDate, request.fundPrice, request.serviceCost);
     fund.SetOwner(user);
 
     await _fundRepository.AddAsync(fund);

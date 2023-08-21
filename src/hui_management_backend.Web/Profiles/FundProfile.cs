@@ -14,10 +14,7 @@ public class FundProfile : Profile
     CreateMap<Fund, FundRecord>();
 
     CreateMap<Fund, GeneralFundRecord>()
-      .ForMember(dst => dst.newSessionDurationDayCount, opt => opt.MapFrom(src => src.NewSessionDurationDayCount))
-      .ForMember(dst => dst.nextSessionDurationDate, opt => opt.MapFrom(src => src.CurrentSessionDurationDate))
-      .ForMember(dst => dst.takenSessionDeliveryDayCount, opt => opt.MapFrom(src => src.TakenSessionDeliveryDayCount))
-      .ForMember(dst => dst.nextTakenSessionDeliveryDate, opt => opt.MapFrom(src => src.CurrentTakenSessionDeliveryDate));
+      .ForMember(dst => dst.fundType, opt => opt.MapFrom(src => src.FundType.Name));
 
 
   }

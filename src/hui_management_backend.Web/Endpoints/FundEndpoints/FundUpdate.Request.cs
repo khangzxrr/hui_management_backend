@@ -12,13 +12,19 @@ public class FundUpdateRequest
   [Required]
   public string name { get; set; } = null!;
   [Required]
-  public int newSessionDurationDayCount { get; set; }
+  public int newSessionDurationCount { get; set; }
   [Required]
-  public int takenSessionDeliveryDayCount { get; set; }
+  public int takenSessionDeliveryCount { get; set; }
+  [Required]
+  public int newSessionCreateDayOfMonth { get; set; }
+  [Required]
+  public DateTimeOffset newSessionCreateHourOfDay { get; set; }
   [Required]
   public DateTimeOffset openDate { get; set; }
   [Required]
   public double fundPrice { get; set; }
   [Required]
   public double serviceCost { get; set; }
+  [Required]
+  public string fundType { get; set; } = null!;
 }

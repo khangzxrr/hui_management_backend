@@ -11,5 +11,11 @@ public class FundConfiguration : IEntityTypeConfiguration<Fund>
   {
     builder.HasMany(f => f.Members).WithOne().OnDelete(DeleteBehavior.Restrict);
     builder.HasMany(f => f.Sessions).WithOne().OnDelete(DeleteBehavior.Cascade);
+
+    builder.Property(f => f.FundType)
+      .HasConversion(ft => ft.Value, v => FundType.FromValue(v))
+      .IsRequired();
+
+    builder.HasQueryFilter(f => !f.IsArchived);
   }
 }

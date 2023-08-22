@@ -20,6 +20,8 @@ public class FundUpdateRequest
   [Required]
   public DateTimeOffset newSessionCreateHourOfDay { get; set; }
   [Required]
+  public DateTimeOffset takenSessionDeliveryHourOfDay { get; set; }
+  [Required]
   public DateTimeOffset openDate { get; set; }
   [Required]
   public double fundPrice { get; set; }

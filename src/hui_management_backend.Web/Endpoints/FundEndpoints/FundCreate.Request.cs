@@ -19,10 +19,13 @@ public class FundCreateRequest
   [Required]
   public DateTimeOffset NewSessionCreateHourOfDay { get; set; }
   [Required]
+  public DateTimeOffset takenSessionDeliveryHourOfDay { get; set; }
+
+  [Required]
   public double fundPrice { get; set; }
   [Required]
   public double serviceCost { get; set; }
   [Required]
   public string fundType { get; set; } = null!;
- 
+  
 }

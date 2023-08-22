@@ -72,6 +72,7 @@ public class FundUpdate : EndpointBaseAsync
     fund.SetFundType(fundType);
     fund.SetNewSessionCreateDayOfMonth(request.newSessionCreateDayOfMonth);
     fund.SetNewSessionCreateHourOfDay(request.newSessionCreateHourOfDay);
+    fund.SetTakenSessionDeliveryHourOfDay(request.takenSessionDeliveryHourOfDay);
 
     await _fundRepository.UpdateAsync(fund);
 

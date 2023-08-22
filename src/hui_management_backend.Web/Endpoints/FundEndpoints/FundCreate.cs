@@ -64,6 +64,7 @@ public class FundCreate : EndpointBaseAsync
         request.TakenSessionDeliveryCount,
         request.NewSessionCreateDayOfMonth,
         request.NewSessionCreateHourOfDay,
+        request.takenSessionDeliveryHourOfDay,
         request.openDate,
         request.fundPrice,
         request.serviceCost,

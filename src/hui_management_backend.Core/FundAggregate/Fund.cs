@@ -21,6 +21,8 @@ public class Fund : EntityBase, IAggregateRoot
 
   public DateTimeOffset NewSessionCreateHourOfDay { get; private set; }
 
+  public DateTimeOffset TakenSessionDeliveryHourOfDay { get; private set; }
+
   public DateTimeOffset OpenDate { get; private set; }
 
   public double FundPrice { get; private set; }
@@ -88,6 +90,7 @@ public class Fund : EntityBase, IAggregateRoot
     int takenSessionDeliveryCount,
     int newSessionCreateDayOfMonth,
     DateTimeOffset newSessionCreateHourOfDay,
+    DateTimeOffset takenSessionDeliveryHourOfDay,
     DateTimeOffset openDate,
     double fundPrice,
     double serviceCost,
@@ -99,7 +102,9 @@ public class Fund : EntityBase, IAggregateRoot
     TakenSessionDeliveryCount = takenSessionDeliveryCount;
 
     NewSessionCreateDayOfMonth = newSessionCreateDayOfMonth;
+
     NewSessionCreateHourOfDay = newSessionCreateHourOfDay;
+    TakenSessionDeliveryHourOfDay = takenSessionDeliveryHourOfDay;
 
     OpenDate = openDate;
     FundPrice = fundPrice;
@@ -192,5 +197,10 @@ public class Fund : EntityBase, IAggregateRoot
   public void SetNewSessionCreateHourOfDay(DateTimeOffset newSessionCreateHourOfDay)
   {
     NewSessionCreateHourOfDay = Guard.Against.Null(newSessionCreateHourOfDay);
+  }
+
+  public void SetTakenSessionDeliveryHourOfDay(DateTimeOffset takenSessionDeliveryHourOfDay)
+  {
+    TakenSessionDeliveryHourOfDay = Guard.Against.Null(takenSessionDeliveryHourOfDay);
   }
 }

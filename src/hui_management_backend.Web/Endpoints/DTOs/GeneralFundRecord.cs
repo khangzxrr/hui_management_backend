@@ -8,6 +8,7 @@ public record GeneralFundRecord(
   int TakenSessionDeliveryCount,
   int NewSessionCreateDayOfMonth,
   DateTimeOffset NewSessionCreateHourOfDay,
+  DateTimeOffset TakenSessionDeliveryHourOfDay,
   DateTimeOffset openDate,
   DateTimeOffset endDate,
   double fundPrice, 

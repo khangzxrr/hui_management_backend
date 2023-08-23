@@ -52,20 +52,36 @@ public class FundDelete : EndpointBaseAsync
       return NotFound();
     }
 
-    var paymentSpec = new PaymentByFundIdSpec(request.fundId);
-    var payments = await _paymentRepository.ListAsync(paymentSpec);
+
 
     _unitOfWork.BeginTransaction();
 
-    //foreach (var payment in payments)
-    //{
-    //  payment.RemoveAllFundBillByFundId(request.fundId);
-    //  await _paymentRepository.UpdateAsync(payment);
-    //}
+    var paymentSpec = new PaymentByFundIdSpec(request.fundId);
+    var payments = await _paymentRepository.ListAsync(paymentSpec);
+
+    foreach (var payment in payments)
+    {
+      payment.RemoveAllFundBillByFundId(request.fundId);
+
+      if (payment.fundBills.Count() == 0)
+      {
+        await _paymentRepository.DeleteAsync(payment);
+      } else
+      {
+        await _paymentRepository.UpdateAsync(payment);
+      }
+
+
+    }
+
 
     fund.RemoveAllMember();
 
     await _fundRepository.DeleteAsync(fund);
+
+
+
+
 
     await _unitOfWork.SaveAndCommitAsync();
 

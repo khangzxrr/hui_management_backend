@@ -45,42 +45,7 @@ public class GetAll : EndpointBaseAsync
     var userWithPaymentSpec = new SubUserWithPaymentByCreatorIdSpec(_authorizeService.UserId);
     subusers = await _subuserRepository.ListAsync(userWithPaymentSpec);
 
-    var userRecords = subusers.Where(s => s.rootUser.Id != _authorizeService.UserId).Select(_mapper.Map<SubUserRecord>).ToList();
-
-
-
-
-    if (request.filterByAnyPayment.HasValue)
-    {
-      subusers = subusers
-        .Where(u => u.Payments.Any() && u.rootUser.Id != _authorizeService.UserId);
-
-      var filteredUserRecord = new List<SubUserRecord>();
-
-      foreach(var subuser in subusers)
-      {
-        var subuserRecord = _mapper.Map<SubUserRecord>(subuser);
-
-        subuserRecord.totalProcessingAmount = subuser.Payments.Where(p => p.Status != PaymentStatus.Finish).Sum(p => p.TotalCost);
-        subuserRecord.totalDebtAmount = subuser.Payments.Where(p => p.Status != PaymentStatus.Finish).Sum(p => p.TotalTransactionCost);
-
-        filteredUserRecord.Add(subuserRecord);
-      }
-
-      userRecords = filteredUserRecord;
-    }
-
-
-    if (request.filterByNotFinishedPayment.HasValue)
-    {
-      var unfinishedPaymentSubusers = subusers
-        .Where(u => 
-          u.Payments.Where(p => p.Status != PaymentStatus.Finish).Any() && u.rootUser.Id != _authorizeService.UserId);
-
-      userRecords = unfinishedPaymentSubusers.Select(_mapper.Map<SubUserRecord>).ToList();
-    }
-
-
+    var userRecords = subusers.Select(_mapper.Map<SubUserRecord>);
 
     var response = new GetAllResponse
     {

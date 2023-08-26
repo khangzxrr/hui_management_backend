@@ -14,6 +14,6 @@ public class SubUserWithPaymentByCreatorIdSpec : Specification<SubUser>
       .Include(u => u.Payments)
         .ThenInclude(p => p.fundBills)
           .ThenInclude(fb => fb.fromSessionDetail)
-      .Where(su => su.createBy.Id == creatorId);
+      .Where(su => su.createBy.Id == creatorId && su.rootUser.Id != creatorId);
   }
 }

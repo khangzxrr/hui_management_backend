@@ -11,7 +11,7 @@ public class GetAllRequest
 
 
   [FromQuery]
-  public bool? filterByNotFinishedPayment { get; set; }
+  public bool? filterByContainToDayPayment { get; set; }
 
 
 }

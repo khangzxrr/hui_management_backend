@@ -21,14 +21,6 @@ public class SubUserRecord
   public string PhoneNumber { get; set; }
   public string AdditionalInfo { get; set; }
 
-  public double totalAliveAmount { get; set; }
-  public double totalDeadAmount { get; set; }
-  public double fundRatio { get; set; }
-  public double totalProcessingAmount { get; set; }
-  public double totalDebtAmount { get; set; }
-  public double totalTakenAmount { get; set; }
-  
-
   public SubUserRecord(int id, string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo)
   {
     Id = id;

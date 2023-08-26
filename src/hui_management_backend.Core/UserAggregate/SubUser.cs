@@ -36,6 +36,32 @@ public class SubUser : EntityBase, IAggregateRoot
   private readonly List<Payment> _payments = new();
   public IEnumerable<Payment> Payments => _payments.AsReadOnly();
 
+
+  public double totalAliveAmount => 
+    _payments
+    .SelectMany(p => p.fundBills)
+    .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Alive)
+    .Sum(fb => fb.fromSessionDetail!.payCost);
+
+  public double totalDeadAmount =>
+    _payments
+    .SelectMany(p => p.fundBills)
+    .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Dead)
+    .Sum(fb => fb.fromSessionDetail!.payCost);
+
+  public double totalTakenAmount =>
+    _payments
+    .SelectMany(p => p.fundBills)
+    .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Taken)
+    .Sum(fb => fb.fromSessionDetail!.payCost);
+  public double totalProcessingAmount => _payments.Where(p => p.Status == PaymentStatus.Processing).Sum(p => p.TotalCost);
+
+  public double totalDebtAmount => _payments.Where(p => p.Status == PaymentStatus.Debting).Sum(p => p.TotalCost);
+
+  public double fundRatio => totalAliveAmount - (totalDeadAmount + totalTakenAmount);
+
+
+
   public SubUser(
     string imageUrl, 
     string identity, 

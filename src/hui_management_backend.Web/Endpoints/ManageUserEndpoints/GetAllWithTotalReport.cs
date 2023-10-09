@@ -45,7 +45,9 @@ public class GetAllWithTotalReport : EndpointBaseAsync
 
     var subusers = await _subUserRepository.ListAsync(subuserSpec);
 
-    var subuserWithReports = subusers.Select(_mapper.Map<SubUserReportRecord>);
+
+    //filter out who doesnt have any payments
+    var subuserWithReports = subusers.Where(su => su.totalProcessingAmount != 0 || su.totalDebtAmount != 0).Select(_mapper.Map<SubUserReportRecord>);
 
     var response = new GetAllWithTotalReportResponse(subuserWithReports);
 

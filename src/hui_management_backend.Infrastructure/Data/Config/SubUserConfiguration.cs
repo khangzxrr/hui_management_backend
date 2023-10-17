@@ -18,7 +18,7 @@ public class SubUserConfiguration : IEntityTypeConfiguration<SubUser>
 
     builder.Property(u => u.NickName).IsRequired().HasDefaultValue("Chưa có nick name");
 
-    builder.Property(u => u.IdentityCreateDate).IsRequired().HasDefaultValue(DateTimeOffset.Now);
+    builder.Property(u => u.IdentityCreateDate).IsRequired().HasDefaultValue(DateTime.Now);
 
     builder.HasOne(su => su.createBy).WithMany().HasForeignKey(su => su.createById)
       .OnDelete(DeleteBehavior.Restrict);

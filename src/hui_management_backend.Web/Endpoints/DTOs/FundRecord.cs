@@ -10,17 +10,17 @@ public record FundRecord(
   int NewSessionDurationCount,
   int TakenSessionDeliveryCount,
   int NewSessionCreateDayOfMonth,
-  DateTimeOffset NewSessionCreateHourOfDay,
-  DateTimeOffset TakenSessionDeliveryHourOfDay,
-  DateTimeOffset openDate,
-  DateTimeOffset endDate,
+  DateTime NewSessionCreateHourOfDay,
+  DateTime TakenSessionDeliveryHourOfDay,
+  DateTime openDate,
+  DateTime endDate,
   double fundPrice, 
   double serviceCost, 
   int membersCount, 
   int sessionsCount, 
   IEnumerable<FundMemberRecord> members, 
   IEnumerable<FundSessionRecord> sessions,
-  IEnumerable<DateTimeOffset> newSessionCreateDates
+  IEnumerable<DateTime> newSessionCreateDates
   ) : GeneralFundRecord(
     id, 
     name,

@@ -6,7 +6,7 @@ public class SubUserReportRecord : SubUserRecord
     int id, 
     string imageUrl, 
     string identity, 
-    DateTimeOffset identityCreateDate, 
+    DateTime identityCreateDate, 
     string identityAddress, 
     string? identityImageFrontUrl, 
     string? identityImageBackUrl, 

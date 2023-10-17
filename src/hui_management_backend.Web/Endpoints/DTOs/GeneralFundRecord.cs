@@ -7,14 +7,14 @@ public record GeneralFundRecord(
   int NewSessionDurationCount,
   int TakenSessionDeliveryCount,
   int NewSessionCreateDayOfMonth,
-  DateTimeOffset NewSessionCreateHourOfDay,
-  DateTimeOffset TakenSessionDeliveryHourOfDay,
-  DateTimeOffset openDate,
-  DateTimeOffset endDate,
+  DateTime NewSessionCreateHourOfDay,
+  DateTime TakenSessionDeliveryHourOfDay,
+  DateTime openDate,
+  DateTime endDate,
   double fundPrice, 
   double serviceCost, 
   int membersCount, 
   int sessionsCount,
-  IEnumerable<DateTimeOffset> newSessionCreateDates)
+  IEnumerable<DateTime> newSessionCreateDates)
 {
 }

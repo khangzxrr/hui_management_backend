@@ -23,7 +23,7 @@ public class CreateSessionRemindService : ICreateSessionRemindingService
 
     HashSet<int> ownerIds = new HashSet<int>(); 
 
-    DateTimeOffset now = DateTimeOffset.Now;
+    DateTime now = DateTime.UtcNow;
     foreach(var fund in funds)
     {
       var newSessionCreateDates = fund.newSessionCreateDates();

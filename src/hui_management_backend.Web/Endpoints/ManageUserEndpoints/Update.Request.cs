@@ -20,7 +20,7 @@ public class UpdateRequest
   [Required]
   public string identityAddress { get; set; } = null!;
   [Required]
-  public DateTimeOffset identityCreateDate { get; set; }
+  public DateTime identityCreateDate { get; set; }
 
   [Required]
   public string phonenumber { get; set; } = null!;

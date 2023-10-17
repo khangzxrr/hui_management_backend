@@ -5,7 +5,7 @@ using hui_management_backend.SharedKernel;
 namespace hui_management_backend.Core.FundAggregate;
 public class FundSession : EntityBase
 {
-  public required DateTimeOffset takenDate { get; set; } 
+  public required DateTime takenDate { get; set; } 
   public required int sessionNumber { get; set; }
 
   private readonly List<NormalSessionDetail> _normalSessionDetails = new List<NormalSessionDetail>();

@@ -2,7 +2,7 @@
 
 public record PaymentRecord(
   int id,
-  DateTimeOffset createAt,
+  DateTime createAt,
   double totalCost,
   double totalTransactionCost,
   IEnumerable<PaymentTransactionRecord> paymentTransactions,

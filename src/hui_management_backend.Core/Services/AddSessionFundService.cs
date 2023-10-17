@@ -71,7 +71,7 @@ public class AddSessionFundService : IAddSessionFundService
     var newSession = new FundSession
     {
       sessionNumber = sessionNumber,
-      takenDate = DateTimeOffset.UtcNow
+      takenDate = DateTime.UtcNow
     };
 
 

@@ -10,7 +10,7 @@ public class GetUserPaymentsRequest
   public int subUserId { get; set; }
 
   [FromQuery]
-  public DateTimeOffset? filerByDate { get; set; }
+  public DateTime? filerByDate { get; set; }
 
   [FromQuery]
   public bool? filterByProcessingOrDebting { get; set; }

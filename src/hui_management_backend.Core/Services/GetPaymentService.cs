@@ -16,9 +16,9 @@ public class GetPaymentService : IGetPaymentService
     _paymentRepository = paymentRepository;
   }
 
-  public async Task<Payment> GetPaymentByDateAndOwnerId(DateTimeOffset dateTimeOffset, SubUser owner)
+  public async Task<Payment> GetPaymentByDateAndOwnerId(DateTime dateTime, SubUser owner)
   {
-    var spec = new PaymentByDateAndOwnerIdAndStatusSpec(dateTimeOffset, owner.Id, PaymentStatus.Processing);
+    var spec = new PaymentByDateAndOwnerIdAndStatusSpec(dateTime, owner.Id, PaymentStatus.Processing);
 
     var payment = await _paymentRepository.FirstOrDefaultAsync(spec);
 
@@ -26,7 +26,7 @@ public class GetPaymentService : IGetPaymentService
     {
       payment = new Payment
       {
-        CreateAt = dateTimeOffset,
+        CreateAt = dateTime,
         Owner = owner,
         Status = PaymentStatus.Processing
       };

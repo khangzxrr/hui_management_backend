@@ -19,11 +19,11 @@ public class Fund : EntityBase, IAggregateRoot
 
   public int NewSessionCreateDayOfMonth { get; private set; }
 
-  public DateTimeOffset NewSessionCreateHourOfDay { get; private set; }
+  public DateTime NewSessionCreateHourOfDay { get; private set; }
 
-  public DateTimeOffset TakenSessionDeliveryHourOfDay { get; private set; }
+  public DateTime TakenSessionDeliveryHourOfDay { get; private set; }
 
-  public DateTimeOffset OpenDate { get; private set; }
+  public DateTime OpenDate { get; private set; }
 
   public double FundPrice { get; private set; }
   public double ServiceCost { get; private set; }
@@ -39,17 +39,17 @@ public class Fund : EntityBase, IAggregateRoot
   private readonly List<FundSession> _sessions = new List<FundSession>();
   public IEnumerable<FundSession> Sessions => _sessions.AsReadOnly();
 
-  public DateTimeOffset EndDate =>  _members.Count == 0 ? OpenDate : newSessionCreateDates().Last();
+  public DateTime EndDate =>  _members.Count == 0 ? OpenDate : newSessionCreateDates().Last();
 
-  private DateTimeOffset ReplaceDayInDateTime(DateTimeOffset dateTime, int day)
+  private DateTime ReplaceDayInDateTime(DateTime dateTime, int day)
   {
-    return new DateTimeOffset(dateTime.Year, dateTime.Month, day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Offset);
+    return new DateTime(dateTime.Year, dateTime.Month, day, dateTime.Hour, dateTime.Minute, dateTime.Second);
   }
-  public IEnumerable<DateTimeOffset> newSessionCreateDates()
+  public IEnumerable<DateTime> newSessionCreateDates()
   {
-    var newSessionCreateDates = new List<DateTimeOffset>();
+    var newSessionCreateDates = new List<DateTime>();
 
-    DateTimeOffset previousDate = OpenDate;
+    DateTime previousDate = OpenDate;
 
     if (this.FundType == FundType.MonthFund)
     {
@@ -67,7 +67,7 @@ public class Fund : EntityBase, IAggregateRoot
 
       for (int i = 1; i < _members.Count; i++)
       {
-        DateTimeOffset newCreatedDate = previousDate.AddDays(NewSessionDurationCount);
+        DateTime newCreatedDate = previousDate.AddDays(NewSessionDurationCount);
 
         if (newCreatedDate.Month != previousDate.Month)
         {
@@ -89,9 +89,9 @@ public class Fund : EntityBase, IAggregateRoot
     int newSessionDurationCount,
     int takenSessionDeliveryCount,
     int newSessionCreateDayOfMonth,
-    DateTimeOffset newSessionCreateHourOfDay,
-    DateTimeOffset takenSessionDeliveryHourOfDay,
-    DateTimeOffset openDate,
+    DateTime newSessionCreateHourOfDay,
+    DateTime takenSessionDeliveryHourOfDay,
+    DateTime openDate,
     double fundPrice,
     double serviceCost,
     FundType fundType)
@@ -156,7 +156,7 @@ public class Fund : EntityBase, IAggregateRoot
     TakenSessionDeliveryCount = Guard.Against.Negative(takenSessionDeliveryDayCount);
   }
 
-  public void SetOpenDate(DateTimeOffset openDate)
+  public void SetOpenDate(DateTime openDate)
   {
     OpenDate = Guard.Against.Null(openDate);
   }
@@ -194,12 +194,12 @@ public class Fund : EntityBase, IAggregateRoot
     NewSessionCreateDayOfMonth = Guard.Against.Negative(newSessionCreateDayOfMonth);
   }
 
-  public void SetNewSessionCreateHourOfDay(DateTimeOffset newSessionCreateHourOfDay)
+  public void SetNewSessionCreateHourOfDay(DateTime newSessionCreateHourOfDay)
   {
     NewSessionCreateHourOfDay = Guard.Against.Null(newSessionCreateHourOfDay);
   }
 
-  public void SetTakenSessionDeliveryHourOfDay(DateTimeOffset takenSessionDeliveryHourOfDay)
+  public void SetTakenSessionDeliveryHourOfDay(DateTime takenSessionDeliveryHourOfDay)
   {
     TakenSessionDeliveryHourOfDay = Guard.Against.Null(takenSessionDeliveryHourOfDay);
   }

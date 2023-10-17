@@ -18,11 +18,11 @@ public class FundUpdateRequest
   [Required]
   public int newSessionCreateDayOfMonth { get; set; }
   [Required]
-  public DateTimeOffset newSessionCreateHourOfDay { get; set; }
+  public DateTime newSessionCreateHourOfDay { get; set; }
   [Required]
-  public DateTimeOffset takenSessionDeliveryHourOfDay { get; set; }
+  public DateTime takenSessionDeliveryHourOfDay { get; set; }
   [Required]
-  public DateTimeOffset openDate { get; set; }
+  public DateTime openDate { get; set; }
   [Required]
   public double fundPrice { get; set; }
   [Required]

@@ -18,7 +18,7 @@ public class CreateRequest
   [RegularExpression("^[0-9]*$", ErrorMessage = "identity must be numeric")]
   public string identity { get; set; } = null!;
   [Required]
-  public DateTimeOffset identityCreateAt { get; set; }
+  public DateTime identityCreateAt { get; set; }
   [Required]
   public string identityAddress { get; set; } = null!;
 

@@ -15,7 +15,7 @@ public class SubUser : EntityBase, IAggregateRoot
 
   public string ImageUrl { get; private set; }
   public string Identity { get; private set; }
-  public DateTimeOffset IdentityCreateDate { get; private set; }
+  public DateTime IdentityCreateDate { get; private set; }
   public string IdentityAddress { get; private set; }
 
   public string? IdentityImageFrontUrl { get; private set; }
@@ -65,7 +65,7 @@ public class SubUser : EntityBase, IAggregateRoot
   public SubUser(
     string imageUrl, 
     string identity, 
-    DateTimeOffset identityCreateDate, 
+    DateTime identityCreateDate, 
     string identityAddress, 
     string? identityImageFrontUrl, 
     string? identityImageBackUrl, 
@@ -100,7 +100,7 @@ public class SubUser : EntityBase, IAggregateRoot
     createBy = Guard.Against.Null(user);
   }
   //update identity create date
-  public void UpdateIdentityCreateDate(DateTimeOffset identityCreateDate)
+  public void UpdateIdentityCreateDate(DateTime identityCreateDate)
   {
     IdentityCreateDate = Guard.Against.Null(identityCreateDate);
   }

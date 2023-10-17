@@ -11,7 +11,7 @@ public class Payment : EntityBase, IAggregateRoot
 {
   public required SubUser Owner { get; set;  } 
   public int OwnerId { get; set; }
-  public required DateTimeOffset CreateAt { get; set; }
+  public required DateTime CreateAt { get; set; }
 
   public double TotalCost => 
     _fundBills.Sum(fb => (fb.fromSessionDetail!.type == NormalSessionType.Taken) ? -fb.fromSessionDetail.payCost : fb.fromSessionDetail.payCost);

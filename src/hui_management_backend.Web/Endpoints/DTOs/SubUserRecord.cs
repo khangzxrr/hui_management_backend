@@ -6,7 +6,7 @@ public class SubUserRecord
   public int Id { get; set; }
   public string ImageUrl { get; set; }
   public string Identity { get; set; }
-  public DateTimeOffset IdentityCreateDate { get; set; }
+  public DateTime IdentityCreateDate { get; set; }
   public string IdentityAddress { get; set; }
 
   public string? IdentityImageFrontUrl { get; set; }
@@ -21,7 +21,7 @@ public class SubUserRecord
   public string PhoneNumber { get; set; }
   public string AdditionalInfo { get; set; }
 
-  public SubUserRecord(int id, string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo)
+  public SubUserRecord(int id, string imageUrl, string identity, DateTime identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string phoneNumber, string additionalInfo)
   {
     Id = id;
     ImageUrl = imageUrl;

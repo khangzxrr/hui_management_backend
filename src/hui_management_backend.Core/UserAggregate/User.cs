@@ -37,7 +37,7 @@ public class User : EntityBase, IAggregateRoot
     return true;
   }
 
-  public SubUser AddSubUser(string imageUrl, string identity, DateTimeOffset identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string additionalInfo, User createBy)
+  public SubUser AddSubUser(string imageUrl, string identity, DateTime identityCreateDate, string identityAddress, string? identityImageFrontUrl, string? identityImageBackUrl, string nickName, string name, string address, string bankName, string bankNumber, string additionalInfo, User createBy)
   {
     
     var subUser = new SubUser(imageUrl, identity, identityCreateDate, identityAddress, identityImageFrontUrl, identityImageBackUrl, nickName, name, address, bankName, bankNumber, additionalInfo);

@@ -4,10 +4,10 @@ on:
     branches:
     - master
 env:
-  CONTAINER_APP_CONTAINER_NAME: hui-container
-  CONTAINER_APP_NAME: hui-container
-  CONTAINER_APP_RESOURCE_GROUP_NAME: langee_group
-  CONTAINER_REGISTRY_LOGIN_SERVER: huimanagementbackendweb20230726124546.azurecr.io
+  CONTAINER_APP_CONTAINER_NAME: huimanagementbackend
+  CONTAINER_APP_NAME: huimanagementbackend
+  CONTAINER_APP_RESOURCE_GROUP_NAME: hui_management_group
+  CONTAINER_REGISTRY_LOGIN_SERVER: huiregistry.azurecr.io
   DOTNET_CORE_VERSION: 7.0.x
   PROJECT_NAME_FOR_DOCKER: hui_management_backend-web
 jobs:

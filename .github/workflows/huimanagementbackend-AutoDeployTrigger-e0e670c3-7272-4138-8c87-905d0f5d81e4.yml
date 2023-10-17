@@ -1,0 +1,45 @@
+name: Trigger auto deployment for huimanagementbackend
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ master ]
+    paths:
+    - '//**'
+    - '.github/workflows/huimanagementbackend-AutoDeployTrigger-e0e670c3-7272-4138-8c87-905d0f5d81e4.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:      
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.HUIMANAGEMENTBACKEND_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.HUIMANAGEMENTBACKEND_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.HUIMANAGEMENTBACKEND_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: huiregistry.azurecr.io
+          registryUsername: ${{ secrets.HUIMANAGEMENTBACKEND_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.HUIMANAGEMENTBACKEND_REGISTRY_PASSWORD }}
+          containerAppName: huimanagementbackend
+          resourceGroup: hui_management_group
+          imageToBuild: huiregistry.azurecr.io/huimanagementbackend:${{ github.sha }}
+          dockerfilePath: Dockerfile
+
+

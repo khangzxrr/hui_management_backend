@@ -13,6 +13,7 @@ public class FundsByOwnerIdSpec : Specification<Fund>
         .ThenInclude(s => s.normalSessionDetails)
           .ThenInclude(nsd => nsd.fundMember)
             .ThenInclude(fm => fm.subUser)
-      .Where(f => f.Owner.Id == ownerId);
+      .Where(f => f.Owner.Id == ownerId)
+      .AsSplitQuery();
   }
 }

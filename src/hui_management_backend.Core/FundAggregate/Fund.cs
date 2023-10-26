@@ -53,7 +53,10 @@ public class Fund : EntityBase, IAggregateRoot
 
     if (this.FundType == FundType.MonthFund)
     {
-      for (int i = _sessions.Count; i < _members.Count; i++)
+      //hot fix: i = 1, because if we repeat by session.count
+      //when session count == member count
+      //=> newSessionCreateDates.last() => throw exception
+      for (int i = 1; i < _members.Count; i++)
       {
         var newCreateDate = previousDate.AddMonths(NewSessionCreateDayOfMonth);
         newSessionCreateDates.Add(ReplaceDayInDateTime(newCreateDate, NewSessionDurationCount));
@@ -81,6 +84,7 @@ public class Fund : EntityBase, IAggregateRoot
       }
     }
 
+    
     return newSessionCreateDates;
   }
 

@@ -72,8 +72,10 @@ public class Fund : EntityBase, IAggregateRoot
       {
         DateTime newCreatedDate = previousDate.AddDays(NewSessionDurationCount);
 
-        if (newCreatedDate.Month != previousDate.Month)
+        //in single day fund, we dont have to calculate shift days
+        if ((newCreatedDate.Month != previousDate.Month) && NewSessionDurationCount > 1)
         {
+
           int shiftedDayCount = DateTime.DaysInMonth(previousDate.Year, previousDate.Month) - 30;
 
           newCreatedDate = previousDate.AddDays(NewSessionDurationCount + shiftedDayCount);

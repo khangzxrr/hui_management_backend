@@ -25,8 +25,17 @@ public class DefaultCoreModule : Module
     builder.RegisterType<GetPaymentService>()
         .As<IGetPaymentService>().InstancePerLifetimeScope();
 
-    builder.RegisterType<CreateSessionRemindService>()
-        .As<ICreateSessionRemindingService>().SingleInstance();
+    builder.RegisterType<FundMemberValidatorService>()
+        .As<IFundMemberValidatorService>().InstancePerLifetimeScope();
+
+    builder.RegisterType<EmergencySessionCreateService>()
+        .As<IEmergencySessionCreateService>().InstancePerLifetimeScope();
+
+    builder.RegisterType<CreateFinalSettlementForDeadSessionService>()
+        .As<ICreateFinalSettlementForDeadSessionService>().InstancePerLifetimeScope();
+
+    builder.RegisterType<ScanExpiredProcessingPaymentService>()
+        .As<IScanExpiredProcessingPayment>().SingleInstance();
 
   }
 }

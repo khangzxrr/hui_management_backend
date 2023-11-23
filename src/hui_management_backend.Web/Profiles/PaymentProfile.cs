@@ -12,10 +12,14 @@ public class PaymentProfile : Profile
 
     CreateMap<FundBill, FundBillRecord>();
 
+    CreateMap<CustomBill, CustomBillRecord>()
+       .ForMember(cb => cb.type, opt => opt.MapFrom(t => t.type.Name));
+
     CreateMap<PaymentTransaction, PaymentTransactionRecord>()
        .ForMember(r => r.method, opt => opt.MapFrom(s => s.Method.Name));
     CreateMap<Payment, PaymentRecord>()
         .ForMember(r => r.Status, opt => opt.MapFrom(s => s.Status.Name));
+        
 
   }
 }

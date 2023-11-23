@@ -182,7 +182,7 @@ using (var scope = app.Services.CreateScope())
     logger.LogError(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
   }
 
-  RecurringJob.AddOrUpdate<ICreateSessionRemindingService>("remindingCreateSession", (createSessionRemindService) => createSessionRemindService.RemindCreateSession(), "0 0 12 * * ?"); 
+  RecurringJob.AddOrUpdate<IScanExpiredProcessingPayment>("remindingCreateSession", (createSessionRemindService) => createSessionRemindService.ScanExpiredProcessingPayment(), "0 0 0 * * *"); 
 }
 
 app.Run();

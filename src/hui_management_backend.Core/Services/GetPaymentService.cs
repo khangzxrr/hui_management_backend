@@ -28,7 +28,7 @@ public class GetPaymentService : IGetPaymentService
       {
         CreateAt = dateTime,
         Owner = owner,
-        Status = PaymentStatus.Processing
+        Status = PaymentStatus.Processing,
       };
 
       await _paymentRepository.AddAsync(payment);

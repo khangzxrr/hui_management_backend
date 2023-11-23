@@ -16,6 +16,9 @@ public class ResponseMessageConstants
 
   public const string FundIsStarted = "FUND_IS_STARTED";
 
+  public const string FundIsNotContainAnyUser = "FUND_NOT_CONTAIN_ANY_USER";
+
+
   public const string FundNotContainUser = "FUND_NOT_CONTAIN_USER";
 
   public const string PaymentNotFound = "PAYMENT_NOT_FOUND";
@@ -40,4 +43,10 @@ public class ResponseMessageConstants
   public const string UserHasBillsOrAttendInFunds = "USER_HAS_BILLS_OR_ATTEND_IN_FUNDS";
 
   public const string CannotParseFundType = "CANNOT_PARSE_FUND_TYPE";
+
+  public const string FundNotHaveSessionYet = "FUND_NOT_HAVE_ANY_SESSION_YET";
+
+  public const string FundIsEnded = "FUND_IS_ENDED";
+
+  public const string SessionNotHaveTakenSessionDetail = "SESSION_NOT_HAVE_TAKEN_SESSION_DETAIL";
 }

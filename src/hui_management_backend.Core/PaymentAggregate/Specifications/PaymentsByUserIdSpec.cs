@@ -7,6 +7,7 @@ public class PaymentsByUserIdSpec: Specification<Payment>
   public PaymentsByUserIdSpec(int userId) {
     Query
       .Include(p => p.Owner)
+      .Include(p => p.customBills)
       .Include(p => p.paymentTransactions)
       .Include(p => p.fundBills)
         .ThenInclude(b => b.fromFund)

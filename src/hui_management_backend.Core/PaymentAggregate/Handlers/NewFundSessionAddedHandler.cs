@@ -1,5 +1,6 @@
 ﻿
 
+using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Events;
 using hui_management_backend.Core.Interfaces;
@@ -23,18 +24,29 @@ public class NewFundSessionAddedHandler : INotificationHandler<NewFundSessionAdd
   {
 
     List<Payment> payments = new();
-     
+    
     foreach(NormalSessionDetail sessionDetail in notification.fundSession.normalSessionDetails)
     {
 
-      var normalPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTime.Now, sessionDetail.fundMember.subUser);
+      var normalPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTime.UtcNow, sessionDetail.fundMember.subUser);
 
       normalPayment.AddBill(new FundBill
       {
         fromSession = notification.fundSession,
         fromSessionDetail = sessionDetail,
-        fromFund = notification.fund
+        fromFund = notification.fund,
       });
+
+
+      //IMPORTANT add transaction for member who has final settlement
+      if ((sessionDetail.type == NormalSessionType.Dead || sessionDetail.type == NormalSessionType.FakeAlive)  && sessionDetail.fundMember.hasFinalSettlementForDeadSessionBill)
+      {
+        normalPayment.AddPaymentTransaction(
+          new PaymentTransaction(
+            InfoMessageConstants.FinalSettlementForDeadSessionDescription + $" Kì {notification.fundSession.sessionNumber} Dây hụi {notification.fund.Name}",
+            notification.fund.FundPrice,
+            TransactionMethod.ByBanking));
+      }
 
 
       payments.Add(normalPayment);

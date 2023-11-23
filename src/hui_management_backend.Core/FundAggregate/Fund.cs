@@ -39,12 +39,18 @@ public class Fund : EntityBase, IAggregateRoot
   private readonly List<FundSession> _sessions = new List<FundSession>();
   public IEnumerable<FundSession> Sessions => _sessions.AsReadOnly();
 
-  public DateTime EndDate =>  _members.Count == 0 ? OpenDate : newSessionCreateDates().Last();
+  public DateTime EndDate =>  _members.Count < 2 ? OpenDate : newSessionCreateDates().Last();
 
   private DateTime ReplaceDayInDateTime(DateTime dateTime, int day)
   {
     return new DateTime(dateTime.Year, dateTime.Month, day, dateTime.Hour, dateTime.Minute, dateTime.Second);
   }
+
+  public bool isEnd()
+  {
+    return _sessions.Count() == _members.Count();
+  }
+
   public IEnumerable<DateTime> newSessionCreateDates()
   {
     var newSessionCreateDates = new List<DateTime>();
@@ -85,7 +91,8 @@ public class Fund : EntityBase, IAggregateRoot
         newSessionCreateDates.Add(newCreatedDate);
       }
     }
-
+   
+    //empty create dates
     
     return newSessionCreateDates;
   }

@@ -10,4 +10,6 @@ public class FundBill : EntityBase
   public required FundSession? fromSession { get; set; }
 
   public NormalSessionDetail? fromSessionDetail { get; set; }
+
+
 }

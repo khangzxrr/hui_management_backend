@@ -15,18 +15,16 @@ public class AddSessionFundService : IAddSessionFundService
   private readonly IUnitOfWork _unitOfWork;
   private readonly IRepository<Fund> _fundRepository;
   private readonly IMediator _mediator;
-  public AddSessionFundService(IRepository<Fund> fundRepository, IMediator mediator, IUnitOfWork unitOfWork)
+  private readonly IFundMemberValidatorService _fundMemberValidatorService;
+  private readonly IGetPaymentService _getPaymentService;
+
+  public AddSessionFundService(IRepository<Fund> fundRepository, IMediator mediator, IUnitOfWork unitOfWork, IFundMemberValidatorService fundMemberValidatorService, IGetPaymentService getPaymentService)
   {
     _fundRepository = fundRepository;
     _mediator = mediator;
     _unitOfWork = unitOfWork;
-  }
-
-  private bool isMemberAlreadyTakeFund(Fund fund, FundMember fundMember) { 
-    return fund.Sessions
-      .Where(
-        session => session.normalSessionDetails.Where(nsd => nsd.type == NormalSessionType.Taken && nsd.fundMember == fundMember).Any()
-      ).Any();
+    _fundMemberValidatorService = fundMemberValidatorService;
+    _getPaymentService = getPaymentService;
   }
 
   public async Task<Result<bool>> AddSession(int fundId, int ownerId, int memberId, double predictedPrice)
@@ -36,7 +34,7 @@ public class AddSessionFundService : IAddSessionFundService
     var spec = new FundDetailByIdAndOwnerIdSpec(fundId, ownerId);
     var fund = await _fundRepository.FirstOrDefaultAsync(spec);
 
-    if (fund == null)
+    if (fund == null) 
     {
       return Result<bool>.NotFound(ResponseMessageConstants.FundNotFound);
     }
@@ -49,10 +47,13 @@ public class AddSessionFundService : IAddSessionFundService
     }
 
     //check if member was taken fund already
-    if (isMemberAlreadyTakeFund(fund, fundTakenMember))
+    if (_fundMemberValidatorService.isMemberTakedFund(fund, fundTakenMember))
     {
       return Result<bool>.Error(ResponseMessageConstants.FundMemberAlreadyTakenFund);
     }
+
+
+    //======================
 
     var sessionNumber = fund.Sessions.Count() + 1;
 
@@ -74,6 +75,8 @@ public class AddSessionFundService : IAddSessionFundService
       takenDate = DateTime.UtcNow
     };
 
+    var isMemberTakedEmergencyFund = _fundMemberValidatorService.isMemberTakedEmergencyFund(fund, fundTakenMember);
+
 
     var takenSessionDetail = new NormalSessionDetail {
       fundAmount = fundAmount,
@@ -81,10 +84,11 @@ public class AddSessionFundService : IAddSessionFundService
       predictedPrice = predictedPrice,
       payCost = remainCost,
       serviceCost = fund.ServiceCost,
-      type = NormalSessionType.Taken,
+      type = isMemberTakedEmergencyFund ? NormalSessionType.FakeTaken : NormalSessionType.Taken,
       fundMember = fundTakenMember,
     };
     newSession.AddNormalSessionDetail(takenSessionDetail);
+
 
 
 
@@ -92,15 +96,18 @@ public class AddSessionFundService : IAddSessionFundService
     {
       if (member == fundTakenMember) continue;
 
-      bool isAlreadyTaken = isMemberAlreadyTakeFund(fund, member);
+      bool isAlreadyTaken = _fundMemberValidatorService.isMemberTakedFund(fund, member);
+      bool isTakedEmergencyFund = _fundMemberValidatorService.isMemberTakedEmergencyFund(fund, member);
 
       var normalSessionDetail = new NormalSessionDetail
       {
         fundMember = member,
+
         //take full price if dead, otherwise take good price
-        payCost = isAlreadyTaken ? fund.FundPrice : aliveMemberPayCost,
-        type = isAlreadyTaken ? NormalSessionType.Dead : NormalSessionType.Alive,
-        lossCost = isAlreadyTaken ? 0 : -predictedPrice,
+
+        payCost = isAlreadyTaken || isTakedEmergencyFund ? fund.FundPrice : aliveMemberPayCost,
+        type = isAlreadyTaken ? NormalSessionType.Dead : isTakedEmergencyFund ? NormalSessionType.FakeAlive : NormalSessionType.Alive,
+        lossCost = isAlreadyTaken || isTakedEmergencyFund ? 0 : -predictedPrice,
         fundAmount = fundAmount,
         predictedPrice = predictedPrice,
         serviceCost = fund.ServiceCost,

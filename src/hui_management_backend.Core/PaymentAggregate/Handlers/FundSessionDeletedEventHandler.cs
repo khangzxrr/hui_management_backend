@@ -26,7 +26,7 @@ public class FundSessionDeletedEventHandler : INotificationHandler<FundSessionDe
 
       //lets remove payment if totalCost == 0 ?
       //bill == 0 is not making sense
-      if (payment.TotalCost == 0)
+      if (payment.TotalCost() == 0)
       {
         await _paymentRepository.DeleteAsync(payment);  
       } else

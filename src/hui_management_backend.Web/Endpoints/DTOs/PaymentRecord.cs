@@ -7,6 +7,7 @@ public record PaymentRecord(
   double totalTransactionCost,
   IEnumerable<PaymentTransactionRecord> paymentTransactions,
   IEnumerable<FundBillRecord> fundBills,
+  IEnumerable<CustomBillRecord> customBills,
   string Status)
 {
 }

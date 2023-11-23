@@ -18,7 +18,7 @@ public class AddedTransactionHandler : INotificationHandler<AddedTransactionEven
 
     double paidTotal = notification.payment.paymentTransactions.Sum(t => t.Amount);
 
-    if (paidTotal >= Math.Abs(notification.payment.TotalCost))
+    if (paidTotal >= Math.Abs(notification.payment.TotalCost()))
     {
       notification.payment.SetStatus(PaymentStatus.Finish);
     } else

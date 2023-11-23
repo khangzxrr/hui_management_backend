@@ -10,6 +10,7 @@ public class PaymentByUserIdAndPaymentIdSpec : Specification<Payment>
       .Include(p => p.Owner)
         .ThenInclude(u => u.rootUser)
       .Include(p => p.paymentTransactions)
+      .Include(p => p.customBills)
       .Include(p => p.fundBills)
         .ThenInclude(b => b.fromFund)
           .ThenInclude(f => f!.Members)

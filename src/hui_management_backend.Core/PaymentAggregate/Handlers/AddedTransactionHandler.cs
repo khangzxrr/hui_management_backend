@@ -21,10 +21,7 @@ public class AddedTransactionHandler : INotificationHandler<AddedTransactionEven
     if (paidTotal >= Math.Abs(notification.payment.TotalCost()))
     {
       notification.payment.SetStatus(PaymentStatus.Finish);
-    } else
-    {
-      notification.payment.SetStatus(PaymentStatus.Debting);
-    }
+    } 
 
     await _paymentRepository.UpdateAsync(notification.payment);
   }

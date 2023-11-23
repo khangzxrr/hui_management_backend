@@ -29,7 +29,7 @@ public class ScanExpiredProcessingPaymentService : IScanExpiredProcessingPayment
 
     foreach (var payment in payments)
     {
-      if (DateTime.UtcNow.Subtract(payment.CreateAt).TotalDays >= 1)
+      if (DateTime.UtcNow.Subtract(payment.CreateAt).TotalHours >= 12)
       {
         payment.SetStatus(PaymentStatus.Debting);
       }

@@ -3,11 +3,16 @@
 public record PaymentRecord(
   int id,
   DateTime createAt,
-  double totalCost,
-  double totalTransactionCost,
   IEnumerable<PaymentTransactionRecord> paymentTransactions,
   IEnumerable<FundBillRecord> fundBills,
   IEnumerable<CustomBillRecord> customBills,
-  string Status)
+  string Status,
+  double totalCost,
+  double totalTransactionCost,
+  double totalOwnerMustPaid,
+  double totalOwnerMustTake,
+  double ownerPaidTakeDiff,
+  double remainPayCost
+  )
 {
 }

@@ -384,7 +384,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<DateTime>("IdentityCreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 22, 13, 11, 40, 763, DateTimeKind.Local).AddTicks(4531));
+                        .HasDefaultValue(new DateTime(2023, 11, 25, 20, 18, 32, 662, DateTimeKind.Local).AddTicks(3555));
 
                     b.Property<string>("IdentityImageBackUrl")
                         .HasColumnType("nvarchar(max)");

@@ -27,6 +27,31 @@ public class Payment : EntityBase, IAggregateRoot
 
   public double TotalTransactionCost => _paymentTransactions.Sum(p => p.Amount);
 
+  public double TotalOwnerMustPaid()
+  {
+
+    double totalOwnerMustPaid =  _fundBills.Where(fb => fb.fromSessionDetail?.type == NormalSessionType.Taken || fb.fromSessionDetail?.type == NormalSessionType.EmergencyTaken).Sum(fb => fb.fromSessionDetail!.payCost);
+
+    totalOwnerMustPaid += _customBills.Where(cb => cb.type == CustomBillType.OwnerPaid).Sum(cb => cb.payCost);
+
+    return totalOwnerMustPaid;
+  }
+
+  public double TotalOwnerMustTake()
+  {
+    double totalOwerMustTake = _fundBills.Where(fb => fb.fromSessionDetail?.type != NormalSessionType.Taken && fb.fromSessionDetail?.type != NormalSessionType.EmergencyTaken).Sum(fb => fb.fromSessionDetail!.payCost);
+
+    totalOwerMustTake += _customBills.Where(cb => cb.type == CustomBillType.OwnerTake).Sum(cb => cb.payCost);
+
+    return totalOwerMustTake;
+  }
+
+  public double ownerPaidTakeDiff => TotalOwnerMustPaid() - TotalOwnerMustTake();
+
+  public double remainPayCost => Math.Abs(Math.Abs(ownerPaidTakeDiff) - TotalTransactionCost);
+
+  
+
   public required PaymentStatus Status { get; set; } 
 
 

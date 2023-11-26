@@ -12,8 +12,8 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230728230221_AddTransactionImage")]
-    partial class AddTransactionImage
+    [Migration("20231125131832_initDB")]
+    partial class initDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,39 +24,6 @@ namespace hui_management_backend.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("UserUser", b =>
-                {
-                    b.Property<int>("CreateById")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CreateById", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserCreateBy", (string)null);
-                });
-
-            modelBuilder.Entity("hui_management_backend.Core.ContributorAggregate.Contributor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Contributors");
-                });
 
             modelBuilder.Entity("hui_management_backend.Core.FundAggregate.Fund", b =>
                 {
@@ -69,6 +36,9 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<double>("FundPrice")
                         .HasColumnType("float");
 
+                    b.Property<int>("FundType")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsArchived")
                         .HasColumnType("bit");
 
@@ -76,18 +46,29 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("OpenDate")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<int>("NewSessionCreateDayOfMonth")
+                        .HasColumnType("int");
 
-                    b.Property<string>("OpenDateText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("NewSessionCreateHourOfDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("NewSessionDurationCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("OpenDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
                     b.Property<double>("ServiceCost")
                         .HasColumnType("float");
+
+                    b.Property<int>("TakenSessionDeliveryCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TakenSessionDeliveryHourOfDay")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -107,18 +88,22 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<int?>("FundId")
                         .HasColumnType("int");
 
-                    b.Property<string>("NickName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("finalSettlementForDeadSessionBillId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("replicationCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("subUserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("FundId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("finalSettlementForDeadSessionBillId");
+
+                    b.HasIndex("subUserId");
 
                     b.ToTable("FundMember");
                 });
@@ -137,8 +122,8 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<int>("sessionNumber")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("takenDate")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("takenDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -163,6 +148,9 @@ namespace hui_management_backend.Infrastructure.Migrations
 
                     b.Property<int>("fundMemberId")
                         .HasColumnType("int");
+
+                    b.Property<double>("lossCost")
+                        .HasColumnType("float");
 
                     b.Property<double>("payCost")
                         .HasColumnType("float");
@@ -202,6 +190,34 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.ToTable("Medias");
                 });
 
+            modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.CustomBill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("PaymentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("payCost")
+                        .HasColumnType("float");
+
+                    b.Property<int>("type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaymentId");
+
+                    b.ToTable("CustomBill");
+                });
+
             modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.FundBill", b =>
                 {
                     b.Property<int>("Id")
@@ -213,13 +229,13 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<int?>("PaymentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("fromFundId")
+                    b.Property<int?>("fromFundId")
                         .HasColumnType("int");
 
-                    b.Property<int>("fromSessionDetailId")
+                    b.Property<int?>("fromSessionDetailId")
                         .HasColumnType("int");
 
-                    b.Property<int>("fromSessionId")
+                    b.Property<int?>("fromSessionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -243,8 +259,8 @@ namespace hui_management_backend.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTimeOffset>("CreateAt")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
@@ -255,9 +271,6 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .HasDefaultValue(0);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreateAt")
-                        .IsUnique();
 
                     b.HasIndex("OwnerId");
 
@@ -275,8 +288,8 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("float");
 
-                    b.Property<DateTimeOffset>("CreateAt")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -317,7 +330,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.ToTable("TransactionImage");
                 });
 
-            modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.Project", b =>
+            modelBuilder.Entity("hui_management_backend.Core.UserAggregate.NotificationToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -325,52 +338,21 @@ namespace hui_management_backend.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Token")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Priority")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("NotificationToken");
                 });
 
-            modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.ToDoItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ContributorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDone")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ToDoItems");
-                });
-
-            modelBuilder.Entity("hui_management_backend.Core.UserAggregate.User", b =>
+            modelBuilder.Entity("hui_management_backend.Core.UserAggregate.SubUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -402,17 +384,15 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset>("IdentityCreateDate")
+                    b.Property<DateTime>("IdentityCreateDate")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValue(new DateTimeOffset(new DateTime(2023, 7, 29, 6, 2, 21, 903, DateTimeKind.Unspecified).AddTicks(7955), new TimeSpan(0, 7, 0, 0, 0)));
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2023, 11, 25, 20, 18, 32, 662, DateTimeKind.Local).AddTicks(3555));
 
                     b.Property<string>("IdentityImageBackUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdentityImageFrontUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
@@ -428,6 +408,30 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("Chưa có nick name");
+
+                    b.Property<int>("createById")
+                        .HasColumnType("int");
+
+                    b.Property<int>("rootUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("createById");
+
+                    b.HasIndex("rootUserId", "createById")
+                        .IsUnique();
+
+                    b.ToTable("SubUser");
+                });
+
+            modelBuilder.Entity("hui_management_backend.Core.UserAggregate.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -450,21 +454,6 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("UserUser", b =>
-                {
-                    b.HasOne("hui_management_backend.Core.UserAggregate.User", null)
-                        .WithMany()
-                        .HasForeignKey("CreateById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("hui_management_backend.Core.UserAggregate.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("hui_management_backend.Core.FundAggregate.Fund", b =>
                 {
                     b.HasOne("hui_management_backend.Core.UserAggregate.User", "Owner")
@@ -481,15 +470,21 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", null)
                         .WithMany("Members")
                         .HasForeignKey("FundId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("hui_management_backend.Core.UserAggregate.User", "User")
+                    b.HasOne("hui_management_backend.Core.PaymentAggregate.Payment", "finalSettlementForDeadSessionBill")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("finalSettlementForDeadSessionBillId");
+
+                    b.HasOne("hui_management_backend.Core.UserAggregate.SubUser", "subUser")
+                        .WithMany()
+                        .HasForeignKey("subUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("finalSettlementForDeadSessionBill");
+
+                    b.Navigation("subUser");
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.FundAggregate.FundSession", b =>
@@ -505,7 +500,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasOne("hui_management_backend.Core.FundAggregate.FundSession", null)
                         .WithMany("normalSessionDetails")
                         .HasForeignKey("FundSessionId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.FundMember", "fundMember")
                         .WithMany()
@@ -516,30 +511,35 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Navigation("fundMember");
                 });
 
+            modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.CustomBill", b =>
+                {
+                    b.HasOne("hui_management_backend.Core.PaymentAggregate.Payment", null)
+                        .WithMany("customBills")
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.FundBill", b =>
                 {
                     b.HasOne("hui_management_backend.Core.PaymentAggregate.Payment", null)
                         .WithMany("fundBills")
                         .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", "fromFund")
                         .WithMany()
                         .HasForeignKey("fromFundId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.NormalSessionDetail", "fromSessionDetail")
                         .WithMany()
                         .HasForeignKey("fromSessionDetailId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.FundSession", "fromSession")
                         .WithMany()
                         .HasForeignKey("fromSessionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("fromFund");
 
@@ -550,7 +550,7 @@ namespace hui_management_backend.Infrastructure.Migrations
 
             modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.Payment", b =>
                 {
-                    b.HasOne("hui_management_backend.Core.UserAggregate.User", "Owner")
+                    b.HasOne("hui_management_backend.Core.UserAggregate.SubUser", "Owner")
                         .WithMany("Payments")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -575,11 +575,31 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.ToDoItem", b =>
+            modelBuilder.Entity("hui_management_backend.Core.UserAggregate.NotificationToken", b =>
                 {
-                    b.HasOne("hui_management_backend.Core.ProjectAggregate.Project", null)
-                        .WithMany("Items")
-                        .HasForeignKey("ProjectId");
+                    b.HasOne("hui_management_backend.Core.UserAggregate.User", null)
+                        .WithMany("NotificationTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("hui_management_backend.Core.UserAggregate.SubUser", b =>
+                {
+                    b.HasOne("hui_management_backend.Core.UserAggregate.User", "createBy")
+                        .WithMany()
+                        .HasForeignKey("createById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("hui_management_backend.Core.UserAggregate.User", "rootUser")
+                        .WithMany("SubUsers")
+                        .HasForeignKey("rootUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("createBy");
+
+                    b.Navigation("rootUser");
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.FundAggregate.Fund", b =>
@@ -596,6 +616,8 @@ namespace hui_management_backend.Infrastructure.Migrations
 
             modelBuilder.Entity("hui_management_backend.Core.PaymentAggregate.Payment", b =>
                 {
+                    b.Navigation("customBills");
+
                     b.Navigation("fundBills");
 
                     b.Navigation("paymentTransactions");
@@ -606,14 +628,16 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Navigation("transactionImages");
                 });
 
-            modelBuilder.Entity("hui_management_backend.Core.ProjectAggregate.Project", b =>
+            modelBuilder.Entity("hui_management_backend.Core.UserAggregate.SubUser", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("hui_management_backend.Core.UserAggregate.User", b =>
                 {
-                    b.Navigation("Payments");
+                    b.Navigation("NotificationTokens");
+
+                    b.Navigation("SubUsers");
                 });
 #pragma warning restore 612, 618
         }

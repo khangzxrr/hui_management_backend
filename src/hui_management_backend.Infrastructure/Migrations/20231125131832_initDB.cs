@@ -6,79 +6,37 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UserPaymentsRestrict : Migration
+    public partial class initDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Contributors",
+                name: "Medias",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Contributors", x => x.Id);
+                    table.PrimaryKey("PK_Medias", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Projects",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Priority = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BankName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BankNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ToDoItems",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContributorId = table.Column<int>(type: "int", nullable: true),
-                    IsDone = table.Column<bool>(type: "bit", nullable: false),
-                    ProjectId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ToDoItems", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ToDoItems_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id");
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -89,8 +47,13 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsArchived = table.Column<bool>(type: "bit", nullable: false),
-                    OpenDateText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OpenDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    FundType = table.Column<int>(type: "int", nullable: false),
+                    NewSessionDurationCount = table.Column<int>(type: "int", nullable: false),
+                    TakenSessionDeliveryCount = table.Column<int>(type: "int", nullable: false),
+                    NewSessionCreateDayOfMonth = table.Column<int>(type: "int", nullable: false),
+                    NewSessionCreateHourOfDay = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TakenSessionDeliveryHourOfDay = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OpenDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FundPrice = table.Column<double>(type: "float", nullable: false),
                     ServiceCost = table.Column<double>(type: "float", nullable: false),
                     OwnerId = table.Column<int>(type: "int", nullable: false)
@@ -99,57 +62,67 @@ namespace hui_management_backend.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Funds", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Funds_User_OwnerId",
+                        name: "FK_Funds_Users_OwnerId",
                         column: x => x.OwnerId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payment",
+                name: "NotificationToken",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OwnerId = table.Column<int>(type: "int", nullable: false),
-                    CreateAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Payment", x => x.Id);
+                    table.PrimaryKey("PK_NotificationToken", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Payment_User_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "User",
+                        name: "FK_NotificationToken_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubUser",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    rootUserId = table.Column<int>(type: "int", nullable: false),
+                    createById = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Identity = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdentityCreateDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 11, 25, 20, 18, 32, 662, DateTimeKind.Local).AddTicks(3555)),
+                    IdentityAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdentityImageFrontUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdentityImageBackUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NickName = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Chưa có nick name"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BankName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BankNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubUser", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SubUser_Users_createById",
+                        column: x => x.createById,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FundMember",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NickName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    FundId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FundMember", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FundMember_Funds_FundId",
-                        column: x => x.FundId,
-                        principalTable: "Funds",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FundMember_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
+                        name: "FK_SubUser_Users_rootUserId",
+                        column: x => x.rootUserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -160,7 +133,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    takenDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    takenDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     sessionNumber = table.Column<int>(type: "int", nullable: false),
                     FundId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -176,6 +149,82 @@ namespace hui_management_backend.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Payment",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OwnerId = table.Column<int>(type: "int", nullable: false),
+                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Payment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Payment_SubUser_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "SubUser",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomBill",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    payCost = table.Column<double>(type: "float", nullable: false),
+                    type = table.Column<int>(type: "int", nullable: false),
+                    PaymentId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomBill", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomBill_Payment_PaymentId",
+                        column: x => x.PaymentId,
+                        principalTable: "Payment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FundMember",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    replicationCount = table.Column<int>(type: "int", nullable: false),
+                    subUserId = table.Column<int>(type: "int", nullable: false),
+                    finalSettlementForDeadSessionBillId = table.Column<int>(type: "int", nullable: true),
+                    FundId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FundMember", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FundMember_Funds_FundId",
+                        column: x => x.FundId,
+                        principalTable: "Funds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FundMember_Payment_finalSettlementForDeadSessionBillId",
+                        column: x => x.finalSettlementForDeadSessionBillId,
+                        principalTable: "Payment",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_FundMember_SubUser_subUserId",
+                        column: x => x.subUserId,
+                        principalTable: "SubUser",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PaymentTransaction",
                 columns: table => new
                 {
@@ -183,7 +232,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<double>(type: "float", nullable: false),
-                    CreateAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Method = table.Column<int>(type: "int", nullable: false),
                     PaymentId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -206,6 +255,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     predictedPrice = table.Column<double>(type: "float", nullable: false),
                     fundAmount = table.Column<double>(type: "float", nullable: false),
+                    lossCost = table.Column<double>(type: "float", nullable: false),
                     serviceCost = table.Column<double>(type: "float", nullable: false),
                     payCost = table.Column<double>(type: "float", nullable: false),
                     type = table.Column<int>(type: "int", nullable: false),
@@ -226,7 +276,27 @@ namespace hui_management_backend.Infrastructure.Migrations
                         column: x => x.FundSessionId,
                         principalTable: "FundSession",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TransactionImage",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PaymentTransactionId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransactionImage", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TransactionImage_PaymentTransaction_PaymentTransactionId",
+                        column: x => x.PaymentTransactionId,
+                        principalTable: "PaymentTransaction",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -235,9 +305,9 @@ namespace hui_management_backend.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    fromFundId = table.Column<int>(type: "int", nullable: false),
-                    fromSessionId = table.Column<int>(type: "int", nullable: false),
-                    fromSessionDetailId = table.Column<int>(type: "int", nullable: false),
+                    fromFundId = table.Column<int>(type: "int", nullable: true),
+                    fromSessionId = table.Column<int>(type: "int", nullable: true),
+                    fromSessionDetailId = table.Column<int>(type: "int", nullable: true),
                     PaymentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -248,13 +318,13 @@ namespace hui_management_backend.Infrastructure.Migrations
                         column: x => x.fromSessionId,
                         principalTable: "FundSession",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_FundBill_Funds_fromFundId",
                         column: x => x.fromFundId,
                         principalTable: "Funds",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FundBill_NormalSessionDetail_fromSessionDetailId",
                         column: x => x.fromSessionDetailId,
@@ -266,8 +336,13 @@ namespace hui_management_backend.Infrastructure.Migrations
                         column: x => x.PaymentId,
                         principalTable: "Payment",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomBill_PaymentId",
+                table: "CustomBill",
+                column: "PaymentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FundBill_fromFundId",
@@ -290,14 +365,19 @@ namespace hui_management_backend.Infrastructure.Migrations
                 column: "PaymentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FundMember_finalSettlementForDeadSessionBillId",
+                table: "FundMember",
+                column: "finalSettlementForDeadSessionBillId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FundMember_FundId",
                 table: "FundMember",
                 column: "FundId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FundMember_UserId",
+                name: "IX_FundMember_subUserId",
                 table: "FundMember",
-                column: "UserId");
+                column: "subUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Funds_OwnerId",
@@ -320,10 +400,9 @@ namespace hui_management_backend.Infrastructure.Migrations
                 column: "FundSessionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payment_CreateAt",
-                table: "Payment",
-                column: "CreateAt",
-                unique: true);
+                name: "IX_NotificationToken_UserId",
+                table: "NotificationToken",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payment_OwnerId",
@@ -336,19 +415,24 @@ namespace hui_management_backend.Infrastructure.Migrations
                 column: "PaymentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ToDoItems_ProjectId",
-                table: "ToDoItems",
-                column: "ProjectId");
+                name: "IX_SubUser_createById",
+                table: "SubUser",
+                column: "createById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Email",
-                table: "User",
-                column: "Email",
+                name: "IX_SubUser_rootUserId_createById",
+                table: "SubUser",
+                columns: new[] { "rootUserId", "createById" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_PhoneNumber",
-                table: "User",
+                name: "IX_TransactionImage_PaymentTransactionId",
+                table: "TransactionImage",
+                column: "PaymentTransactionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_PhoneNumber",
+                table: "Users",
                 column: "PhoneNumber",
                 unique: true);
         }
@@ -357,25 +441,25 @@ namespace hui_management_backend.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Contributors");
+                name: "CustomBill");
 
             migrationBuilder.DropTable(
                 name: "FundBill");
 
             migrationBuilder.DropTable(
-                name: "PaymentTransaction");
+                name: "Medias");
 
             migrationBuilder.DropTable(
-                name: "ToDoItems");
+                name: "NotificationToken");
+
+            migrationBuilder.DropTable(
+                name: "TransactionImage");
 
             migrationBuilder.DropTable(
                 name: "NormalSessionDetail");
 
             migrationBuilder.DropTable(
-                name: "Payment");
-
-            migrationBuilder.DropTable(
-                name: "Projects");
+                name: "PaymentTransaction");
 
             migrationBuilder.DropTable(
                 name: "FundMember");
@@ -384,10 +468,16 @@ namespace hui_management_backend.Infrastructure.Migrations
                 name: "FundSession");
 
             migrationBuilder.DropTable(
+                name: "Payment");
+
+            migrationBuilder.DropTable(
                 name: "Funds");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "SubUser");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

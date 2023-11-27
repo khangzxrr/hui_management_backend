@@ -3,6 +3,7 @@
 public record PaymentRecord(
   int id,
   DateTime createAt,
+  SubUserRecord owner,
   IEnumerable<PaymentTransactionRecord> paymentTransactions,
   IEnumerable<FundBillRecord> fundBills,
   IEnumerable<CustomBillRecord> customBills,

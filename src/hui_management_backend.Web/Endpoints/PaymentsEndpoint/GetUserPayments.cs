@@ -92,10 +92,12 @@ public class GetUserPayments : EndpointBaseAsync
     {
       filteredPayments = filteredPayments.Where(p => p.Status != PaymentStatus.Finish);
     }
+    if (request.filterBySessionDetailId != null)
+    {
+      filteredPayments = filteredPayments.Where(p => p.fundBills.Where(fb => fb.fromSessionDetail?.Id == request.filterBySessionDetailId).Any());
+    }
 
-
-
-    var paymentRecords = payments.Select(_mapper.Map<PaymentRecord>);
+    var paymentRecords = filteredPayments.Select(_mapper.Map<PaymentRecord>);
     var response = new GetUserPaymentsResponse(paymentRecords);
 
     return Ok(response);

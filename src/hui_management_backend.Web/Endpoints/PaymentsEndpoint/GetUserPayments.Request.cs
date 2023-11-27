@@ -13,5 +13,8 @@ public class GetUserPaymentsRequest
   public DateTime? filerByDate { get; set; }
 
   [FromQuery]
+  public int? filterBySessionDetailId { get; set; }
+
+  [FromQuery]
   public bool? filterByProcessingOrDebting { get; set; }
 }

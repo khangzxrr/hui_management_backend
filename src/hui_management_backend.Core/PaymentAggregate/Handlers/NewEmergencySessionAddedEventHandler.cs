@@ -25,7 +25,7 @@ public class NewEmergencySessionAddedEventHandler : INotificationHandler<NewEmer
     {
       var userPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTime.UtcNow, emergencyTakenSessionDetail.fundMember.subUser);
 
-      userPayment.RemoveLatestFundBill(notification.fund.Id);
+      userPayment.RemoveLatestAliveFundBill(notification.fund.Id);
 
       userPayment.AddBill(new FundBill
       {

@@ -47,7 +47,6 @@ public class FundRemoveSession : EndpointBaseAsync
     var spec = new FundByIdAndOwnerIdSpec(request.fundId, _authorizeService.UserId);
 
     var fund = await _fundRepository.FirstOrDefaultAsync(spec);
-
     if (fund == null)
     {
       return NotFound(ResponseMessageConstants.FundNotFound);

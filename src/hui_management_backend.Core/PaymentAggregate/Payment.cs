@@ -77,9 +77,9 @@ public class Payment : EntityBase, IAggregateRoot
     _fundBills.Add(bill);
   }
 
-  public void RemoveLatestFundBill(int fundId)
+  public void RemoveLatestAliveFundBill(int fundId)
   {
-    var latestFundBill = _fundBills.Where(fb => fb.fromFund != null && fb.fromFund!.Id == fundId).LastOrDefault();
+    var latestFundBill = _fundBills.Where(fb => fb.fromFund?.Id == fundId && fb.fromSessionDetail?.type == NormalSessionType.Alive).LastOrDefault();
 
     if (latestFundBill != null)
     {

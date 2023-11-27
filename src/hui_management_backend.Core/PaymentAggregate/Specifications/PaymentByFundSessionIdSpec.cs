@@ -7,6 +7,7 @@ public class PaymentByFundSessionIdSpec : Specification<Payment>
   public PaymentByFundSessionIdSpec(int fundSesionId)
   {
     Query
+      .Include(p => p.customBills)
       .Include(p => p.fundBills)
         .ThenInclude(fb => fb.fromSession)
        .Include(p => p.fundBills)

@@ -73,7 +73,6 @@ public class CreateFinalSettlementForDeadSessionService : ICreateFinalSettlement
     member.setFinalSettlementForDeadSessionBill(payment);
 
     await _paymentRepository.SaveChangesAsync();
-    await _fundRepository.SaveChangesAsync();
     
     await _unitOfWork.SaveAndCommitAsync();
 

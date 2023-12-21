@@ -20,7 +20,7 @@ public class FundMemberValidatorService : IFundMemberValidatorService
     return fund.Sessions
       .Where(
         session => session.normalSessionDetails.Where(
-          nsd => (nsd.type == NormalSessionType.Taken || nsd.type == NormalSessionType.FakeTaken) && nsd.fundMember == fundMember).Any()
+          nsd => (nsd.type == NormalSessionType.Taken) && nsd.fundMember == fundMember).Any()
       ).Any();
   }
 }

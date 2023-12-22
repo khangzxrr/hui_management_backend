@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hui_management_backend.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231221175354_CascadeDeleteFundBill")]
+    partial class CascadeDeleteFundBill
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -384,7 +387,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<DateTime>("IdentityCreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 12, 22, 1, 7, 27, 491, DateTimeKind.Local).AddTicks(4309));
+                        .HasDefaultValue(new DateTime(2023, 12, 22, 0, 53, 54, 58, DateTimeKind.Local).AddTicks(8902));
 
                     b.Property<string>("IdentityImageBackUrl")
                         .HasColumnType("nvarchar(max)");
@@ -526,12 +529,12 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", "fromFund")
                         .WithMany()
                         .HasForeignKey("fromFundId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.NormalSessionDetail", "fromSessionDetail")
                         .WithMany()
                         .HasForeignKey("fromSessionDetailId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.FundSession", "fromSession")
                         .WithMany()

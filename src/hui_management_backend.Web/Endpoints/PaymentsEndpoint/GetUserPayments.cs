@@ -72,16 +72,18 @@ public class GetUserPayments : EndpointBaseAsync
     var paymentSpec = new PaymentsByUserIdSpec(subuser.rootUser.Id);
     var payments = await _paymentRepository.ListAsync(paymentSpec);
 
-    //workaround, shouldn't like this! please take time to fix in the future KHANG!
-    var noBillPayments = payments.Where(p => !p.fundBills.Any() && !p.customBills.Any()).ToList();
+    ////workaround, shouldn't like this! please take time to fix in the future KHANG!
+    //var noBillPayments = payments.Where(p => !p.fundBills.Any() && !p.customBills.Any()).ToList();
 
-    await _paymentRepository.DeleteRangeAsync(noBillPayments);
-    await _paymentRepository.SaveChangesAsync();
-    //================================================
+    //await _paymentRepository.DeleteRangeAsync(noBillPayments);
+    //await _paymentRepository.SaveChangesAsync();
+    ////================================================
 
     payments = await _paymentRepository.ListAsync(paymentSpec);
 
-    IEnumerable<Payment> filteredPayments = payments;
+    IEnumerable<Payment> filteredPayments = payments.Where(p => p.fundBills.Count() > 0);
+
+
 
     if (request.filerByDate != null)
     {

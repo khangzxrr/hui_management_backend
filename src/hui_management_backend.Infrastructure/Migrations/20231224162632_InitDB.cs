@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initDB : Migration
+    public partial class InitDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -99,7 +99,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     createById = table.Column<int>(type: "int", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Identity = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdentityCreateDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 11, 25, 20, 18, 32, 662, DateTimeKind.Local).AddTicks(3555)),
+                    IdentityCreateDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 12, 24, 23, 26, 32, 793, DateTimeKind.Local).AddTicks(1698)),
                     IdentityAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdentityImageFrontUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdentityImageBackUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -317,26 +317,22 @@ namespace hui_management_backend.Infrastructure.Migrations
                         name: "FK_FundBill_FundSession_fromSessionId",
                         column: x => x.fromSessionId,
                         principalTable: "FundSession",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_FundBill_Funds_fromFundId",
                         column: x => x.fromFundId,
                         principalTable: "Funds",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_FundBill_NormalSessionDetail_fromSessionDetailId",
                         column: x => x.fromSessionDetailId,
                         principalTable: "NormalSessionDetail",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_FundBill_Payment_PaymentId",
                         column: x => x.PaymentId,
                         principalTable: "Payment",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

@@ -12,8 +12,8 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231221180037_SetNullFundBills")]
-    partial class SetNullFundBills
+    [Migration("20231224162632_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -387,7 +387,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<DateTime>("IdentityCreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 12, 22, 1, 0, 37, 632, DateTimeKind.Local).AddTicks(136));
+                        .HasDefaultValue(new DateTime(2023, 12, 24, 23, 26, 32, 793, DateTimeKind.Local).AddTicks(1698));
 
                     b.Property<string>("IdentityImageBackUrl")
                         .HasColumnType("nvarchar(max)");
@@ -524,20 +524,22 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasOne("hui_management_backend.Core.PaymentAggregate.Payment", null)
                         .WithMany("fundBills")
                         .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", "fromFund")
                         .WithMany()
-                        .HasForeignKey("fromFundId");
+                        .HasForeignKey("fromFundId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.NormalSessionDetail", "fromSessionDetail")
                         .WithMany()
                         .HasForeignKey("fromSessionDetailId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.FundSession", "fromSession")
                         .WithMany()
-                        .HasForeignKey("fromSessionId");
+                        .HasForeignKey("fromSessionId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("fromFund");
 

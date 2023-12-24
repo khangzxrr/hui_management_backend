@@ -12,8 +12,8 @@ using hui_management_backend.Infrastructure.Data;
 namespace hui_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231125131832_initDB")]
-    partial class initDB
+    [Migration("20231224171952_CascadeDeletePayment")]
+    partial class CascadeDeletePayment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -387,7 +387,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<DateTime>("IdentityCreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 25, 20, 18, 32, 662, DateTimeKind.Local).AddTicks(3555));
+                        .HasDefaultValue(new DateTime(2023, 12, 25, 0, 19, 52, 558, DateTimeKind.Local).AddTicks(1392));
 
                     b.Property<string>("IdentityImageBackUrl")
                         .HasColumnType("nvarchar(max)");
@@ -529,17 +529,17 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", "fromFund")
                         .WithMany()
                         .HasForeignKey("fromFundId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.NormalSessionDetail", "fromSessionDetail")
                         .WithMany()
                         .HasForeignKey("fromSessionDetailId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.FundSession", "fromSession")
                         .WithMany()
                         .HasForeignKey("fromSessionId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("fromFund");
 

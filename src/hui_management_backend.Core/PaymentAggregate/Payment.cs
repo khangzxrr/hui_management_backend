@@ -87,11 +87,6 @@ public class Payment : EntityBase, IAggregateRoot
     }
   }
 
-  public void RemoveAllFundBillByFundId(int fundId)
-  {
-    _fundBills.RemoveAll(fb => fb.fromFund!.Id == fundId);
-  }
-
 
   public void AddPaymentTransaction(PaymentTransaction transaction)
   {
@@ -109,6 +104,6 @@ public class Payment : EntityBase, IAggregateRoot
 
   public void RemoveAllFundBillWithSessionId(int fundBillId)
   {
-    _fundBills.RemoveAll(fb => fb.fromSession!.Id == fundBillId);
+    _fundBills.RemoveAll(fb => fb.fromSession?.Id == fundBillId);
   }
 }

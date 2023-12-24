@@ -1,6 +1,7 @@
 ﻿
 
 using hui_management_backend.Core.FundAggregate;
+using hui_management_backend.Core.PaymentAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,6 +11,7 @@ public class FundConfiguration : IEntityTypeConfiguration<Fund>
   public void Configure(EntityTypeBuilder<Fund> builder)
   {
     builder.HasMany(f => f.Members).WithOne().OnDelete(DeleteBehavior.Restrict);
+
     builder.HasMany(f => f.Sessions).WithOne().OnDelete(DeleteBehavior.Cascade);
 
     builder.Property(f => f.FundType)

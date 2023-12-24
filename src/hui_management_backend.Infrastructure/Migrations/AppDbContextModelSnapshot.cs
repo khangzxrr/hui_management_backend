@@ -384,7 +384,7 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.Property<DateTime>("IdentityCreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 12, 22, 1, 7, 27, 491, DateTimeKind.Local).AddTicks(4309));
+                        .HasDefaultValue(new DateTime(2023, 12, 25, 0, 19, 52, 558, DateTimeKind.Local).AddTicks(1392));
 
                     b.Property<string>("IdentityImageBackUrl")
                         .HasColumnType("nvarchar(max)");
@@ -526,17 +526,17 @@ namespace hui_management_backend.Infrastructure.Migrations
                     b.HasOne("hui_management_backend.Core.FundAggregate.Fund", "fromFund")
                         .WithMany()
                         .HasForeignKey("fromFundId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.NormalSessionDetail", "fromSessionDetail")
                         .WithMany()
                         .HasForeignKey("fromSessionDetailId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("hui_management_backend.Core.FundAggregate.FundSession", "fromSession")
                         .WithMany()
                         .HasForeignKey("fromSessionId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("fromFund");
 

@@ -8,7 +8,6 @@ public class FundDetailByIdAndOwnerIdSpec : Specification<Fund>, ISingleResultSp
   {
     Query
      .Include(f => f.Owner)
-
      .Include(f => f.Members)
       .ThenInclude(m => m.finalSettlementForDeadSessionBill)
      .Include(f => f.Members)

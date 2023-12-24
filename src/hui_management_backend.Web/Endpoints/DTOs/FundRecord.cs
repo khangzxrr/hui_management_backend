@@ -1,7 +1,4 @@
-﻿
-using hui_management_backend.Web.Endpoints.FundEndpoints;
-
-namespace hui_management_backend.Web.Endpoints.DTOs;
+﻿namespace hui_management_backend.Web.Endpoints.DTOs;
 
 public record FundRecord(
   int id, 

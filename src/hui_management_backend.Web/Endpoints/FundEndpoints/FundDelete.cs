@@ -20,16 +20,12 @@ public class FundDelete : EndpointBaseAsync
 {
 
   private readonly IRepository<Fund> _fundRepository;
-  private readonly IRepository<Payment> _paymentRepository;
   private readonly IAuthorizeService _authorizeService;
-  private readonly IUnitOfWork _unitOfWork;
 
-  public FundDelete(IRepository<Fund> fundRepository, IRepository<Payment> paymentRepository, IAuthorizeService authorizeService, IUnitOfWork unitOfWork)
+  public FundDelete(IRepository<Fund> fundRepository, IAuthorizeService authorizeService)
   {
     _fundRepository = fundRepository;
-    _paymentRepository = paymentRepository;
     _authorizeService = authorizeService;
-    _unitOfWork = unitOfWork;
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -53,37 +49,9 @@ public class FundDelete : EndpointBaseAsync
     }
 
 
+    fund.setArchived(true);
 
-    _unitOfWork.BeginTransaction();
-
-    var paymentSpec = new PaymentByFundIdSpec(request.fundId);
-    var payments = await _paymentRepository.ListAsync(paymentSpec);
-
-    foreach (var payment in payments)
-    {
-      payment.RemoveAllFundBillByFundId(request.fundId);
-
-      if (payment.fundBills.Count() == 0)
-      {
-        await _paymentRepository.DeleteAsync(payment);
-      } else
-      {
-        await _paymentRepository.UpdateAsync(payment);
-      }
-
-
-    }
-
-
-    fund.RemoveAllMember();
-
-    await _fundRepository.DeleteAsync(fund);
-
-
-
-
-
-    await _unitOfWork.SaveAndCommitAsync();
+    await _fundRepository.UpdateAsync(fund);
 
     return Ok();
   }

@@ -46,6 +46,11 @@ public class Fund : EntityBase, IAggregateRoot
     return new DateTime(dateTime.Year, dateTime.Month, day, dateTime.Hour, dateTime.Minute, dateTime.Second);
   }
 
+  public void setArchived(bool isArchived)
+  {
+    IsArchived = isArchived;
+  }
+
   public bool isEnd()
   {
     return _sessions.Count() == _members.Count();
@@ -133,6 +138,7 @@ public class Fund : EntityBase, IAggregateRoot
   {
     _members.RemoveAll(_members => true);
   }
+
   public void AddMember(FundMember member)
   {
     Guard.Against.Null(member);
@@ -218,4 +224,5 @@ public class Fund : EntityBase, IAggregateRoot
   {
     TakenSessionDeliveryHourOfDay = Guard.Against.Null(takenSessionDeliveryHourOfDay);
   }
+
 }

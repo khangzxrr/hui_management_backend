@@ -39,7 +39,7 @@ public class NewFundSessionAddedHandler : INotificationHandler<NewFundSessionAdd
 
 
       //IMPORTANT add transaction for member who has final settlement
-      if (sessionDetail.type == NormalSessionType.Dead  && sessionDetail.fundMember.hasFinalSettlementForDeadSessionBill)
+      if ((sessionDetail.type == NormalSessionType.Dead || sessionDetail.type == NormalSessionType.EmergencyReceivable)  && sessionDetail.fundMember.hasFinalSettlementForDeadSessionBill)
       {
         normalPayment.AddPaymentTransaction(
           new PaymentTransaction(

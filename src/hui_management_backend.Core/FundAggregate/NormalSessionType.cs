@@ -12,5 +12,7 @@ public class NormalSessionType : SmartEnum<NormalSessionType>
 
   public static NormalSessionType EmergencyTaken = new(nameof(EmergencyTaken), 4);
 
+  public static readonly NormalSessionType EmergencyReceivable = new(nameof(EmergencyReceivable), 5);
+
   public NormalSessionType(string name, int value) : base(name, value) { }
 }

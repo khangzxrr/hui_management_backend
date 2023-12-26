@@ -45,7 +45,7 @@ public class AddSessionFundService : IAddSessionFundService
     }
 
     //check if member was taken fund already
-    if (_fundMemberValidatorService.isMemberTakedFund(fund, fundTakenMember) || _fundMemberValidatorService.isMemberTakedEmergencyFund(fund, fundTakenMember))
+    if (_fundMemberValidatorService.isMemberTakedFund(fund, fundTakenMember))
     {
       return Result<bool>.Error(ResponseMessageConstants.FundMemberAlreadyTakenFund);
     }
@@ -81,6 +81,17 @@ public class AddSessionFundService : IAddSessionFundService
       type = NormalSessionType.Taken,
       fundMember = fundTakenMember,
     };
+
+    /*
+     * if the fund member taked an emergency fund before => generate EmergencyReceivable which owner will take which dead price instead of a normal taken 
+     */
+    if (_fundMemberValidatorService.isMemberTakedEmergencyFund(fund, fundTakenMember))
+    {
+      takenSessionDetail.type = NormalSessionType.EmergencyReceivable;
+      takenSessionDetail.payCost = fund.FundPrice;
+    }
+
+
     newSession.AddNormalSessionDetail(takenSessionDetail);
 
 

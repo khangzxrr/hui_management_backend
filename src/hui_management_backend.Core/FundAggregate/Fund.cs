@@ -51,10 +51,7 @@ public class Fund : EntityBase, IAggregateRoot
     IsArchived = isArchived;
   }
 
-  public bool isEnd()
-  {
-    return _sessions.Count() == _members.Count();
-  }
+  public bool isEnd() => _sessions.Count() == _members.Count();
 
   public int emergencySessionsCount => _sessions.Where(s => s.normalSessionDetails.Any(sd => sd.type == NormalSessionType.EmergencyTaken)).Count();
 

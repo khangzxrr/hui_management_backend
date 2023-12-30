@@ -53,8 +53,6 @@ public class Fund : EntityBase, IAggregateRoot
 
   public bool isEnd() => _sessions.Count() == _members.Count();
 
-  public int emergencySessionsCount => _sessions.Where(s => s.normalSessionDetails.Any(sd => sd.type == NormalSessionType.EmergencyTaken)).Count();
-
   public IEnumerable<DateTime> newSessionCreateDates()
   {
     var newSessionCreateDates = new List<DateTime>();

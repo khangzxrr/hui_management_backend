@@ -15,7 +15,6 @@ public record FundRecord(
   double serviceCost, 
   int membersCount, 
   int sessionsCount, 
-  int emergencySessionsCount,
   IEnumerable<FundMemberRecord> members, 
   IEnumerable<FundSessionRecord> sessions,
   IEnumerable<DateTime> newSessionCreateDates
@@ -34,7 +33,6 @@ public record FundRecord(
     serviceCost,
     membersCount, 
     sessionsCount,
-    emergencySessionsCount,
     newSessionCreateDates)
 {
 }

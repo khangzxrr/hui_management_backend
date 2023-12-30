@@ -1,5 +1,4 @@
 ﻿using Ardalis.GuardClauses;
-using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.SharedKernel;
 
 namespace hui_management_backend.Core.FundAggregate;

@@ -15,7 +15,6 @@ public record GeneralFundRecord(
   double serviceCost, 
   int membersCount, 
   int sessionsCount,
-  int emergencySessionsCount,
   IEnumerable<DateTime> newSessionCreateDates)
 {
 }

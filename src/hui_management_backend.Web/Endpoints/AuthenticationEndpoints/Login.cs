@@ -18,14 +18,12 @@ public class Login : EndpointBaseAsync
   private readonly IMapper _mapper;
   private readonly IAuthenticationService _authenticationService;
   private readonly ITokenService _tokenService;
-  private readonly IPushNotificationSender _pushNotificationSender;
 
-  public Login(IAuthenticationService authenticationService, ITokenService tokenService, IMapper mapper, IPushNotificationSender pushNotificationSender)
+  public Login(IAuthenticationService authenticationService, ITokenService tokenService, IMapper mapper)
   {
     _authenticationService = authenticationService;
     _tokenService = tokenService;
     _mapper = mapper;
-    _pushNotificationSender = pushNotificationSender;
   }
 
 

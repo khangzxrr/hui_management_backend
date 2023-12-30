@@ -11,7 +11,7 @@ public class SubUserConfiguration : IEntityTypeConfiguration<SubUser>
 
     builder.Property(u => u.Identity).IsRequired();
 
-    builder.Property(u => u.Name).IsRequired();
+    builder.Property(u => u.Name).UseCollation("VIETNAMESE_CI_AI").IsRequired();
     builder.Property(u => u.Address).IsRequired();
     builder.Property(u => u.BankName).IsRequired();
     builder.Property(u => u.BankNumber).IsRequired();

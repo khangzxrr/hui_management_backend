@@ -34,8 +34,13 @@ public class DefaultCoreModule : Module
     builder.RegisterType<CreateFinalSettlementForDeadSessionService>()
         .As<ICreateFinalSettlementForDeadSessionService>().InstancePerLifetimeScope();
 
+    builder.RegisterType<GetFundService>()
+    .As<IGetFundService>().InstancePerLifetimeScope();
+
     builder.RegisterType<ScanExpiredProcessingPaymentService>()
         .As<IScanExpiredProcessingPayment>().SingleInstance();
+
+
 
   }
 }

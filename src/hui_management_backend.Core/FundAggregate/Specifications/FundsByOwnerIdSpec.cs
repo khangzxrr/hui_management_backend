@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
-using Ardalis.Specification;
-using Diacritics.Extensions;
+﻿using Ardalis.Specification;
 
 namespace hui_management_backend.Core.FundAggregate.Specifications;
 public class FundsByOwnerIdSpec : Specification<Fund>

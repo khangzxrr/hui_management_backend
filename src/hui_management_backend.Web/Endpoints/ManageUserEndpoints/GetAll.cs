@@ -1,8 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
 using hui_management_backend.Core.Constants;
-using hui_management_backend.Core.FundAggregate;
-using hui_management_backend.Core.PaymentAggregate;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;

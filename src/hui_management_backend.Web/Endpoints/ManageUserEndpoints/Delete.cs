@@ -1,6 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
 using hui_management_backend.Core.Constants;
-using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;

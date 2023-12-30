@@ -14,12 +14,14 @@ public class GetFundService : IGetFundService
   {
     _fundRepository = fundRepository;
   }
-  public async Task<Result<IEnumerable<Fund>>> getFunds(int ownerId, int skip, int take)
+
+ 
+
+  public async Task<Result<IEnumerable<Fund>>> getFunds(int ownerId, int skip, int take, string? searchTerm)
   {
-    var spec = new FundsByOwnerIdSpec(ownerId, skip, take);
+
+    var spec = new FundsByOwnerIdSpec(ownerId, skip, take, searchTerm);
     var funds = await _fundRepository.ListAsync(spec);
-
-
     return funds;
   }
 }

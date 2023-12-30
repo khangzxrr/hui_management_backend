@@ -2,10 +2,7 @@
 using Ardalis.ApiEndpoints;
 using AutoMapper;
 using hui_management_backend.Core.Constants;
-using hui_management_backend.Core.FundAggregate;
-using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.Core.Interfaces;
-using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -42,7 +39,7 @@ public class FundGetAll : EndpointBaseAsync
   ]
   public override async Task<ActionResult<FundGetAllResponse>> HandleAsync([FromRoute] FundGetAllRequest request, CancellationToken cancellationToken = default)
   {
-    var fundsResult = await _fundService.getFunds(_authorizeService.UserId, request.skip, request.pageSize);
+    var fundsResult = await _fundService.getFunds(_authorizeService.UserId, request.skip, request.pageSize, request.searchTerm);
 
     if (fundsResult.IsSuccess)
     {

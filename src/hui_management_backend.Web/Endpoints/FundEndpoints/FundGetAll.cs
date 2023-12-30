@@ -1,8 +1,10 @@
-﻿using Ardalis.ApiEndpoints;
+﻿using System;
+using Ardalis.ApiEndpoints;
 using AutoMapper;
 using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.FundAggregate.Specifications;
+using hui_management_backend.Core.Interfaces;
 using hui_management_backend.SharedKernel.Interfaces;
 using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
@@ -13,18 +15,18 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace hui_management_backend.Web.Endpoints.FundEndpoints;
 
 public class FundGetAll : EndpointBaseAsync
-  .WithoutRequest
+  .WithRequest<FundGetAllRequest>
   .WithActionResult<FundGetAllResponse>
 {
 
-  private readonly IRepository<Fund> _fundRepository;
+  private readonly IGetFundService _fundService;
   private readonly IMapper _mapper;
   private readonly IAuthorizeService _authorizeService;
 
 
-  public FundGetAll(IRepository<Fund> fundRepository, IMapper mapper, IAuthorizeService authorizeService)
+  public FundGetAll(IGetFundService fundService, IMapper mapper, IAuthorizeService authorizeService)
   {
-    _fundRepository = fundRepository;
+    _fundService = fundService;
     _mapper = mapper;
     _authorizeService = authorizeService;
   }
@@ -38,15 +40,16 @@ public class FundGetAll : EndpointBaseAsync
     Tags = new[] { "Fund" }
     )
   ]
-  public override async Task<ActionResult<FundGetAllResponse>> HandleAsync(CancellationToken cancellationToken = default)
+  public override async Task<ActionResult<FundGetAllResponse>> HandleAsync([FromRoute] FundGetAllRequest request, CancellationToken cancellationToken = default)
   {
-    var spec = new FundsByOwnerIdSpec(_authorizeService.UserId);
-    var funds = await _fundRepository.ListAsync(spec);
+    var fundsResult = await _fundService.getFunds(_authorizeService.UserId, request.skip, request.pageSize);
 
-    var fundRecords = funds.Select(_mapper.Map<GeneralFundRecord>); 
+    if (fundsResult.IsSuccess)
+    {
+      var response = new FundGetAllResponse(fundsResult.Value.Select(_mapper.Map<GeneralFundRecord>));
+      return Ok(response);
+    }
 
-    var response = new FundGetAllResponse(fundRecords);
-
-    return Ok(response);
+    return BadRequest(fundsResult.Errors);
   }
 }

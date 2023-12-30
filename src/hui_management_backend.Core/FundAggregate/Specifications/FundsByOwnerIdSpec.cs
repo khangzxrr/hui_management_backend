@@ -3,17 +3,16 @@
 namespace hui_management_backend.Core.FundAggregate.Specifications;
 public class FundsByOwnerIdSpec : Specification<Fund>
 {
-  public FundsByOwnerIdSpec(int ownerId)
+  public FundsByOwnerIdSpec(int ownerId, int skip, int take)
   {
     Query
-      .Include(f => f.Owner)
-      .Include(f => f.Members)
-        .ThenInclude(m => m.subUser)
-      .Include(f => f.Sessions)
-        .ThenInclude(s => s.normalSessionDetails)
-          .ThenInclude(nsd => nsd.fundMember)
-            .ThenInclude(fm => fm.subUser)
+     .Include(f => f.Owner)
+     .Include(f => f.Members)
+      .ThenInclude(m => m.subUser)
+     .Include(f => f.Sessions)
       .Where(f => f.Owner.Id == ownerId)
-      .AsSplitQuery();
+      .OrderBy(f => f.Id)
+      .Skip(skip)
+      .Take(take);
   }
 }

@@ -14,6 +14,7 @@ using hui_management_backend.Web.Interfaces;
 using hui_management_backend.Web.Services;
 using Hangfire;
 using hui_management_backend.Core.Interfaces;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +34,11 @@ builder.Services.AddHangfireService(connectionString);
 
 builder.Services.AddDbContext(connectionString);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(opt =>
+{
+  opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>

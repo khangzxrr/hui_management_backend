@@ -1,9 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
 using hui_management_backend.Core.Constants;
-using hui_management_backend.Core.UserAggregate;
-using hui_management_backend.Core.UserAggregate.Specifications;
-using hui_management_backend.SharedKernel.Interfaces;
+using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -18,13 +16,14 @@ public class GetAll : EndpointBaseAsync
 {
   private readonly IAuthorizeService _authorizeService;
   private readonly IMapper _mapper;
-  private readonly IRepository<SubUser> _subuserRepository;
+  private readonly IGetAllSubUserService _getAllsubUserService;
+  
 
-  public GetAll(IRepository<SubUser> subuserRepository, IMapper mapper, IAuthorizeService authorizeService)
+  public GetAll(IMapper mapper, IAuthorizeService authorizeService, IGetAllSubUserService getAllSubUserService)
   {
-    _subuserRepository = subuserRepository;
     _mapper = mapper;
     _authorizeService = authorizeService;
+    _getAllsubUserService = getAllSubUserService;
   }
 
   [Authorize(Roles = RoleNameConstants.Owner)]
@@ -38,12 +37,9 @@ public class GetAll : EndpointBaseAsync
   ]
   public override async Task<ActionResult<GetAllResponse>> HandleAsync([FromRoute] GetAllRequest request, CancellationToken cancellationToken = default)
   {
-    IEnumerable<SubUser> subusers;
+    var subUsers = await _getAllsubUserService.GetSubUsers(_authorizeService.UserId, request.skip, request.take, request.searchTerm);
 
-    var userWithPaymentSpec = new SubUserWithPaymentByCreatorIdSpec(_authorizeService.UserId);
-    subusers = await _subuserRepository.ListAsync(userWithPaymentSpec);
-
-    var userRecords = subusers.Select(_mapper.Map<SubUserRecord>);
+    var userRecords = subUsers.Select(_mapper.Map<SubUserRecord>);
 
     var response = new GetAllResponse
     {

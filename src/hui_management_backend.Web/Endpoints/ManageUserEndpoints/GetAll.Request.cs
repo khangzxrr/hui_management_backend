@@ -1,17 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using hui_management_backend.Web.Endpoints.Base;
+using Microsoft.AspNetCore.Mvc;
 
 namespace hui_management_backend.Web.Endpoints.UserEndpoints;
 
-public class GetAllRequest
+public class GetAllRequest : PagingRequest
 {
   public const string Route = "/subusers";
 
   [FromQuery]
-  public bool? filterByAnyPayment { get; set; }
-
-
-  [FromQuery]
-  public bool? filterByContainToDayPayment { get; set; }
+  public string? searchTerm { get; set; }
 
 
 }

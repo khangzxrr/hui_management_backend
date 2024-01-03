@@ -61,45 +61,34 @@ public class GetUserPayments : EndpointBaseAsync
 
 
     var fundSpec = new FundsByUserIdOwnerIdSpec(request.subUserId, _authorizeService.UserId);
-    var isExistFundContainUser = await _fundRepository.AnyAsync(fundSpec);
+    var fund = await _fundRepository.FirstOrDefaultAsync(fundSpec);
 
-    if (!isExistFundContainUser)
+    if (fund == null)
     {
       List<PaymentRecord> emptyRecords = new();
       return Ok(new GetUserPaymentsResponse(emptyRecords));
     }
 
+    foreach(var fundMember in fund.Members.Where(fm => fm.subUser.Id == request.subUserId))
+    {
+      fundMember.clearFinalSettlementForDeadSessionBill();
+    }
+
+    await _fundRepository.SaveChangesAsync();
+
     var paymentSpec = new PaymentsByUserIdSpec(subuser.rootUser.Id);
     var payments = await _paymentRepository.ListAsync(paymentSpec);
 
     ////workaround, shouldn't like this! please take time to fix in the future KHANG!
-    //var noBillPayments = payments.Where(p => !p.fundBills.Any() && !p.customBills.Any()).ToList();
+    var noBillPayments = payments.Where(p => !p.fundBills.Any()).ToList();
 
-    //await _paymentRepository.DeleteRangeAsync(noBillPayments);
-    //await _paymentRepository.SaveChangesAsync();
-    ////================================================
+    await _paymentRepository.DeleteRangeAsync(noBillPayments);
+    await _paymentRepository.SaveChangesAsync();
+    //================================================
 
-    payments = await _paymentRepository.ListAsync(paymentSpec);
+    var paymentRecords = payments.Select(_mapper.Map<PaymentRecord>);
 
-    IEnumerable<Payment> filteredPayments = payments.Where(p => p.fundBills.Count() > 0);
-
-
-
-    if (request.filerByDate != null)
-    {
-      filteredPayments = filteredPayments.Where(p => p.CreateAt.Date == request.filerByDate.Value.Date);
-    }
-
-    if (request.filterByProcessingOrDebting != null)
-    {
-      filteredPayments = filteredPayments.Where(p => p.Status != PaymentStatus.Finish);
-    }
-    if (request.filterBySessionDetailId != null)
-    {
-      filteredPayments = filteredPayments.Where(p => p.fundBills.Where(fb => fb.fromSessionDetail?.Id == request.filterBySessionDetailId).Any());
-    }
-
-    var paymentRecords = filteredPayments.Select(_mapper.Map<PaymentRecord>);
+    var emptyPaymentList = new List<Payment>();
     var response = new GetUserPaymentsResponse(paymentRecords);
 
     return Ok(response);

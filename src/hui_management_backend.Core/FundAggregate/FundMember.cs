@@ -10,6 +10,7 @@ public class FundMember: EntityBase
   public int replicationCount { get; set; }
   public SubUser subUser { get; set; } = null!;
 
+  public int? finalSettlementForDeadSessionBillId { get; private set; }
   public Payment? finalSettlementForDeadSessionBill { get; private set; }
 
   public bool hasFinalSettlementForDeadSessionBill => finalSettlementForDeadSessionBill != null;
@@ -17,5 +18,10 @@ public class FundMember: EntityBase
   {
     Guard.Against.Null(finalSettlementForDeadSessionBill);
     this.finalSettlementForDeadSessionBill = finalSettlementForDeadSessionBill;
+  }
+
+  public void clearFinalSettlementForDeadSessionBill()
+  {
+    finalSettlementForDeadSessionBill = null;
   }
 }

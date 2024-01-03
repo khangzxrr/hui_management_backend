@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
 using hui_management_backend.Core.Constants;
+using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Specifications;
 using hui_management_backend.SharedKernel.Interfaces;
@@ -13,17 +14,17 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace hui_management_backend.Web.Endpoints.ManageUserEndpoints;
 
 public class GetAllWithTotalReport : EndpointBaseAsync
-  .WithoutRequest
+  .WithRequest<GetAllWithTotalReportRequest>
   .WithActionResult<GetAllWithTotalReportResponse>
 {
 
-  private readonly IRepository<SubUser> _subUserRepository;
+  private readonly IGetAllSubUserWithPaymentService _getAllSubUserWithPaymentService;
   private readonly IAuthorizeService _authorizeService;
   private readonly IMapper _mapper;
 
-  public GetAllWithTotalReport(IRepository<SubUser> subUserRepository, IAuthorizeService authorizeService, IMapper mapper)
+  public GetAllWithTotalReport(IGetAllSubUserWithPaymentService getAllSubUserWithPaymentService, IAuthorizeService authorizeService, IMapper mapper)
   {
-    _subUserRepository = subUserRepository;
+    _getAllSubUserWithPaymentService = getAllSubUserWithPaymentService;
     _authorizeService = authorizeService;
     _mapper = mapper;
   }
@@ -38,19 +39,18 @@ public class GetAllWithTotalReport : EndpointBaseAsync
     Tags = new[] { "SubUsers" }
     )
   ]
-  public override async Task<ActionResult<GetAllWithTotalReportResponse>> HandleAsync(CancellationToken cancellationToken = default)
+  public override async Task<ActionResult<GetAllWithTotalReportResponse>> HandleAsync([FromRoute] GetAllWithTotalReportRequest request, CancellationToken cancellationToken = default)
   {
+    var result = await _getAllSubUserWithPaymentService.GetAllSubUserWithPayment(_authorizeService.UserId, request.skip, request.take, request.searchTerm, request.filters);
 
-    var subuserSpec = new SubUserWithPaymentByCreatorIdSpec(_authorizeService.UserId);
+    if (result.IsSuccess)
+    {
+      var subuserReportRecords = result.Value.Select(_mapper.Map<SubUserReportRecord>);
+      var response = new GetAllWithTotalReportResponse(subuserReportRecords);
 
-    var subusers = await _subUserRepository.ListAsync(subuserSpec);
+      return Ok(response);
+    }
 
-
-    //filter out who doesnt have any payments
-    var subuserWithReports = subusers.Where(su => su.totalProcessingAmount != 0 || su.totalDebtAmount != 0).Select(_mapper.Map<SubUserReportRecord>);
-
-    var response = new GetAllWithTotalReportResponse(subuserWithReports);
-
-    return Ok(response);
+    return BadRequest(result.Errors.First());
   }
 }

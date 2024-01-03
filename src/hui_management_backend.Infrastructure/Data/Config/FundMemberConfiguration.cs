@@ -9,5 +9,7 @@ public class FundMemberConfiguration : IEntityTypeConfiguration<FundMember>
   public void Configure(EntityTypeBuilder<FundMember> builder)
   {
     builder.HasOne(f => f.subUser).WithMany().OnDelete(DeleteBehavior.Cascade);
+    builder.HasOne(f => f.finalSettlementForDeadSessionBill).WithOne().HasForeignKey<FundMember>(fm => fm.finalSettlementForDeadSessionBillId).OnDelete(DeleteBehavior.Cascade);
+
   }
 }

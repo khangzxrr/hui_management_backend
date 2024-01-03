@@ -11,8 +11,10 @@ public abstract class PagingRequest
   public int pageIndex { get; set; }
   [Required]
   [FromQuery]
-  [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than {1}")]
+  [Range(0, int.MaxValue, ErrorMessage = "Please enter a value bigger than {1}")]
   public int pageSize { get; set; }
+
+  public int take => pageSize == 0 ? int.MaxValue : pageSize;
 
   public int skip => pageIndex * pageSize;
 

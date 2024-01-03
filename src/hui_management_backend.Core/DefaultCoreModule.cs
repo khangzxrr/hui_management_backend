@@ -37,6 +37,12 @@ public class DefaultCoreModule : Module
     builder.RegisterType<GetFundService>()
     .As<IGetFundService>().InstancePerLifetimeScope();
 
+    builder.RegisterType<GetAllSubUserService>()
+      .As<IGetAllSubUserService>().InstancePerLifetimeScope();
+
+    builder.RegisterType<GetAllSubUserWithPaymentService>()
+      .As<IGetAllSubUserWithPaymentService>().InstancePerLifetimeScope();
+
     builder.RegisterType<ScanExpiredProcessingPaymentService>()
         .As<IScanExpiredProcessingPayment>().SingleInstance();
 

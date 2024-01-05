@@ -17,8 +17,11 @@ public class GetAllSubUserService : IGetAllSubUserService
 
   public async Task<IEnumerable<SubUser>> GetSubUsers(int ownerId, int skip, int take, string? searchTerm)
   {
-    var spec = new SubUserByCreateById(ownerId, skip, take, searchTerm?.Trim());  
+    var spec = new SubUserByCreateById(ownerId, skip, take, searchTerm?.Trim());
 
-    return await _subuserRepository.ListAsync(spec);  
+    var subUsers = await _subuserRepository.ListAsync(spec);
+    var sortedSubUsers = subUsers.OrderBy(su => su.Name.Trim().Split(' ').Last().ToLower().First());
+
+    return sortedSubUsers.Skip(skip).Take(take);  
   }
 }

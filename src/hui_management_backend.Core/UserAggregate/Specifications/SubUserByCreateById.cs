@@ -10,10 +10,10 @@ public class SubUserByCreateById : Specification<SubUser>
       .Include(su => su.rootUser)
       .Where(su => su.createBy.Id == creatorId && su.rootUser.Id != creatorId)
       .Search(su => su.Name, "%" + searchTerm + "%", searchTerm != null)
-      .Search(su => su.NickName, "%" + searchTerm + "%", searchTerm != null)
-      .OrderBy(su => su.Name)
-      .Skip(skip)
-      .Take(take);
+      .Search(su => su.NickName, "%" + searchTerm + "%", searchTerm != null);
+      //.OrderBy(su => su.Name)
+      //.Skip(skip)
+      //.Take(take);
       
 
   }

@@ -4,6 +4,7 @@ public class SubUserWithPaymentReportFilter
 {
   public enum Filter
   {
-    AtLeastOnePayment
+    AtLeastOnePayment,
+    TodayPayment
   }
 }

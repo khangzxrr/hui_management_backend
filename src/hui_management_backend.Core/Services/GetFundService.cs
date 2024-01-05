@@ -1,6 +1,7 @@
 ﻿
 using Ardalis.Result;
 using hui_management_backend.Core.FundAggregate;
+using hui_management_backend.Core.FundAggregate.Filters;
 using hui_management_backend.Core.FundAggregate.Specifications;
 using hui_management_backend.Core.Interfaces;
 using hui_management_backend.SharedKernel.Interfaces;
@@ -17,10 +18,9 @@ public class GetFundService : IGetFundService
 
  
 
-  public async Task<Result<IEnumerable<Fund>>> getFunds(int ownerId, int skip, int take, string? searchTerm)
+  public async Task<Result<IEnumerable<Fund>>> getFunds(int ownerId, int skip, int take, string? searchTerm, IEnumerable<FundFilter.FundFilterEnum> filters)
   {
-
-    var spec = new FundsByOwnerIdSpec(ownerId, skip, take, searchTerm);
+    var spec = new FundsByOwnerIdSpec(ownerId, skip, take, searchTerm, filters);
     var funds = await _fundRepository.ListAsync(spec);
     return funds;
   }

@@ -58,7 +58,11 @@ public class SubUser : EntityBase, IAggregateRoot
 
   public double totalDebtAmount => _payments.Where(p => p.Status == PaymentStatus.Debting).Sum(p => p.TotalCost());
 
-  public double fundRatio => totalAliveAmount - (totalDeadAmount + totalTakenAmount);
+  public double totalServiceCostAmount => _payments
+                                          .SelectMany(p => p.fundBills)
+                                          .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Alive)
+                                          .Sum(fb => fb.fromSessionDetail!.serviceCost);
+  public double fundRatio => totalAliveAmount - (totalDeadAmount + totalTakenAmount) - totalServiceCostAmount;
 
 
 

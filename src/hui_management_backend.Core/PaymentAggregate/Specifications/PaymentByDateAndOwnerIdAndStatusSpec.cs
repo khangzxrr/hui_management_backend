@@ -8,7 +8,9 @@ public class PaymentByDateAndOwnerIdAndStatusSpec : Specification<Payment>, ISin
     Query
       .Include(p => p.Owner)
       .Include(p => p.fundBills)
+        .ThenInclude(fb => fb.fromSessionDetail)
       .Include(p => p.customBills)
+        
       .Where(p => p.CreateAt.Date == dateTime.Date && p.Owner.Id == ownerId && p.Status == paymentStatus);
   }
 }

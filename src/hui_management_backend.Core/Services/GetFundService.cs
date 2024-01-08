@@ -18,9 +18,9 @@ public class GetFundService : IGetFundService
 
  
 
-  public async Task<Result<IEnumerable<Fund>>> getFunds(int ownerId, int skip, int take, string? searchTerm, IEnumerable<FundFilter.FundFilterEnum> filters)
+  public async Task<Result<IEnumerable<Fund>>> getFunds(int ownerId, int skip, int take, FundFilter filter)
   {
-    var spec = new FundsByOwnerIdSpec(ownerId, skip, take, searchTerm, filters);
+    var spec = new FundsByOwnerIdSpec(ownerId, skip, take, filter);
     var funds = await _fundRepository.ListAsync(spec);
     return funds;
   }

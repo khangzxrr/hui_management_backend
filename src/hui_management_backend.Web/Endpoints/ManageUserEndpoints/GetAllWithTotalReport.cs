@@ -2,9 +2,7 @@
 using AutoMapper;
 using hui_management_backend.Core.Constants;
 using hui_management_backend.Core.Interfaces;
-using hui_management_backend.Core.UserAggregate;
-using hui_management_backend.Core.UserAggregate.Specifications;
-using hui_management_backend.SharedKernel.Interfaces;
+using hui_management_backend.Core.UserAggregate.Enums;
 using hui_management_backend.Web.Endpoints.DTOs;
 using hui_management_backend.Web.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -41,7 +39,10 @@ public class GetAllWithTotalReport : EndpointBaseAsync
   ]
   public override async Task<ActionResult<GetAllWithTotalReportResponse>> HandleAsync([FromRoute] GetAllWithTotalReportRequest request, CancellationToken cancellationToken = default)
   {
-    var result = await _getAllSubUserWithPaymentService.GetAllSubUserWithPayment(_authorizeService.UserId, request.skip, request.take, request.searchTerm, request.filters);
+
+    var filter = new SubUserWithPaymentReportFilter(request.atLeastOnePayment, request.todayPayment, request.byPaymentId);
+
+    var result = await _getAllSubUserWithPaymentService.GetAllSubUserWithPayment(_authorizeService.UserId, request.skip, request.take, request.searchTerm, filter);
 
     if (result.IsSuccess)
     {

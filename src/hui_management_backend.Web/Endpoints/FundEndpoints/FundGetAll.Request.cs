@@ -12,5 +12,8 @@ public class FundGetAllRequest : PagingRequest
 
 
   [FromQuery]
-  public IEnumerable<FundFilter.FundFilterEnum>? filters { get; set; } 
+  public bool? onlyDayFund { get; set; }
+
+  [FromQuery]
+  public bool? onlyMonthFund { get; set; }
 }

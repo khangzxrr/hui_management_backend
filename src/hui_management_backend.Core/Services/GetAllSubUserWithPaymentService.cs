@@ -17,10 +17,10 @@ public class GetAllSubUserWithPaymentService : IGetAllSubUserWithPaymentService
     _subuserRepository = subuserRepository;
   }
 
-  public async Task<Result<IEnumerable<SubUser>>> GetAllSubUserWithPayment(int ownerId, int skip, int take, string? searchTerm, IEnumerable<SubUserWithPaymentReportFilter.Filter> filters)
+  public async Task<Result<IEnumerable<SubUser>>> GetAllSubUserWithPayment(int ownerId, int skip, int take, string? searchTerm, SubUserWithPaymentReportFilter filter)
   {
 
-    var subuserSpec = new SubUserWithPaymentByCreatorIdSpec(ownerId, skip, take, searchTerm, filters);
+    var subuserSpec = new SubUserWithPaymentByCreatorIdSpec(ownerId, skip, take, searchTerm, filter);
 
     var subusers = await _subuserRepository.ListAsync(subuserSpec);
 

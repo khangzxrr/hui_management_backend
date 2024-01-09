@@ -18,5 +18,5 @@ public class GetAllWithTotalReportRequest : PagingRequest
   public bool? todayPayment { get; set; }
 
   [FromQuery]
-  public int? byPaymentId { get; set; }
+  public bool? unfinishedPayment { get; set; }
 }

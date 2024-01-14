@@ -49,6 +49,12 @@ public class SubUser : EntityBase, IAggregateRoot
     .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Dead)
     .Sum(fb => fb.fromSessionDetail!.payCost);
 
+  public double totalUnfinishedTakenAmount => 
+    _payments
+    .Where(p => p.Status != PaymentStatus.Finish)
+    .SelectMany(p => p.fundBills)
+    .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Taken)
+    .Sum(fb => fb.fromSessionDetail!.payCost);
   public double totalTakenAmount =>
     _payments
     .SelectMany(p => p.fundBills)

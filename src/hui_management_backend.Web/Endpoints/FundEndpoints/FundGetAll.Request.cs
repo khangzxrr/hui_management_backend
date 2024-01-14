@@ -16,4 +16,7 @@ public class FundGetAllRequest : PagingRequest
 
   [FromQuery]
   public bool? onlyMonthFund { get; set; }
+
+  [FromQuery]
+  public int? bySubuserId { get; set; }
 }

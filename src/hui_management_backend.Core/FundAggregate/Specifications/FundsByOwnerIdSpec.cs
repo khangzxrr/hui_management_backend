@@ -18,6 +18,7 @@ public class FundsByOwnerIdSpec : Specification<Fund>
      .Search(f => f.Name, "%" + filter.searchTerm + "%", filter.searchTerm != null)
      .Where(f => f.FundType == FundType.DayFund, filter.onlyDayFund.HasValue)
      .Where(f => f.FundType == FundType.MonthFund, filter.onlyMonthFund.HasValue)
+     .Where(f => f.Members.Any(m => m.subUser.Id == filter.bySubuserId), filter.bySubuserId != null)
      .OrderBy(f => f.Id)
      .Skip(skip)
      .Take(take);

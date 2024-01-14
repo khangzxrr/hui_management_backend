@@ -26,4 +26,6 @@ public class SubUserReportRecord : SubUserRecord
   public double totalProcessingAmount { get; set; }
   public double totalDebtAmount { get; set; }
   public double totalTakenAmount { get; set; }
+
+  public double totalUnfinishedTakenAmount { get; set; }
 }

@@ -7,7 +7,7 @@ public class FundsByOwnerIdSpec : Specification<Fund>
 
   
 
-  public FundsByOwnerIdSpec(int ownerId, int skip, int take, string? searchTerm, IEnumerable<FundFilter.FundFilterEnum> filters)
+  public FundsByOwnerIdSpec(int ownerId, int skip, int take, FundFilter filter)
   {
     Query
      .Include(f => f.Owner)
@@ -15,9 +15,10 @@ public class FundsByOwnerIdSpec : Specification<Fund>
       .ThenInclude(m => m.subUser)
      .Include(f => f.Sessions)
      .Where(f => f.Owner.Id == ownerId )
-     .Search(f => f.Name, "%" + searchTerm + "%", searchTerm != null)
-     .Where(f => f.FundType == FundType.DayFund, filters.Contains(FundFilter.FundFilterEnum.OnlyDayFund))
-     .Where(f => f.FundType == FundType.MonthFund, filters.Contains(FundFilter.FundFilterEnum.OnlyMonthFund))
+     .Search(f => f.Name, "%" + filter.searchTerm + "%", filter.searchTerm != null)
+     .Where(f => f.FundType == FundType.DayFund, filter.onlyDayFund.HasValue)
+     .Where(f => f.FundType == FundType.MonthFund, filter.onlyMonthFund.HasValue)
+     .Where(f => f.Members.Any(m => m.subUser.Id == filter.bySubuserId), filter.bySubuserId != null)
      .OrderBy(f => f.Id)
      .Skip(skip)
      .Take(take);

@@ -69,22 +69,23 @@ public class GetUserPayments : EndpointBaseAsync
       return Ok(new GetUserPaymentsResponse(emptyRecords));
     }
 
-    foreach(var fundMember in fund.Members.Where(fm => fm.subUser.Id == request.subUserId))
-    {
-      fundMember.clearFinalSettlementForDeadSessionBill();
-    }
+    //foreach(var fundMember in fund.Members.Where(fm => fm.subUser.Id == request.subUserId))
+    //{
+    //  fundMember.clearFinalSettlementForDeadSessionBill();
+    //}
 
-    await _fundRepository.SaveChangesAsync();
+    //await _fundRepository.SaveChangesAsync();
+
+    //////workaround, shouldn't like this! please take time to fix in the future KHANG!
+    //var noBillPayments = payments.Where(p => !p.fundBills.Any()).ToList();
+
+    //await _paymentRepository.DeleteRangeAsync(noBillPayments);
+    //await _paymentRepository.SaveChangesAsync();
+    ////================================================
 
     var paymentSpec = new PaymentsByUserIdSpec(subuser.rootUser.Id);
     var payments = await _paymentRepository.ListAsync(paymentSpec);
-
-    ////workaround, shouldn't like this! please take time to fix in the future KHANG!
-    var noBillPayments = payments.Where(p => !p.fundBills.Any()).ToList();
-
-    await _paymentRepository.DeleteRangeAsync(noBillPayments);
-    await _paymentRepository.SaveChangesAsync();
-    //================================================
+    
 
     var paymentRecords = payments.Select(_mapper.Map<PaymentRecord>);
 

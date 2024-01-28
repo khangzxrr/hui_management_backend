@@ -41,8 +41,10 @@ public class FundGetAll : EndpointBaseAsync
   public override async Task<ActionResult<FundGetAllResponse>> HandleAsync([FromRoute] FundGetAllRequest request, CancellationToken cancellationToken = default)
   {
 
+    var filter = new FundFilter(request.onlyDayFund, request.onlyMonthFund, request.searchTerm, request.bySubuserId);
+
     //overcome optional filters => create new list of filter
-    var fundsResult = await _fundService.getFunds(_authorizeService.UserId, request.skip, request.pageSize, request.searchTerm, request.filters == null ? new List<FundFilter.FundFilterEnum>() : request.filters);
+    var fundsResult = await _fundService.getFunds(_authorizeService.UserId, request.skip, request.take, filter);
 
     if (fundsResult.IsSuccess)
     {

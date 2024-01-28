@@ -46,9 +46,9 @@ public class Payment : EntityBase, IAggregateRoot
     return totalOwerMustTake;
   }
 
-  public double ownerPaidTakeDiff => TotalOwnerMustPaid() - TotalOwnerMustTake();
+  public double ownerPaidTakeDiff => TotalOwnerMustPaid() - TotalOwnerMustTake() + TotalTransactionCost;
 
-  public double remainPayCost => Math.Abs(Math.Abs(ownerPaidTakeDiff) - TotalTransactionCost);
+  public double remainPayCost => Math.Abs(ownerPaidTakeDiff);
 
   
 

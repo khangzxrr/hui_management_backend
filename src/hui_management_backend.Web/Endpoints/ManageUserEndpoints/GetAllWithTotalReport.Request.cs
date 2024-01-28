@@ -12,5 +12,11 @@ public class GetAllWithTotalReportRequest : PagingRequest
   public string? searchTerm { get; set; }
 
   [FromQuery]
-  public required IEnumerable<SubUserWithPaymentReportFilter.Filter> filters { get; set; }
+  public bool? atLeastOnePayment { get; set; }
+
+  [FromQuery]
+  public bool? todayPayment { get; set; }
+
+  [FromQuery]
+  public bool? unfinishedPayment { get; set; }
 }

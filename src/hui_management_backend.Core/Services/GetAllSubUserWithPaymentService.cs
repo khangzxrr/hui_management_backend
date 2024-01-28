@@ -54,16 +54,7 @@ public class GetAllSubUserWithPaymentService : IGetAllSubUserWithPaymentService
     double totalPredictedDeadAmount = 0;
     double totalAliveAmountWithoutServiceCost = 0;
 
-
-    var finishedPayments = subUser.Payments.Where(p => p.Status == PaymentStatus.Finish);
-
-
-    //totalPredictedDeadAmount = finishedPayments
-    //  .SelectMany(p => p.fundBills)
-    //  .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Dead)
-    //  .Sum(fb => fb.fromFund!.FundPrice * fb.fromFund!.RemainSessionCount);
-
-
+    //var finishedPayments = subUser.Payments.Where(p => p.Status == PaymentStatus.Finish);
 
     var finishedPaymentFunds = subUser.Payments
           .Where(p => p.Status == PaymentStatus.Finish)
@@ -72,6 +63,9 @@ public class GetAllSubUserWithPaymentService : IGetAllSubUserWithPaymentService
           .GroupBy(fb => fb?.Id)
           .Select(fb => fb.First());
 
+    //await Task.Run(() => { });
+
+
     foreach (var requestedFund in finishedPaymentFunds)
     {
 
@@ -79,25 +73,23 @@ public class GetAllSubUserWithPaymentService : IGetAllSubUserWithPaymentService
 
       var fund = await _getFundsBySubUserIdService.getFundByFundIdAndSubUserId(requestedFund.Id, subUser.Id);
 
-      if (fund == null) continue;
-
       //int deadMemberCountInSpecificFund = await _countDeadMemberBySubUserIdService.countDeadMemberBySubUserId(fund.Id, subUser.Id);
-      int deadMemberCountInSpecificFund = fund.Sessions.Count() == 0 ? 0 : fund.Sessions.Last().normalSessionDetails.Count(nsd => (nsd.type == FundAggregate.NormalSessionType.Dead || 
-      nsd.type == FundAggregate.NormalSessionType.Taken || 
-      nsd.type == FundAggregate.NormalSessionType.EmergencyTaken) && nsd.fundMember.subUser.Id == subUser.Id); 
+      int deadMemberCountInSpecificFund = requestedFund.Sessions.Count() == 0 ? 0 : requestedFund.Sessions.Last().normalSessionDetails.Count(nsd => (nsd.type == FundAggregate.NormalSessionType.Dead ||
+      nsd.type == FundAggregate.NormalSessionType.Taken ||
+      nsd.type == FundAggregate.NormalSessionType.EmergencyTaken) && nsd.fundMember.subUser.Id == subUser.Id);
 
-      int aliveMemberCountInSpecificFund = fund.Sessions.Count() == 0 ? 0 : fund.Sessions.Last().normalSessionDetails.Count(nsd => (nsd.type == FundAggregate.NormalSessionType.Alive) && nsd.fundMember.subUser.Id == subUser.Id);
+      int aliveMemberCountInSpecificFund = requestedFund.Sessions.Count() == 0 ? 0 : requestedFund.Sessions.Last().normalSessionDetails.Count(nsd => (nsd.type == FundAggregate.NormalSessionType.Alive) && nsd.fundMember.subUser.Id == subUser.Id);
 
       if (deadMemberCountInSpecificFund > 0)
       {
-        totalPredictedDeadAmount += fund.FundPrice * (fund.Members.Count() - fund.Sessions.Count()) * deadMemberCountInSpecificFund;
+        totalPredictedDeadAmount += requestedFund.FundPrice * (requestedFund.Members.Count() - requestedFund.Sessions.Count()) * deadMemberCountInSpecificFund;
       }
 
       if (aliveMemberCountInSpecificFund > 0)
       {
-        totalAliveAmountWithoutServiceCost += fund.FundPrice * fund.Sessions.Count() * aliveMemberCountInSpecificFund - (fund.ServiceCost * aliveMemberCountInSpecificFund);
+        totalAliveAmountWithoutServiceCost += requestedFund.FundPrice * requestedFund.Sessions.Count() * aliveMemberCountInSpecificFund - (requestedFund.ServiceCost * aliveMemberCountInSpecificFund);
       }
-      
+
     }
 
 
@@ -129,6 +121,12 @@ public class GetAllSubUserWithPaymentService : IGetAllSubUserWithPaymentService
 
 
 
-    return new SubUserReportWithoutSubUserInfoRecord(totalAliveAmount, totalDeadAmount, fundRatio, totalProcessingAmount, totalDebtAmount, totalTakenAmount, totalUnfinishedTakenAmount);
+    return new SubUserReportWithoutSubUserInfoRecord(totalAliveAmount,
+                                                     totalDeadAmount,
+                                                     fundRatio,
+                                                     totalProcessingAmount,
+                                                     totalDebtAmount,
+                                                     totalTakenAmount,
+                                                     totalUnfinishedTakenAmount);
   }
 }

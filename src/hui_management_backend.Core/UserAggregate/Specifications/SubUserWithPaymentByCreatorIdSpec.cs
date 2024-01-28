@@ -19,7 +19,6 @@ public class SubUserWithPaymentByCreatorIdSpec : Specification<SubUser>
       .Include(u => u.Payments)
         .ThenInclude(p => p.fundBills)
           .ThenInclude(fb => fb.fromFund)
-            
 
       .Where(su => su.createBy.Id == creatorId && su.rootUser.Id != creatorId)
       .Where(su => su.Payments.Any(p => p.fundBills.Any()), filter.atLeastOnePayment.HasValue)
@@ -27,6 +26,7 @@ public class SubUserWithPaymentByCreatorIdSpec : Specification<SubUser>
       .Where(su => su.Payments.Any(p => p.Status == PaymentStatus.Processing || p.Status == PaymentStatus.Debting), filter.unfinishedPayment.HasValue)
       .Search(su => su.Name, "%" + searchTerm + "%", searchTerm != null)
       .AsSplitQuery();
+      
       //.OrderBy(su => su.Name)
       //.Skip(skip)
       //.Take(take);

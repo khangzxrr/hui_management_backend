@@ -12,6 +12,7 @@ public class FundBySubUserIdSpec : Specification<Fund>
         .ThenInclude(s => s.normalSessionDetails)
           .ThenInclude(nsd => nsd.fundMember)
             .ThenInclude(fm => fm.subUser)
-    .Where(f => f.Members.Any(m => m.subUser.Id == subUserId) && f.Id == fundId);
+    .Where(f => f.Members.Any(m => m.subUser.Id == subUserId) && f.Id == fundId)
+    .AsSplitQuery();
   }
 }

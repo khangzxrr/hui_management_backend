@@ -52,27 +52,55 @@ public class GetAllSubUserWithPaymentService : IGetAllSubUserWithPaymentService
   {
 
     double totalPredictedDeadAmount = 0;
+    double totalAliveAmountWithoutServiceCost = 0;
 
-    var funds = await _getFundsBySubUserIdService.getFundsBySubUserId(subUser.Id);
 
-    foreach (var fund in funds)
+    var finishedPayments = subUser.Payments.Where(p => p.Status == PaymentStatus.Finish);
+
+
+    //totalPredictedDeadAmount = finishedPayments
+    //  .SelectMany(p => p.fundBills)
+    //  .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Dead)
+    //  .Sum(fb => fb.fromFund!.FundPrice * fb.fromFund!.RemainSessionCount);
+
+
+
+    var finishedPaymentFunds = subUser.Payments
+          .Where(p => p.Status == PaymentStatus.Finish)
+          .SelectMany(p => p.fundBills)
+          .Select(fb => fb.fromFund)
+          .GroupBy(fb => fb?.Id)
+          .Select(fb => fb.First());
+
+    foreach (var requestedFund in finishedPaymentFunds)
     {
-      int deadMemberCountInSpecificFund = await _countDeadMemberBySubUserIdService.countDeadMemberBySubUserId(fund.Id, subUser.Id);
 
-      totalPredictedDeadAmount += fund.FundPrice * (fund.Members.Count() - fund.Sessions.Count()) * deadMemberCountInSpecificFund;
+      if (requestedFund == null) continue;
+
+      var fund = await _getFundsBySubUserIdService.getFundByFundIdAndSubUserId(requestedFund.Id, subUser.Id);
+
+      if (fund == null) continue;
+
+      //int deadMemberCountInSpecificFund = await _countDeadMemberBySubUserIdService.countDeadMemberBySubUserId(fund.Id, subUser.Id);
+      int deadMemberCountInSpecificFund = fund.Sessions.Count() == 0 ? 0 : fund.Sessions.Last().normalSessionDetails.Count(nsd => (nsd.type == FundAggregate.NormalSessionType.Dead || 
+      nsd.type == FundAggregate.NormalSessionType.Taken || 
+      nsd.type == FundAggregate.NormalSessionType.EmergencyTaken) && nsd.fundMember.subUser.Id == subUser.Id); 
+
+      int aliveMemberCountInSpecificFund = fund.Sessions.Count() == 0 ? 0 : fund.Sessions.Last().normalSessionDetails.Count(nsd => (nsd.type == FundAggregate.NormalSessionType.Alive) && nsd.fundMember.subUser.Id == subUser.Id);
+
+      if (deadMemberCountInSpecificFund > 0)
+      {
+        totalPredictedDeadAmount += fund.FundPrice * (fund.Members.Count() - fund.Sessions.Count()) * deadMemberCountInSpecificFund;
+      }
+
+      if (aliveMemberCountInSpecificFund > 0)
+      {
+        totalAliveAmountWithoutServiceCost += fund.FundPrice * fund.Sessions.Count() * aliveMemberCountInSpecificFund - (fund.ServiceCost * aliveMemberCountInSpecificFund);
+      }
+      
     }
 
-    double totalAliveAmount = 
-      subUser.Payments
-      .SelectMany(p => p.fundBills)
-      .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Alive)
-      .Sum(fb => fb.fromSessionDetail!.payCost);
 
-    double totalDeadAmount =
-     subUser.Payments
-      .SelectMany(p => p.fundBills)
-      .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Dead)
-      .Sum(fb => fb.fromSessionDetail!.payCost);
 
     double totalUnfinishedTakenAmount =
       subUser.Payments
@@ -92,13 +120,12 @@ public class GetAllSubUserWithPaymentService : IGetAllSubUserWithPaymentService
 
     double totalDebtAmount = subUser.Payments.Where(p => p.Status == PaymentStatus.Debting).Sum(p => p.remainPayCost);
 
-    double totalAliveAmountWithoutServiceCost =
-          subUser.Payments
-          .SelectMany(p => p.fundBills)
-          .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Alive)
-          .Sum(fb => fb.fromSessionDetail!.payCost - fb.fromSessionDetail!.serviceCost);
 
     double fundRatio = totalAliveAmountWithoutServiceCost - totalPredictedDeadAmount;
+
+    double totalAliveAmount = totalAliveAmountWithoutServiceCost;
+
+    double totalDeadAmount = totalPredictedDeadAmount;
 
 
 

@@ -4,12 +4,14 @@ using Ardalis.Specification;
 namespace hui_management_backend.Core.FundAggregate.Specifications;
 public class FundBySubUserIdSpec : Specification<Fund>
 {
-  public FundBySubUserIdSpec(int subUserId)
+  public FundBySubUserIdSpec(int fundId, int subUserId)
   {
     Query
       .Include(f => f.Members)
-        .ThenInclude(m => m.subUser)
       .Include(f => f.Sessions)
-    .Where(f => f.Members.Any(m => m.subUser.Id == subUserId));
+        .ThenInclude(s => s.normalSessionDetails)
+          .ThenInclude(nsd => nsd.fundMember)
+            .ThenInclude(fm => fm.subUser)
+    .Where(f => f.Members.Any(m => m.subUser.Id == subUserId) && f.Id == fundId);
   }
 }

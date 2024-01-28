@@ -49,7 +49,7 @@ public class DefaultCoreModule : Module
     builder.RegisterType<CountDeadMemberBySubUserIdService>()
       .As<ICountDeadMemberBySubUserIdService>().InstancePerLifetimeScope();
 
-    builder.RegisterType<GetFundsBySubUserIdService>()
+    builder.RegisterType<GetFundByFundIdAndSubUserId>()
       .As<IGetFundsBySubUserIdService>().InstancePerLifetimeScope();
 
     builder.RegisterType<ScanExpiredProcessingPaymentService>()

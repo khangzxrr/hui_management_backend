@@ -11,6 +11,6 @@ public class CountDeadMemberInFundBySubUserIdSpec : Specification<Fund>
         .ThenInclude(s => s.normalSessionDetails)
           .ThenInclude(nsd => nsd.fundMember)
             .ThenInclude(fm => fm.subUser)
-      .Where(f => f.Id == fundId && f.Sessions.Any(s => s.normalSessionDetails.Any(nsd => nsd.type == NormalSessionType.Dead && nsd.fundMember.subUser.Id == subUserId)));
+      .Where(f => f.Id == fundId && f.Sessions.Any(s => s.normalSessionDetails.Where(nsd => nsd.type == NormalSessionType.Dead && nsd.fundMember.subUser.Id == subUserId).Any()));
   }
 }

@@ -39,6 +39,8 @@ public class Fund : EntityBase, IAggregateRoot
   private readonly List<FundSession> _sessions = new List<FundSession>();
   public IEnumerable<FundSession> Sessions => _sessions.AsReadOnly();
 
+  public int RemainSessionCount => Members.Count() - Sessions.Count();
+
   public DateTime EndDate =>  _members.Count < 2 ? OpenDate : newSessionCreateDates().Last();
 
   private DateTime ReplaceDayInDateTime(DateTime dateTime, int day)

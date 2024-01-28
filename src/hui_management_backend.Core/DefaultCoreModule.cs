@@ -46,8 +46,16 @@ public class DefaultCoreModule : Module
     builder.RegisterType<GetSubUserWithPaymentByIdService>() 
       .As<IGetSubUserWithPaymentByIdService>().InstancePerLifetimeScope();
 
+    builder.RegisterType<CountDeadMemberBySubUserIdService>()
+      .As<ICountDeadMemberBySubUserIdService>().InstancePerLifetimeScope();
+
+    builder.RegisterType<GetFundsBySubUserIdService>()
+      .As<IGetFundsBySubUserIdService>().InstancePerLifetimeScope();
+
     builder.RegisterType<ScanExpiredProcessingPaymentService>()
         .As<IScanExpiredProcessingPayment>().SingleInstance();
+
+    
 
 
 

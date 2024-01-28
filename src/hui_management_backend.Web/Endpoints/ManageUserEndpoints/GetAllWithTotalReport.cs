@@ -46,7 +46,12 @@ public class GetAllWithTotalReport : EndpointBaseAsync
 
     if (result.IsSuccess)
     {
-      var subuserReportRecords = result.Value.Select(_mapper.Map<SubUserReportRecord>);
+
+      var subuserReportRecords = result.Value.Select(dic => 
+      _mapper.Map<SubUserReportRecord>(
+          dic.Key, opt => opt.AfterMap((src, dst) => dst.setReport(dic.Value))
+      ));
+
       var response = new GetAllWithTotalReportResponse(subuserReportRecords);
 
       return Ok(response);

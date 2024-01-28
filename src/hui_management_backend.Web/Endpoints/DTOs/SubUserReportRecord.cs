@@ -1,4 +1,6 @@
-﻿namespace hui_management_backend.Web.Endpoints.DTOs;
+﻿using hui_management_backend.Core.UserAggregate.Records;
+
+namespace hui_management_backend.Web.Endpoints.DTOs;
 
 public class SubUserReportRecord : SubUserRecord
 {
@@ -20,12 +22,22 @@ public class SubUserReportRecord : SubUserRecord
   {
   }
 
-  public double totalAliveAmount { get; set; }
-  public double totalDeadAmount { get; set; }
-  public double fundRatio { get; set; }
-  public double totalProcessingAmount { get; set; }
-  public double totalDebtAmount { get; set; }
-  public double totalTakenAmount { get; set; }
+  public double totalAliveAmount { get; private set; }
+  public double totalDeadAmount { get; private set; }
+  public double fundRatio { get; private set; }
+  public double totalProcessingAmount { get; private set; }
+  public double totalDebtAmount { get; private set; }
+  public double totalTakenAmount { get; private set; }
+  public double totalUnfinishedTakenAmount { get; private set; }
 
-  public double totalUnfinishedTakenAmount { get; set; }
+  public void setReport(SubUserReportWithoutSubUserInfoRecord report)
+  {
+    totalAliveAmount = report.totalAliveAmount;
+    totalDeadAmount = report.totalDeadAmount;
+    fundRatio = report.fundRatio;
+    totalProcessingAmount = report.totalProcessingAmount;
+    totalDebtAmount = report.totalDebtAmount;
+    totalTakenAmount = report.totalTakenAmount;
+    totalUnfinishedTakenAmount = report.totalUnfinishedTakenAmount;
+  }
 }

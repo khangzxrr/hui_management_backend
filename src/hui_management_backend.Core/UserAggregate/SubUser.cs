@@ -37,41 +37,6 @@ public class SubUser : EntityBase, IAggregateRoot
   public IEnumerable<Payment> Payments => _payments.AsReadOnly();
 
 
-  public double totalAliveAmount => 
-    _payments
-    .SelectMany(p => p.fundBills)
-    .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Alive)
-    .Sum(fb => fb.fromSessionDetail!.payCost);
-
-  public double totalDeadAmount =>
-    _payments
-    .SelectMany(p => p.fundBills)
-    .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Dead)
-    .Sum(fb => fb.fromSessionDetail!.payCost);
-
-  public double totalUnfinishedTakenAmount => 
-    _payments
-    .Where(p => p.Status != PaymentStatus.Finish)
-    .SelectMany(p => p.fundBills)
-    .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Taken)
-    .Sum(fb => fb.fromSessionDetail!.payCost);
-  public double totalTakenAmount =>
-    _payments
-    .SelectMany(p => p.fundBills)
-    .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Taken)
-    .Sum(fb => fb.fromSessionDetail!.payCost);
-  public double totalProcessingAmount => _payments.Where(p => p.Status == PaymentStatus.Processing).Sum(p => p.remainPayCost);
-
-  public double totalDebtAmount => _payments.Where(p => p.Status == PaymentStatus.Debting).Sum(p => p.remainPayCost);
-
-  public double totalServiceCostAmount => _payments
-                                          .SelectMany(p => p.fundBills)
-                                          .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Alive)
-                                          .Sum(fb => fb.fromSessionDetail!.serviceCost);
-  public double fundRatio => totalAliveAmount - (totalDeadAmount + totalTakenAmount) - totalServiceCostAmount;
-
-
-
   public SubUser(
     string imageUrl, 
     string identity, 

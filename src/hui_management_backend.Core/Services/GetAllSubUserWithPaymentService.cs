@@ -1,9 +1,8 @@
-﻿
-
-using System.Collections.Generic;
-using Ardalis.Result;
+﻿using Ardalis.Result;
+using hui_management_backend.Core.FundAggregate;
 using hui_management_backend.Core.Interfaces;
 using hui_management_backend.Core.PaymentAggregate;
+using hui_management_backend.Core.PaymentAggregate.Specifications;
 using hui_management_backend.Core.UserAggregate;
 using hui_management_backend.Core.UserAggregate.Enums;
 using hui_management_backend.Core.UserAggregate.Records;
@@ -14,13 +13,16 @@ namespace hui_management_backend.Core.Services;
 public class GetAllSubUserWithPaymentService : IGetAllSubUserWithPaymentService
 {
   private readonly IRepository<SubUser> _subuserRepository;
-  private readonly ICountDeadMemberBySubUserIdService _countDeadMemberBySubUserIdService;
+  private readonly IRepository<Payment> _paymentRepository;
   private readonly IGetFundsBySubUserIdService _getFundsBySubUserIdService;
 
-  public GetAllSubUserWithPaymentService(IRepository<SubUser> subuserRepository, ICountDeadMemberBySubUserIdService countDeadMemberBySubUserIdService, IGetFundsBySubUserIdService getFundsBySubUserIdService)
+  public GetAllSubUserWithPaymentService(
+    IRepository<SubUser> subuserRepository,
+    IRepository<Payment> paymentRepository,
+    IGetFundsBySubUserIdService getFundsBySubUserIdService)
   {
     _subuserRepository = subuserRepository;
-    _countDeadMemberBySubUserIdService = countDeadMemberBySubUserIdService;
+    _paymentRepository = paymentRepository;
     _getFundsBySubUserIdService = getFundsBySubUserIdService;
   }
 
@@ -41,16 +43,76 @@ public class GetAllSubUserWithPaymentService : IGetAllSubUserWithPaymentService
 
     foreach (var subuser in filterdSubUsers)
     {
-      result.Add(subuser, await GetSubUserReport(subuser));
+      result.Add(subuser, await GetSubUserReport(subuser, filter));
     }
 
 
     return new Result<Dictionary<SubUser, SubUserReportWithoutSubUserInfoRecord>>(result);  
   }
 
-  public async Task<SubUserReportWithoutSubUserInfoRecord> GetSubUserReport(SubUser subUser)
-  {
 
+  public async Task<SubUserReportWithoutSubUserInfoRecord> GetSubUserReport(SubUser subUser, SubUserWithPaymentReportFilter filters)
+  {
+    double totalProcessingAmount =
+     subUser.Payments.Where(p => p.Status == PaymentStatus.Processing).Sum(p => p.remainPayCost);
+
+    double totalDebtAmount = subUser.Payments.Where(p => p.Status == PaymentStatus.Debting).Sum(p => p.remainPayCost);
+
+    if (filters.getProcessingAndDebtPaymentOnly.HasValue)
+    {
+      return new SubUserReportWithoutSubUserInfoRecord(0,
+                                                     0,
+                                                     0,
+                                                     totalProcessingAmount,
+                                                     totalDebtAmount,
+                                                     0,
+                                                     0,
+                                                     0);
+    }
+
+
+
+    var predictedAliveandDeadAmount = await calculateTotalPredictedAliveAndDeadAmount(subUser);
+
+
+    double totalUnfinishedTakenAmount =
+      subUser.Payments
+      .Where(p => p.Status != PaymentStatus.Finish)
+      .SelectMany(p => p.fundBills)
+      .Where(fb => fb.fromSessionDetail?.type == NormalSessionType.Taken)
+      .Sum(fb => fb.fromSessionDetail!.payCost);
+
+    double totalTakenAmount =
+      subUser.Payments
+      .SelectMany(p => p.fundBills)
+      .Where(fb => fb.fromSessionDetail?.type == NormalSessionType.Taken)
+      .Sum(fb => fb.fromSessionDetail!.payCost);
+
+    double totalOutsideDebt =
+      subUser.Payments
+      .SelectMany(p => p.customBills)
+      .Sum(cb => cb.payCost);
+
+    double totalAliveAmount = predictedAliveandDeadAmount.Item1;
+
+    double totalDeadAmount = predictedAliveandDeadAmount.Item2;
+
+
+    double fundRatio = totalAliveAmount - totalDeadAmount;
+
+
+    return new SubUserReportWithoutSubUserInfoRecord(totalAliveAmount,
+                                                     totalDeadAmount,
+                                                     fundRatio,
+                                                     totalProcessingAmount,
+                                                     totalDebtAmount,
+                                                     totalTakenAmount,
+                                                     totalUnfinishedTakenAmount,
+                                                     totalOutsideDebt);
+  }
+
+  private async Task<Tuple<double, double>> calculateTotalPredictedAliveAndDeadAmount(SubUser subUser)
+  {
     double totalPredictedDeadAmount = 0;
     double totalAliveAmountWithoutServiceCost = 0;
 
@@ -73,60 +135,84 @@ public class GetAllSubUserWithPaymentService : IGetAllSubUserWithPaymentService
 
       var fund = await _getFundsBySubUserIdService.getFundByFundIdAndSubUserId(requestedFund.Id, subUser.Id);
 
-      //int deadMemberCountInSpecificFund = await _countDeadMemberBySubUserIdService.countDeadMemberBySubUserId(fund.Id, subUser.Id);
-      int deadMemberCountInSpecificFund = requestedFund.Sessions.Count() == 0 ? 0 : requestedFund.Sessions.Last().normalSessionDetails.Count(nsd => (nsd.type == FundAggregate.NormalSessionType.Dead ||
-      nsd.type == FundAggregate.NormalSessionType.Taken ||
-      nsd.type == FundAggregate.NormalSessionType.EmergencyTaken) && nsd.fundMember.subUser.Id == subUser.Id);
+      if (fund == null) continue;
 
-      int aliveMemberCountInSpecificFund = requestedFund.Sessions.Count() == 0 ? 0 : requestedFund.Sessions.Last().normalSessionDetails.Count(nsd => (nsd.type == FundAggregate.NormalSessionType.Alive) && nsd.fundMember.subUser.Id == subUser.Id);
+      if (!fund.Sessions.Any()) continue;
 
-      if (deadMemberCountInSpecificFund > 0)
+      //Vốn chết = mệnh giá * tổng số kỳ còn lại * số lượng đầu chết
+
+      var fundMembers = fund.Members.Where(m => m.subUser.Id == subUser.Id);
+
+      int aliveMemberCount = 0;
+
+      foreach (FundMember member in fundMembers)
       {
-        totalPredictedDeadAmount += requestedFund.FundPrice * (requestedFund.Members.Count() - requestedFund.Sessions.Count()) * deadMemberCountInSpecificFund;
-      }
+        bool isDead = fund.Sessions.SelectMany(s => s.normalSessionDetails).Any(sd =>
+        sd.fundMember == member &&
+        (sd.type == NormalSessionType.Taken || sd.type == NormalSessionType.EmergencyTaken));
 
-      if (aliveMemberCountInSpecificFund > 0)
+        if (isDead)
+        {
+
+          int remainSessionCount = fund.Members.Count() - fund.Sessions.Count();
+          totalPredictedDeadAmount += fund.FundPrice * remainSessionCount;
+
+          int countNotPaidDeadSession = 0;
+
+          foreach (FundSession session in fund.Sessions)
+          {
+            var sessionDetailOfMember = session.normalSessionDetails.Where(sd => sd.fundMember == member &&
+             (sd.type == NormalSessionType.Dead ||
+             sd.type == NormalSessionType.Taken ||
+             sd.type == NormalSessionType.EmergencyTaken)).FirstOrDefault();
+
+            if (sessionDetailOfMember == null) continue;
+
+            var finishPaymentOfSessionDetailSpec = new PaymentByStatusAndNormalSessionDetailIdSpec(PaymentStatus.Finish, sessionDetailOfMember.Id);
+            bool isPaid = await _paymentRepository.AnyAsync(finishPaymentOfSessionDetailSpec);
+
+            if (!isPaid) // NOT paid
+            {
+              countNotPaidDeadSession++;
+            }
+          }
+
+          totalPredictedDeadAmount += fund.FundPrice * countNotPaidDeadSession;
+
+        }
+        else
+        {
+
+          aliveMemberCount++;
+
+          int countPaidSession = 0;
+
+          foreach (FundSession session in fund.Sessions)
+          {
+            var sessionDetailOfMember = session.normalSessionDetails.Where(sd => sd.fundMember == member && sd.type == NormalSessionType.Alive).FirstOrDefault();
+
+            if (sessionDetailOfMember == null) continue;
+
+            var finishPaymentOfSessionDetailSpec = new PaymentByStatusAndNormalSessionDetailIdSpec(PaymentStatus.Finish, sessionDetailOfMember.Id);
+            bool isPaid = await _paymentRepository.AnyAsync(finishPaymentOfSessionDetailSpec);
+
+            if (isPaid)
+            {
+              countPaidSession++;
+            }
+          }
+
+          totalAliveAmountWithoutServiceCost += fund.FundPrice * countPaidSession;
+        } //end else if
+
+      } //end member loop
+
+      if (totalAliveAmountWithoutServiceCost > 0)
       {
-        totalAliveAmountWithoutServiceCost += requestedFund.FundPrice * requestedFund.Sessions.Count() * aliveMemberCountInSpecificFund - (requestedFund.ServiceCost * aliveMemberCountInSpecificFund);
+        totalAliveAmountWithoutServiceCost -= fund.ServiceCost * aliveMemberCount;
       }
+    } //end fund loop
 
-    }
-
-
-
-    double totalUnfinishedTakenAmount =
-      subUser.Payments
-      .Where(p => p.Status != PaymentStatus.Finish)
-      .SelectMany(p => p.fundBills)
-      .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Taken)
-      .Sum(fb => fb.fromSessionDetail!.payCost);
-
-    double totalTakenAmount =
-      subUser.Payments
-      .SelectMany(p => p.fundBills)
-      .Where(fb => fb.fromSessionDetail?.type == FundAggregate.NormalSessionType.Taken)
-      .Sum(fb => fb.fromSessionDetail!.payCost);
-
-    double totalProcessingAmount =
-      subUser.Payments.Where(p => p.Status == PaymentStatus.Processing).Sum(p => p.remainPayCost);
-
-    double totalDebtAmount = subUser.Payments.Where(p => p.Status == PaymentStatus.Debting).Sum(p => p.remainPayCost);
-
-
-    double fundRatio = totalAliveAmountWithoutServiceCost - totalPredictedDeadAmount;
-
-    double totalAliveAmount = totalAliveAmountWithoutServiceCost;
-
-    double totalDeadAmount = totalPredictedDeadAmount;
-
-
-
-    return new SubUserReportWithoutSubUserInfoRecord(totalAliveAmount,
-                                                     totalDeadAmount,
-                                                     fundRatio,
-                                                     totalProcessingAmount,
-                                                     totalDebtAmount,
-                                                     totalTakenAmount,
-                                                     totalUnfinishedTakenAmount);
+    return new Tuple<double, double>(totalAliveAmountWithoutServiceCost, totalPredictedDeadAmount);
   }
 }

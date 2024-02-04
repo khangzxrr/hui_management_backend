@@ -28,7 +28,12 @@ public class NewFundSessionAddedHandler : INotificationHandler<NewFundSessionAdd
     foreach(NormalSessionDetail sessionDetail in notification.fundSession.normalSessionDetails)
     {
 
-      var normalPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTime.UtcNow, sessionDetail.fundMember.subUser);
+      var normalPayment = await _getPaymentService.getTodayPaymentByOwnerId(sessionDetail.fundMember.subUser.Id);
+
+      if (normalPayment == null)
+      {
+        continue;
+      }
 
       normalPayment.AddBill(new FundBill
       {

@@ -10,15 +10,24 @@ public class GetPaymentService : IGetPaymentService
 {
 
   private readonly IRepository<Payment> _paymentRepository;
+  private readonly IRepository<SubUser> _subUserRepository;
 
-  public GetPaymentService(IRepository<Payment> paymentRepository)
+  public GetPaymentService(IRepository<Payment> paymentRepository, IRepository<SubUser> subUserRepository)
   {
     _paymentRepository = paymentRepository;
+    _subUserRepository = subUserRepository;
   }
 
-  public async Task<Payment> GetPaymentByDateAndOwnerId(DateTime dateTime, SubUser owner)
+  public async Task<Payment?> GetPaymentByDateAndOwnerId(DateTime dateTime, int subUserId)
   {
-    var spec = new PaymentByDateAndOwnerIdAndStatusSpec(dateTime, owner.Id, PaymentStatus.Processing);
+    var subUser = await _subUserRepository.GetByIdAsync(subUserId);
+
+    if (subUser == null)
+    {
+      return null;
+    }
+
+    var spec = new PaymentByDateAndOwnerIdAndStatusSpec(dateTime, subUserId, PaymentStatus.Processing);
 
     var payment = await _paymentRepository.FirstOrDefaultAsync(spec);
 
@@ -27,14 +36,18 @@ public class GetPaymentService : IGetPaymentService
       payment = new Payment
       {
         CreateAt = dateTime,
-        Owner = owner,
+        Owner = subUser,
         Status = PaymentStatus.Processing,
       };
 
       await _paymentRepository.AddAsync(payment);
     }
 
-
     return payment;
+  }
+
+  public async Task<Payment?> getTodayPaymentByOwnerId(int subUserId)
+  {
+    return await GetPaymentByDateAndOwnerId(DateTime.UtcNow, subUserId);
   }
 }

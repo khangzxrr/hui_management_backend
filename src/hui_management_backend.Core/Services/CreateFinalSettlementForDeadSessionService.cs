@@ -54,7 +54,7 @@ public class CreateFinalSettlementForDeadSessionService : ICreateFinalSettlement
     }
 
 
-    var payment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTime.UtcNow, member.subUser);
+    var payment = await _getPaymentService.getTodayPaymentByOwnerId(member.subUser.Id);
 
     if (payment == null)
     {

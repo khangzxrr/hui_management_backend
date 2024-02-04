@@ -23,7 +23,12 @@ public class NewEmergencySessionAddedEventHandler : INotificationHandler<NewEmer
 
     foreach(var emergencyTakenSessionDetail in notification.emergencyTakenSessionDetails)
     {
-      var userPayment = await _getPaymentService.GetPaymentByDateAndOwnerId(DateTime.UtcNow, emergencyTakenSessionDetail.fundMember.subUser);
+      var userPayment = await _getPaymentService.getTodayPaymentByOwnerId(emergencyTakenSessionDetail.fundMember.subUser.Id);
+
+      if (userPayment == null)
+      {
+        continue;
+      }
 
       userPayment.RemoveLatestAliveFundBill(notification.fund.Id);
 

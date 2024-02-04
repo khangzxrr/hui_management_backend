@@ -40,7 +40,7 @@ public class GetAllWithTotalReport : EndpointBaseAsync
   public override async Task<ActionResult<GetAllWithTotalReportResponse>> HandleAsync([FromRoute] GetAllWithTotalReportRequest request, CancellationToken cancellationToken = default)
   {
 
-    var filter = new SubUserWithPaymentReportFilter(request.atLeastOnePayment, request.todayPayment, request.unfinishedPayment);
+    var filter = new SubUserWithPaymentReportFilter(request.atLeastOnePayment, request.todayPayment, request.unfinishedPayment, request.getProcessingAndDebtPaymentOnly);
 
     var result = await _getAllSubUserWithPaymentService.GetAllSubUserWithPayment(_authorizeService.UserId, request.skip, request.take, request.searchTerm, filter);
 

@@ -49,4 +49,7 @@ public class ResponseMessageConstants
   public const string FundIsEnded = "FUND_IS_ENDED";
 
   public const string SessionNotHaveTakenSessionDetail = "SESSION_NOT_HAVE_TAKEN_SESSION_DETAIL";
+
+  public const string TodayPaymentIsNotFound = "TODAY_PAYMENT_IS_NOT_FOUND";
+  public const string CannotParseCustomBillType = "CANNOT_PARSE_CUSTOM_BILL_TYPE";
 }

@@ -11,11 +11,17 @@ public class SubUserWithPaymentByCreatorIdSpec : Specification<SubUser>
     Query
       .Include(su => su.createBy)
       .Include(su => su.rootUser)
+
+      .Include(u => u.Payments)
+        .ThenInclude(p => p.customBills)
+
       .Include(u => u.Payments)
         .ThenInclude(p => p.paymentTransactions)
+
       .Include(u => u.Payments)
         .ThenInclude(p => p.fundBills)
           .ThenInclude(fb => fb.fromSessionDetail)
+
       .Include(u => u.Payments)
         .ThenInclude(p => p.fundBills)
           .ThenInclude(fb => fb.fromFund)

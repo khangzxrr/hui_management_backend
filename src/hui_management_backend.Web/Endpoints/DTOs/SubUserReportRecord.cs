@@ -30,6 +30,8 @@ public class SubUserReportRecord : SubUserRecord
   public double totalTakenAmount { get; private set; }
   public double totalUnfinishedTakenAmount { get; private set; }
 
+  public double totalOutsideDebt { get; private set; }
+
   public void setReport(SubUserReportWithoutSubUserInfoRecord report)
   {
     totalAliveAmount = report.totalAliveAmount;
@@ -39,5 +41,6 @@ public class SubUserReportRecord : SubUserRecord
     totalDebtAmount = report.totalDebtAmount;
     totalTakenAmount = report.totalTakenAmount;
     totalUnfinishedTakenAmount = report.totalUnfinishedTakenAmount;
+    totalOutsideDebt = report.totalOutsideDebt;
   }
 }

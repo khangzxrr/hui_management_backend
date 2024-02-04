@@ -19,4 +19,7 @@ public class GetAllWithTotalReportRequest : PagingRequest
 
   [FromQuery]
   public bool? unfinishedPayment { get; set; }
+
+  [FromQuery]
+  public bool? getProcessingAndDebtPaymentOnly { get; set; }
 }
